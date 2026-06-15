@@ -1,0 +1,17 @@
+main{
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    grid-template-rows: 2rem 1fr 2rem;
+    grid-template-areas:
+    "nb nb"
+    "sb env"
+    "sb bb";
+    gap: 2px;
+}
+main nav{grid-area: nb;}
+main aside{grid-area: sb;}
+main .enviorment{grid-area: env;}
+main footer{grid-area: bb;}

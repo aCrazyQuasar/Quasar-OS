@@ -1,0 +1,500 @@
+<!-- 
+   This is no the original, merely pieces of what is used to be. Quasar Games, 
+   you will forever be remembered.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Csssssssssssssssssssssssssssssssssssssss -->
+    <style>
+        /* ---------- SETUP ---------- */
+        @import url('https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap');
+        :root{
+            --base-color: #161616;
+            --surface-color: #212121;
+
+            --text-color: #ffffffe7;
+            --contrast-text-color: var(--base-color);
+
+            --brand-color: #44d7ee;
+
+            --accent-color: #522df7;
+        }
+        html{
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        html::-webkit-scrollbar {
+            display: none;
+        }
+        *{
+            margin:0;
+            padding:0;
+            font-family: "Exo 2", monospace, system-ui;
+        }
+        *::selection{
+            background: var(--brand-color);
+        }
+        body{
+            background-color: #000011;
+            color:var(--text-color);
+        }
+
+        /* ---------- TEXT ---------- */
+        h1, h2, h3, h4, h5, h6{font-family: "Cantarell", Arial, Helvetica, sans-serif;}
+        p{font-family: "Cascadia Mono", monospace, system-ui;}
+        h2{font-size: 5rem;}
+        h3{font-size: 3rem;}
+        h4{font-size: 2rem;}
+        h5{font-size: 3rem;}
+        .hide{
+            opacity: 0;
+            pointer-events: none;
+        }
+        .no-scroll{
+            overflow: hidden;
+            max-height: 100vh;
+        }
+        .centered{
+            text-align: center;
+        }
+        .no-display{
+            display: none;
+        }
+
+        /* ---------- LOADING ---------- */
+        #loading{
+            z-index: 99999999;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: all;
+            background-color: var(--base-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 2rem;
+            text-align: center;
+            transition: 0.5s ease;
+            #bar-container{
+                width: 80%;
+                border: 10px solid var(--brand-color);
+                height: 2rem;
+                border-radius: 10rem;
+                /* overflow: hidden; */
+                box-shadow: 0 0 20px var(--brand-color), 0 0 40px var(--brand-color), 0 0 10px var(--brand-color) inset;
+                margin-bottom: 1rem;
+                #load-bar{
+                    background-color: var(--brand-color);
+                    border: 1px solid var(--brand-color);
+                    display: block;
+                    width: 0%;
+                    height: 100%;
+                    animation: load 15s ease forwards;
+                }
+            }
+            h1{ 
+                font-size: 4rem;
+            }
+            .load-msg-cont{
+                width: 100vw;
+                max-height: 2rem;
+                position: relative;
+            }
+            .load-msg-cont .load-msg{
+                width: 100%;
+                display: block;
+                opacity: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                text-align: center;
+                font-size: 2rem;
+                animation: show-msg 12s ease forwards infinite;
+            }
+            .load-msg-cont span:nth-child(1){animation-delay: 0s;}
+            .load-msg-cont span:nth-child(2){animation-delay: 2s;}
+            .load-msg-cont span:nth-child(3){animation-delay: 4s;}
+            .load-msg-cont span:nth-child(4){animation-delay: 6s;}
+            .load-msg-cont span:nth-child(5){animation-delay: 8s;}
+            .load-msg-cont span:nth-child(6){animation-delay: 10s;}
+            button{
+                padding: 1rem 2rem;
+                background-color: var(--brand-color);
+                border: none;
+                box-shadow: 0 0 20px var(--brand-color);
+                color: white;
+                border-radius: 10rem;
+                cursor: pointer;
+                font-weight: 900;
+                position: fixed;
+                bottom: 2rem;
+                transition: 0.3s ease;
+            }
+            button:hover{
+                scale: 1.1;
+            }
+        }
+        #loading.hide{
+            opacity: 0;
+            pointer-events: none;
+        }
+        @keyframes load{
+            from{width: 0%;}
+            to{width: 100%;}
+        }
+        @keyframes show-msg {
+            0% {
+                transform: translate(-50%, -50%) translateY(1rem);
+                opacity: 0;
+            }
+            15% {
+                transform: translate(-50%, -50%) translateY(0);
+                opacity: 1;
+            }
+            30% {
+                transform: translate(-50%, -50%) translateY(-1rem);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) translateY(-1rem);
+                opacity: 0;
+            }
+        }
+
+        /* ---------- HERO ---------- */
+        header{
+            height: 100vh;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+        header .main{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
+            
+        }
+        #quasar-canvas{
+            display:block;
+            width: 60vw;
+            height: 30vh;
+            overflow: visible !important;
+            position: relative;
+        }
+        #quasar-canvas canvas {
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            overflow: visible !important;
+            pointer-events: none;
+        }
+        header h1{
+            color: var(--text-color);
+            text-align: center;
+        }
+        header .call-to-action{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+        header .call-to-action button, 
+        header .call-to-action a{
+            padding: 0.75rem 2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.08rem;
+            font-family: "Cascadia Mono", monospace, system-ui;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+        header .call-to-action button:hover, 
+        header .call-to-action a:hover{
+            scale: 1.1;
+        }
+        header .call-to-action .primary{
+            background-color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-color), 0 0 40px var(--accent-color);
+            border: 2px solid var(--accent-color);
+            color: var(--contrast-text-color);
+        }
+        header .call-to-action .primary svg{fill: var(--contrast-text-color);}
+        header .call-to-action .secondary{
+            background-color: transparent;
+            border: 2px solid var(--brand-color);
+            color: var(--brand-color);
+            box-shadow: 0 0 20px var(--brand-color), 0 0 10px var(--brand-color) inset;
+        }
+        header .call-to-action .secondary svg{fill: var(--brand-color);}
+    </style>
+
+    <!-- ********** LOADING SCREEN CONTROLLER *********** -->
+    <script>
+        document.documentElement.classList.add("no-scroll"); //html
+        document.body.classList.add("no-scroll"); //body
+
+        function skipLoad() {
+            document.getElementById("loading").classList.add("hide");
+            document.documentElement.classList.remove("no-scroll");
+            document.body.classList.remove("no-scroll");
+        }
+    </script>
+
+    <!-- ********** LOAD P5.JS & Opentype ********** -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/opentype.js/1.3.4/opentype.min.js"></script>
+    
+    <!-- P5 BG -->
+    <script>
+        let stars = [];
+        let velX = 0.5;
+        let velY = 0.5;
+        let maxDepth = 3;
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.position(0, 0);
+            canvas.style("position", "fixed");
+            canvas.style("top", "0");
+            canvas.style("left", "0");
+            canvas.style("z-index", "-100");
+            for (let i = 0; i < 200; i++) {
+                stars.push({
+                    x: random(width),
+                    y: random(height),
+                    z: random(1, maxDepth)
+                });
+            }
+        }
+        function draw() {
+            background(5, 8, 20, 255);
+            stroke(200, 200, 200, 180);
+            for (let s of stars) {
+                let size = (maxDepth - s.z) * 2;
+                strokeWeight(size);
+                point(s.x, s.y);
+
+                // movement
+                s.x += velX / s.z;
+                s.y += velY / s.z;
+
+                // FIXED wrap
+                s.x = (s.x + width) % width;
+                s.y = (s.y + height) % height;
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            stars = [];
+            for (let i = 0; i < 200; i++) {
+                stars.push({
+                    x: random(width),
+                    y: random(height),
+                    z: random(1, maxDepth)
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- ********** LOADING ELEMENT ********** -->
+    <div id="loading">
+        <h1>Probably Loading...</h1>
+        <div id="bar-container">
+            <div id="load-bar"></div>
+        </div>
+        <div class="load-msg-cont">
+            <span class="load-msg">Doing things</span>
+            <span class="load-msg">That are really important</span>
+            <span class="load-msg">Probably...</span>
+            <span class="load-msg">I am getting bored now</span>
+            <span class="load-msg">This is taking too long</span>
+            <span class="load-msg">Maybe get a better computer?</span>
+        </div>
+        <button onclick="skipLoad()" title="This will skip loading some parts of the website">Skip Loading</button>
+    </div>
+
+    <!-- ********** PAGE ********** -->
+
+    <!-- HERO -->
+    <header>
+        <div class="main">
+            <div id="quasar-canvas"></div>
+            <script>
+                const logoSketch = (p) => {
+                    let font;
+                    let particles = [];
+                    const siteName = "Quasar";
+                    const padding = 200;
+                    let firstFrame = false;
+
+                    p.preload = () => {
+                        font = p.loadFont('https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf');
+                    };
+                    p.setup = () => {
+                        let container = document.getElementById('quasar-canvas');
+                        let canvas = p.createCanvas(container.offsetWidth + (padding * 2), container.offsetHeight + (padding * 2));
+                        canvas.parent('quasar-canvas');
+                        
+                        p.generateTextParticles();
+                    };
+                    p.windowResized = () => {
+                        let container = document.getElementById('quasar-canvas');
+                        // MODIFIED: Resize the enlarged canvas area accurately on window change
+                        p.resizeCanvas(container.offsetWidth + (padding * 2), container.offsetHeight + (padding * 2));
+                        p.generateTextParticles();
+                    };
+                    p.generateTextParticles = () => {
+                        let testSize = 6;
+                        
+                        // Compute text scaling based on the inner visible container size
+                        let innerWidth = p.width - (padding * 2);
+                        let innerHeight = p.height - (padding * 2);
+
+                        let bounds = font.textBounds(siteName, 0, 0, testSize);
+                        let optimalSize = (innerWidth / bounds.w) * testSize;
+                        
+                        let testBoundsHeight = font.textBounds(siteName, 0, 0, optimalSize);
+                        if (testBoundsHeight.h > innerHeight) {
+                            optimalSize = (innerHeight / testBoundsHeight.h) * optimalSize;
+                        }
+
+                        let finalBounds = font.textBounds(siteName, 0, 0, optimalSize);
+                        
+                        // Centers the text coordinates mathematically inside the padded layer
+                        let x = (p.width / 2) - (finalBounds.w / 2) - finalBounds.x;
+                        let y = (p.height / 2) - (finalBounds.h / 2) - finalBounds.y;   
+                        
+                        let pts = font.textToPoints(siteName, x, y, optimalSize, { 
+                            sampleFactor: p.width > 600 ? 0.12 : 0.22 
+                        });
+
+                        // ADD THIS LOGIC HERE TO POPULATE THE ARRAY
+                        if (particles.length === 0) {
+                            for (let pt of pts) {
+                                particles.push(new Particle(p, pt.x, pt.y));
+                            }
+                        } else {
+                            let difference = pts.length - particles.length;
+                            if (difference > 0) {
+                                for (let i = 0; i < difference; i++) {
+                                    particles.push(new Particle(p, p.random(p.width), p.random(p.height)));
+                                }
+                            } else if (difference < 0) {
+                                particles.splice(pts.length);
+                            }
+                            for (let i = 0; i < pts.length; i++) {
+                                particles[i].target.set(pts[i].x, pts[i].y);
+                            }
+                        }
+                    }
+                    p.draw = () => {
+                        if(!firstFrame) {
+                            document.getElementById("loading").classList.add("hide");
+                            document.documentElement.classList.remove("no-scroll");
+                            document.body.classList.remove("no-scroll");
+                            firstFrame = true;
+                        }
+                        p.clear(); 
+                        for (let part of particles) {
+                            part.behaviors();
+                            part.update();
+                            part.show();
+                        }
+                    };
+                    class Particle {
+                        constructor(p, x, y) {
+                            this.p = p;
+                            this.pos = p.createVector(x, y);
+                            this.target = p.createVector(x, y);
+                            this.vel = p.createVector();
+                            this.acc = p.createVector();
+                            this.maxSpeed = 8;
+                            this.maxForce = 0.8;
+                        }
+                        behaviors() {
+                            let arrive = this.arrive(this.target);
+                            let mouse = this.p.createVector(this.p.mouseX, this.p.mouseY);
+                            let flee = this.flee(mouse);
+
+                            arrive.mult(1);
+                            flee.mult(6); 
+
+                            this.applyForce(arrive);
+                            this.applyForce(flee);
+                        }
+                        applyForce(f) {
+                            this.acc.add(f);
+                        }
+                        update() {
+                            this.pos.add(this.vel);
+                            this.vel.add(this.acc);
+                            this.acc.mult(0);
+                            this.vel.mult(0.93); 
+                        }
+                        show() {
+                            // Draw an outer, thicker, semi-transparent point first to act as the glow ring
+                            this.p.stroke(68, 215, 238, 50); // The '50' adds low opacity transparency
+                            this.p.strokeWeight(this.p.width > 600 ? 12 : 9); // Make it wide
+                            this.p.point(this.pos.x, this.pos.y);
+
+                            // Draw the bright, sharp core point directly over it
+                            this.p.stroke(68, 215, 238); // A slightly lighter/brighter core color makes the neon pop
+                            this.p.strokeWeight(this.p.width > 600 ? 4 : 2.5); 
+                            this.p.point(this.pos.x, this.pos.y);
+                        }
+                        arrive(target) {
+                            let desired = p5.Vector.sub(target, this.pos);
+                            let d = desired.mag();
+                            let speed = this.maxSpeed;
+                            if (d < 100) {
+                                speed = this.p.map(d, 0, 100, 0, this.maxSpeed);
+                            }
+                            desired.setMag(speed);
+                            let steer = p5.Vector.sub(desired, this.vel);
+                            steer.limit(this.maxForce);
+                            return steer;
+                        }
+                        flee(target) {
+                            let desired = p5.Vector.sub(target, this.pos);
+                            let d = desired.mag();
+                            if (d < 80) { 
+                                desired.setMag(this.maxSpeed * 1.5);
+                                desired.mult(-1);
+                                let steer = p5.Vector.sub(desired, this.vel);
+                                steer.limit(this.maxForce * 1.5);
+                                return steer;
+                            } else {
+                                return this.p.createVector(0, 0);
+                            }
+                        }
+                    }
+                };
+                new p5(logoSketch);
+            </script>
+            <div class="call-to-action">
+                <a class="secondary" href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M189-160q-60 0-102.5-43T42-307q0-9 1-18t3-18l84-336q14-54 57-87.5t98-33.5h390q55 0 98 33.5t57 87.5l84 336q2 9 3.5 18.5T919-306q0 61-43.5 103.5T771-160q-42 0-78-22t-54-60l-28-58q-5-10-15-15t-21-5H385q-11 0-21 5t-15 15l-28 58q-18 38-54 60t-78 22Zm379.5-371.5Q580-543 580-560t-11.5-28.5Q557-600 540-600t-28.5 11.5Q500-577 500-560t11.5 28.5Q523-520 540-520t28.5-11.5Zm80-80Q660-623 660-640t-11.5-28.5Q637-680 620-680t-28.5 11.5Q580-657 580-640t11.5 28.5Q603-600 620-600t28.5-11.5Zm0 160Q660-463 660-480t-11.5-28.5Q637-520 620-520t-28.5 11.5Q580-497 580-480t11.5 28.5Q603-440 620-440t28.5-11.5Zm80-80Q740-543 740-560t-11.5-28.5Q717-600 700-600t-28.5 11.5Q660-577 660-560t11.5 28.5Q683-520 700-520t28.5-11.5Zm-367 63Q370-477 370-490v-40h40q13 0 21.5-8.5T440-560q0-13-8.5-21.5T410-590h-40v-40q0-13-8.5-21.5T340-660q-13 0-21.5 8.5T310-630v40h-40q-13 0-21.5 8.5T240-560q0 13 8.5 21.5T270-530h40v40q0 13 8.5 21.5T340-460q13 0 21.5-8.5Z"/></svg>
+                    Play
+                </a>
+            </div>
+        </div>
+    </header>
+</body>
+</html>

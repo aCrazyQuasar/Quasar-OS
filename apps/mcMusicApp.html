@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft MIDI Visualizer 3D</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi@2.0.28/build/Midi.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #0b0e14; font-family: system-ui, sans-serif; }
+        canvas { display: block; }
+    </style>
+</head>
+<body class="text-white select-none">
+
+    <div class="absolute top-0 left-0 z-10 p-6 bg-slate-900/90 backdrop-blur-md m-4 rounded-xl border border-slate-700/50 shadow-2xl max-w-sm">
+        <h1 class="text-xl font-mono text-green-400 mb-2 flex items-center gap-2 font-bold">
+            ⛏️ CraftNotes 3D
+        </h1>
+        <p class="text-xs text-slate-400 mb-4">Upload a .mid file to watch a stream of glowing note blocks drop onto the playhead.</p>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Load MIDI File</label>
+                <input type="file" id="midi-upload" accept=".mid,.midi" 
+                    class="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-green-600 file:text-white hover:file:bg-green-500 cursor-pointer bg-slate-800 rounded-md border border-slate-700 p-1"/>
+            </div>
+
+            <div class="flex gap-2">
+                <button id="btn-play" disabled class="flex-1 py-2 px-3 bg-slate-800 text-slate-500 text-sm font-medium rounded-md cursor-not-allowed transition">
+                    Play
+                </button>
+                <button id="btn-pause" disabled class="flex-1 py-2 px-3 bg-slate-800 text-slate-500 text-sm font-medium rounded-md cursor-not-allowed transition">
+                    Pause
+                </button>
+            </div>
+
+            <div class="text-xs text-slate-400 flex justify-between items-center bg-slate-950 p-2 rounded border border-slate-800">
+                <span>Status:</span>
+                <span id="status-text" class="text-amber-400 font-medium">Awaiting File Selection...</span>
+            </div>
+            
+            <div class="text-[11px] text-slate-500 space-y-1 pt-2 border-t border-slate-800 font-mono">
+                <div>🟥 Red/Orange = Bass Tones</div>
+                <div>🟩 Green/Cyan = Mid Melodies</div>
+                <div>🟦 Blue/Purple = High Leads</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="canvas-container" class="w-full h-screen"></div>
+
+    <script>
+        // --- Core Application State ---
+        let activeNotes = [];
+        let playedNoteIds = new Set();
+        let isPlaying = false;
+        let startTime = 0;
+        let pauseTime = 0;
+
+        // Three.js Scene Variables
+        let scene, camera, renderer, composer;
+        let noteMeshes = [];
+        let particleSystem, particleGeometry;
+        const MAX_PARTICLES = 800;
+        let particleData = [];
+
+        // DOM Element Cache
+        const uploadInput = document.getElementById('midi-upload');
+        const playBtn = document.getElementById('btn-play');
+        const pauseBtn = document.getElementById('btn-pause');
+        const statusText = document.getElementById('status-text');
+
+        // --- Audio Pipeline (Synth tuned to sound like retro 8-bit Note Blocks) ---
+        const synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "triangle" },
+            envelope: { attack: 0.002, decay: 0.12, sustain: 0, release: 0.1 }
+        });
+        const filter = new Tone.Filter(1800, "lowpass");
+        synth.chain(filter, Tone.Destination);
+
+        // --- Set Up 3D WebGL World ---
+        function init3D() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0b0e14, 0.012);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 14, 22);
+            camera.lookAt(0, -1, -4);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Ambience & Lights
+            scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+            const sun = new THREE.DirectionalLight(0xffffff, 0.85);
+            sun.position.set(10, 25, 10);
+            scene.add(sun);
+
+            // Horizontal Hit Line / Alignment Tracker
+            const lineGeo = new THREE.BoxGeometry(50, 0.15, 0.15);
+            const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 });
+            const playLine = new THREE.Mesh(lineGeo, lineMat);
+            playLine.position.set(0, 0, 0);
+            scene.add(playLine);
+
+            setupBackgroundStars();
+            setupParticleSystem();
+
+            // Set up Glow Post-Processing (Unreal Bloom)
+            const renderPass = new THREE.RenderPass(scene, camera);
+            const bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight), 
+                1.4,  // Intensity
+                0.35, // Radius
+                0.15  // Threshold
+            );
+            
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderPass);
+            composer.addPass(bloomPass);
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function setupBackgroundStars() {
+            const starGeo = new THREE.BufferGeometry();
+            const count = 250;
+            const positions = new Float32Array(count * 3);
+
+            for(let i=0; i<count*3; i+=3) {
+                positions[i] = (Math.random() - 0.5) * 70;
+                positions[i+1] = Math.random() * 25;
+                positions[i+2] = (Math.random() - 0.5) * 90;
+            }
+            starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const starMat = new THREE.PointsMaterial({color: 0x77ccff, size: 0.12, transparent: true, opacity: 0.5});
+            scene.add(new THREE.Points(starGeo, starMat));
+        }
+
+        function setupParticleSystem() {
+            particleGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(MAX_PARTICLES * 3);
+            const colors = new Float32Array(MAX_PARTICLES * 3);
+            
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const pMat = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending
+            });
+
+            particleSystem = new THREE.Points(particleGeometry, pMat);
+            scene.add(particleSystem);
+
+            for(let i=0; i<MAX_PARTICLES; i++) {
+                particleData.push({
+                    velocity: new THREE.Vector3(),
+                    life: 0,
+                    maxLife: 1
+                });
+            }
+        }
+
+        function emitNoteParticles(x, colorHex) {
+            const targetColor = new THREE.Color(colorHex);
+            let countTriggered = 0;
+
+            for(let i=0; i<MAX_PARTICLES; i++) {
+                if(particleData[i].life <= 0) {
+                    const posArr = particleGeometry.attributes.position.array;
+                    const colArr = particleGeometry.attributes.color.array;
+
+                    posArr[i*3] = x + (Math.random() - 0.5) * 0.4;
+                    posArr[i*3+1] = 0;
+                    posArr[i*3+2] = 0;
+
+                    colArr[i*3] = targetColor.r;
+                    colArr[i*3+1] = targetColor.g;
+                    colArr[i*3+2] = targetColor.b;
+
+                    particleData[i].velocity.set(
+                        (Math.random() - 0.5) * 0.18,
+                        Math.random() * 0.15 + 0.08,
+                        (Math.random() - 0.5) * 0.18
+                    );
+                    particleData[i].life = 1.0;
+                    particleData[i].maxLife = 25 + Math.random() * 20;
+
+                    countTriggered++;
+                    if(countTriggered > 12) break; // Number of particles per cube pop
+                }
+            }
+            particleGeometry.attributes.position.needsUpdate = true;
+            particleGeometry.attributes.color.needsUpdate = true;
+        }
+
+        // --- Bulletproof Native File Ingestion Pipeline ---
+uploadInput.addEventListener('change', function() {
+    const fileInput = document.getElementById('midi-upload');
+    
+    // 1. Structural verify on the DOM array
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        statusText.innerText = "No file selected.";
+        statusText.className = "text-amber-400 font-medium";
+        return;
+    }
+
+    const targetFile = fileInput.files;
+
+    // 2. Secondary layer check
+    if (!targetFile) {
+        statusText.innerText = "File reference lost.";
+        statusText.className = "text-amber-400 font-medium";
+        return;
+    }
+
+    statusText.innerText = "Parsing Track...";
+    statusText.className = "text-amber-400 font-medium";
+
+    const reader = new FileReader();
+    
+    reader.onload = function(event) {
+        try {
+            if (!event || !event.target || !event.target.result) {
+                throw new Error("File buffer empty");
+            }
+            
+            const parsedMidi = new Midi(event.target.result);
+            loadMidiToScene(parsedMidi);
+            
+            statusText.innerText = "Ready to Play!";
+            statusText.className = "text-green-400 font-medium";
+            
+            playBtn.disabled = false;
+            playBtn.className = "flex-1 py-2 px-3 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-md transition cursor-pointer shadow";
+        } catch (err) {
+            console.error("MIDI Ingestion Failure:", err);
+            statusText.innerText = "Error parsing file format.";
+            statusText.className = "text-red-500 font-medium";
+        }
+    };
+
+    // 3. THE ABSOLUTE GUARD: This makes it physically impossible for the browser 
+    // to pass an undefined parameter into readAsArrayBuffer.
+    if (targetFile && (targetFile instanceof Blob || targetFile instanceof File)) {
+        reader.readAsArrayBuffer(targetFile);
+    } else {
+        statusText.innerText = "Invalid file type detected.";
+        statusText.className = "text-red-500 font-medium";
+    }
+});
+
+        function loadMidiToScene(midi) {
+            // Cleanup current objects completely
+            noteMeshes.forEach(m => scene.remove(m.mesh));
+            noteMeshes = [];
+            playedNoteIds.clear();
+            activeNotes = [];
+            isPlaying = false;
+            pauseTime = 0;
+
+            let idTrack = 0;
+            midi.tracks.forEach(track => {
+                track.notes.forEach(note => {
+                    activeNotes.push({
+                        id: idTrack++,
+                        pitch: note.midi,
+                        name: note.name,
+                        time: note.time,
+                        duration: note.duration,
+                        velocity: note.velocity
+                    });
+                });
+            });
+
+            // Sort by timeline sequence execution
+            activeNotes.sort((a, b) => a.time - b.time);
+
+            // Standardize block size
+            const geometry = new THREE.BoxGeometry(0.75, 0.75, 1);
+
+            activeNotes.forEach(note => {
+                // Scale pitch to a standard 0.0 - 1.0 hue mapping range
+                const hue = THREE.MathUtils.mapLinear(note.pitch, 24, 100, 0, 1);
+                const color = new THREE.Color().setHSL(hue, 0.9, 0.5);
+                
+                const material = new THREE.MeshStandardMaterial({
+                    color: color,
+                    roughness: 0.15,
+                    emissive: color,
+                    emissiveIntensity: 0.45
+                });
+
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                // Map keyboard layout coordinates across the landscape X axis
+                const xPos = (note.pitch - 64) * 0.65;
+                // Scale structural block length to represent note duration time values
+                mesh.scale.z = Math.max(note.duration * 4, 0.75);
+                
+                // Track timeline location mapping back down the Z axis
+                const zPos = -(note.time * 14) - (mesh.scale.z / 2);
+                mesh.position.set(xPos, 0, zPos);
+
+                scene.add(mesh);
+                noteMeshes.push({
+                    note: note,
+                    mesh: mesh,
+                    colorHex: color.getHex(),
+                    initialZ: zPos
+                });
+            });
+        }
+
+        // --- Core Application Input Routing Loop ---
+        playBtn.addEventListener('click', async () => {
+            if (isPlaying) return;
+            
+            // Wake up web audio standard components cleanly inside click scope
+            if (Tone.context.state !== 'running') {
+                await Tone.context.resume();
+            }
+            await Tone.start();
+            
+            isPlaying = true;
+            startTime = performance.now() - pauseTime;
+
+            playBtn.disabled = true;
+            playBtn.className = "flex-1 py-2 px-3 bg-slate-800 text-slate-500 text-sm font-medium rounded-md cursor-not-allowed transition";
+            pauseBtn.disabled = false;
+            pauseBtn.className = "flex-1 py-2 px-3 bg-amber-600 hover:bg-amber-500 text-white text-sm font-medium rounded-md transition cursor-pointer shadow";
+            statusText.innerText = "Playing...";
+            statusText.className = "text-emerald-400 font-medium animate-pulse";
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            if (!isPlaying) return;
+            isPlaying = false;
+            pauseTime = performance.now() - startTime;
+
+            pauseBtn.disabled = true;
+            pauseBtn.className = "flex-1 py-2 px-3 bg-slate-800 text-slate-500 text-sm font-medium rounded-md cursor-not-allowed transition";
+            playBtn.disabled = false;
+            playBtn.className = "flex-1 py-2 px-3 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-md transition cursor-pointer shadow";
+            statusText.innerText = "Paused Track";
+            statusText.className = "text-amber-400 font-medium";
+        });
+
+        // --- Visual Framework Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const currentTimeSec = isPlaying ? ((performance.now() - startTime) / 1000) : (pauseTime / 1000);
+
+            let trackingCamX = 0;
+            let totalTrackedCubes = 0;
+
+            noteMeshes.forEach(item => {
+                // Move note blocks down the timeline tracking track line at 14 units per second
+                const currentZ = item.initialZ + (currentTimeSec * 14);
+                item.mesh.position.z = currentZ;
+
+                // Fire note execution logic when block crosses the 0 index threshold line
+                if (currentZ >= -0.4 && !playedNoteIds.has(item.note.id)) {
+                    if (isPlaying) {
+                        synth.triggerAttackRelease(item.note.name, item.note.duration, Tone.now(), item.note.velocity);
+                        emitNoteParticles(item.mesh.position.x, item.colorHex);
+                    }
+                    playedNoteIds.add(item.note.id);
+                }
+
+                // Performance optimization boundary filters (Phase 17)
+                if (currentZ > 6 || currentZ < -75) {
+                    item.mesh.visible = false;
+                } else {
+                    item.mesh.visible = true;
+                    // Gather coordinates for camera tracking engine logic
+                    if (currentZ > -12 && currentZ < 0) {
+                        trackingCamX += item.mesh.position.x;
+                        totalTrackedCubes++;
+                    }
+                }
+            });
+
+            // Fluid Camera Track Mapping (Phase 12)
+            if (totalTrackedCubes > 0) {
+                const centerTargetX = (trackingCamX / totalTrackedCubes) * 0.45;
+                camera.position.x = THREE.MathUtils.lerp(camera.position.x, centerTargetX, 0.04);
+            } else {
+                camera.position.x = THREE.MathUtils.lerp(camera.position.x, 0, 0.01);
+            }
+
+            // Real-time Particle Particle Simulation
+            const posArr = particleGeometry.attributes.position.array;
+            for(let i = 0; i < MAX_PARTICLES; i++) {
+                if(particleData[i].life > 0) {
+                    posArr[i*3] += particleData[i].velocity.x;
+                    posArr[i*3+1] += particleData[i].velocity.y;
+                    posArr[i*3+2] += particleData[i].velocity.z;
+
+                    particleData[i].velocity.y -= 0.0045; // Gravity pull constant
+                    particleData[i].life -= 1 / particleData[i].maxLife;
+                } else {
+                    posArr[i*3+1] = -999; // Drop dead elements out of view
+                }
+            }
+            particleGeometry.attributes.position.needsUpdate = true;
+
+            composer.render();
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Initialize Engine
+        init3D();
+        animate();
+    </script>
+</body>
+</html>

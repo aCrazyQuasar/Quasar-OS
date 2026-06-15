@@ -1,0 +1,7 @@
+main{
+    background-color: var(--surface-color);
+}
+.grid-card{
+    background-color: var(--base-color);
+    border-radius: 3px;
+}
