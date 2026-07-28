@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght=300;400;600&display=swap');
+        body {
+            font-family: 'Exo 2', sans-serif;
+            color: #ffffff;
+            background: rgba(15, 12, 30, 0.6);
+            margin: 0;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        h2 { margin-top: 0; font-size: 1.4rem; color: #8ed8ff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        .section { margin-bottom: 1.5rem; }
+        .label { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; display: block; font-weight: 600; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; }
+        .wallpaper-thumb {
+            aspect-ratio: 16/9;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .wallpaper-thumb:hover { transform: scale(1.05); }
+        .wallpaper-thumb.active { border-color: #8ed8ff; }
+        
+        .input-group { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+        input[type="text"] {
+            flex-grow: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            color: white;
+            font-family: inherit;
+        }
+        input[type="text"]:focus { outline: none; border-color: #8ed8ff; }
+        
+        .file-upload-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .file-label:hover {
+            background: rgba(142, 216, 255, 0.1);
+            border-color: #8ed8ff;
+        }
+        input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        button {
+            background: rgba(142, 216, 255, 0.2);
+            border: 1px solid rgba(142, 216, 255, 0.4);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: background 0.2;
+        }
+        button:hover { background: rgba(142, 216, 255, 0.4); }
+    </style>
+</head>
+<body>
+    <h2>Personalization</h2>
+    
+    <div class="section">
+        <span class="label">System Wallpapers</span>
+        <div class="grid">
+            <div class="wallpaper-thumb active" style="background-image: url('https://www.quantamagazine.org/wp-content/uploads/2018/11/ChangingQuasar_2880x1800-1720x1075.jpg');" onclick="changeBg(this, 'https://www.quantamagazine.org/wp-content/uploads/2018/11/ChangingQuasar_2880x1800-1720x1075.jpg')"></div>
+            <div class="wallpaper-thumb" style="background-image: url('https://cdn.esahubble.org/archives/images/newsfeature/heic1902a.jpg');" onclick="changeBg(this, 'https://cdn.esahubble.org/archives/images/newsfeature/heic1902a.jpg')"></div>
+            <div class="wallpaper-thumb" style="background-image: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=1000');" onclick="changeBg(this, 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=1000')"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <span class="label">Custom Wallpaper URL</span>
+        <div class="input-group">
+            <input type="text" id="custom-url" placeholder="Paste image link here...">
+            <button onclick="applyCustomBg()">Apply</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <span class="label">Upload From Local Storage</span>
+        <div class="file-upload-wrapper">
+            <div class="file-label">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 20px" width="20px" fill="currentColor"><path d="M440-200h80v-167l64 64 56-57-160-160-160 160 56 57 64-64v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0-33-23.5-56.5T720-80H240Zm280-560v-160H240v640h480v-480H520ZM240-800v160-160 640-640Z"/></svg>
+                Choose or drop an image...
+            </div>
+            <input type="file" id="file-input" accept="image/*" onchange="handleFileUpload(this)">
+        </div>
+    </div>
+
+    <div class="section">
+        <span class="label">System Username</span>
+        <div class="input-group">
+            <input type="text" id="username-input">
+        </div>
+    </div>
+
+    <script>
+        function changeBg(el, url) {
+            if(el) {
+                document.querySelectorAll('.wallpaper-thumb').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+            }
+            if(window.parent) {
+                const bgImg = window.parent.document.querySelector('.bg-img');
+                if(bgImg) bgImg.src = url;
+            }
+        }
+        function applyCustomBg() {
+            const url = document.getElementById('custom-url').value.trim();
+            if(url) {
+                changeBg(null, url);
+            }
+        }
+        function handleFileUpload(input) {
+            const file = input.files;
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    changeBg(null, e.target.result);
+                    document.querySelectorAll('.wallpaper-thumb').forEach(t => t.classList.remove('active'));
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>

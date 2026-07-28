@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;800&display=swap');
+        body {
+            font-family: 'Exo 2', sans-serif;
+            color: #ffffff;
+            background: rgba(12, 10, 28, 0.8);
+            margin: 0;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+        .builder-card {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            color: #8ed8ff;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+        }
+        .file-upload-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        .file-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        .file-upload-wrapper:hover .file-label {
+            background: rgba(142, 216, 255, 0.08);
+            border-color: #8ed8ff;
+            color: #ffffff;
+        }
+        input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+        <div class="builder-card">
+            <h2>App Builder</h2>
+            <div class="file-upload-wrapper">
+                <div class="file-label">Upload Files</div>
+                <input type="file">
+            </div>
+        </div>
+</body>
+</html>

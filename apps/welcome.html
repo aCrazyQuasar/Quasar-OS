@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;800&display=swap');
+        body {
+            font-family: 'Exo 2', sans-serif;
+            color: #ffffff;
+            background-color: #02040a;
+            margin: 0;
+            padding: 2rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-sizing: border-box;
+            position: relative;
+            user-select: none;
+        }
+        #welcome-quasar {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                rgba(90, 180, 255, 0.25),
+                rgba(90, 180, 255, 0.12) 25%,
+                rgba(90, 180, 255, 0.04) 45%,
+                transparent 70%
+            );
+            filter: blur(50px);
+            animation: breathe 8s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        @keyframes breathe {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+        #welcome-stars {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        #welcome-stars .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: .5;
+            animation: twinkle linear infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: .15; }
+            50% { opacity: .8; }
+        }
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 450px;
+        }
+        h1 {
+            color: #8ed8ff;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            margin: 0 0 0.5rem 0;
+            text-shadow: 0 0 15px rgba(142,216,255,.35);
+        }
+        p {
+            color: rgba(180, 220, 255, 0.8);
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            line-height: 1.6;
+            margin: 0 0 2rem 0;
+        }
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            color: #d7f4ff;
+        }
+        .feature-item svg {
+            flex-shrink: 0;
+            fill: #8ed8ff;
+        }
+        button {
+            background: rgba(30, 80, 160, 0.3);
+            border: 1px solid rgba(120, 220, 255, 0.4);
+            color: #d7f4ff;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(100,180,255,0.1);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            border-color: rgba(120, 220, 255, 0.8);
+            box-shadow: 0 0 25px rgba(100,180,255,0.3);
+            background: rgba(30, 80, 160, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-stars"></div>
+    <div id="welcome-quasar"></div>
+
+    <div class="content">
+        <h1>Welcome</h1>
+        <p>Explore a minimalist Web OS built entirely inside a single sandboxed ecosystem.</p>
+        
+        <div class="features">
+            <div class="feature-item">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 20px" width="20px"><path d="M160-160v-320h160v320H160Zm240 0v-640h160v640H400Zm240 0v-440h160v440H640Z"/></svg>
+                <span>High-performance canvas apps loaded via jsDelivr CDN binding.</span>
+            </div>
+            <div class="feature-item">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 20px" width="20px"><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5t1-13.5L78-585l110-190 119 50q11-8 23-15t24.5-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5t-1 13.5l103 78-110 190-119-50q-11 8-23 15t-24.5 12L590-80H370Z"/></svg>
+                <span>Fully customizable, add you own apps!</span>
+            </div>
+        </div>
+
+        <button onclick="closeWelcome()">GET STARTED</button>
+    </div>
+
+    <script>
+        const stars = document.getElementById("welcome-stars");
+        for(let i=0; i<60; i++){
+            const s = document.createElement("div");
+            s.className = "star";
+            const size = Math.random() * 2 + 0.5;
+            s.style.width = size+"px";
+            s.style.height = size+"px";
+            s.style.left = Math.random()*100+"%";
+            s.style.top = Math.random()*100+"%";
+            s.style.animationDuration = (2 + Math.random()*6) + "s";
+            s.style.animationDelay = (-Math.random()*8) + "s";
+            stars.appendChild(s);
+        }
+
+        function closeWelcome() {
+            if(window.parent) {
+                const currentFrame = window.frameElement;
+                if(currentFrame && currentFrame.closest('.window')) {
+                    currentFrame.closest('.window').remove();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

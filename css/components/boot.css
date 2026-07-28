@@ -1,0 +1,122 @@
+#boot-screen{
+    background-color: #02040a;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    user-select: none;
+    z-index: 99999999999999;
+}
+#boot-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem
+}
+#boot-star-canvas{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+#boot-quasar{
+    position: fixed;
+    width:900px;
+    height:900px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:
+        radial-gradient(
+            circle,
+            rgba(90,180,255,.30),
+            rgba(90,180,255,.15) 25%,
+            rgba(90,180,255,.05) 45%,
+            transparent 70%
+        );
+    filter:blur(80px);
+    animation:breathe 10s ease-in-out infinite;
+}
+@keyframes breathe{
+    0%,100%{transform: translate(-50%,-50%) scale(1);}
+    50%{transform: translate(-50%,-50%) scale(1.08);}
+}
+#boot-logo{
+    color:#8ed8ff;
+    position: relative;
+    font-size: clamp(64px,10vw,120px);
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    font-family: "Exo 2", monospace, system-ui;
+    text-shadow: 0 0 15px rgba(142,216,255,.35), 0 0 40px rgba(142,216,255,.15);
+    animation: logoAppear 2s ease forwards, logoPulse 7s ease-in-out infinite 2s;
+}
+@keyframes logoAppear{
+    from{
+        opacity:0;
+        transform: translateY(20px) scale(.97);
+        filter:blur(8px);
+    }
+    to{
+        opacity:1;
+        transform: translateY(0) scale(1);
+        filter:blur(0);
+    }
+}
+@keyframes logoPulse{
+    0%,100%{text-shadow: 0 0 15px rgba(142,216,255,.35), 0 0 40px rgba(142,216,255,.15);}
+    50%{text-shadow: 0 0 20px rgba(142,216,255,.5), 0 0 60px rgba(142,216,255,.2);}
+}
+#boot-subtitle{
+    color: rgba(180,220,255,.75);
+    letter-spacing: 0.4em;
+    text-transform:uppercase;
+    font-size: 0.8rem;
+    opacity: 0;
+    font-family: "Exo 2", monospace, system-ui;
+    animation: fadeIn 2s ease 1.2s forwards;
+}
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+#boot-launch{
+    margin-top: 10px;
+    padding: 16px 46px;
+    border-radius: 16px;
+    border: 1px solid rgba(120,220,255,.35);
+    background: rgba(30,80,160,.12);
+    color: #d7f4ff;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: .15em;
+    cursor:pointer;
+    font-family: "Exo 2", monospace, system-ui;
+    backdrop-filter:blur(20px);
+    box-shadow: 0 0 20px rgba(100,180,255,.12);
+    transition: 0.15s ease;
+    width: max-content;
+}
+#boot-launch:hover{
+    transform:translateY(-2px);
+    border-color: rgba(120,220,255,.7);
+    box-shadow: 0 0 30px rgba(100,180,255,.25);
+}
+#boot-launch:active{transform:translateY(0);}
