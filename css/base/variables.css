@@ -1,8 +1,22 @@
 :root{
-    --base-color: #0d1530;
-    --surface-color: #18206F;
+    /* Feedback Colors */
+    --success-color: #22C55E;
+    --success-light: #86EFAC;
+    --success-dark: #15803D;
+    --success-bg: rgba(34, 197, 94, 0.12);
 
-    --brand-color: #36dac9;
+    --warning-color: #F59E0B;
+    --warning-light: #FCD34D;
+    --warning-dark: #B45309;
+    --warning-bg: rgba(245, 158, 11, 0.12);
 
-    --text-color: #D8DCFF;
+    --error-color: #EF4444;
+    --error-light: #FCA5A5;
+    --error-dark: #B91C1C;
+    --error-bg: rgba(239, 68, 68, 0.12);
+
+    --info-color: #3B82F6;
+    --info-light: #93C5FD;
+    --info-dark: #1D4ED8;
+    --info-bg: rgba(59, 130, 246, 0.12);
 }
