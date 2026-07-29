@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quasar Chat</title>
+
+    <!-- CDN Import -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <button id="create-room-btn">Create Room</button>
+    <span id="room-code"></span>
+    <hr>
+    <form id="join-form">
+        <input type="text" placeholder="Join Code" id="join-code" required>
+        <button type="submit">Join</button>
+    </form>
+    <message-box>
+        <message-bubble>
+            <h3>Username</h3>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat cupiditate inventore adipisci omnis, dolores placeat necessitatibus ratione accusantium accusamus sit libero explicabo ipsa, incidunt repellendus obcaecati quasi qui architecto delectus.</p>
+        </message-bubble>
+    </message-box>
+    <form id="send-message-form">
+        <input type="text" placeholder="Type your message..." id="send-message">
+        <button type="submit">
+            Send
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg>
+        </button>
+    </form>
+
+    <!-- Username Mgr -->
+    <script>
+        let USERNAME = "user";
+        for(let i = 0; i < 6; i++) {
+            USERNAME += String(Math.floor(Math.random() * 10));
+        }
+    </script>
+
+    <!-- Useful js -->
+    <script>
+        function addMessageToDOM(type, username, text) {
+            const messageBox = document.querySelector('message-box');
+            const bubble = document.createElement('message-bubble');
+
+            if(type === 'MESSAGE') {
+                const h3 = document.createElement('h3');
+                h3.textContent = username;
+                bubble.appendChild(h3);
+                bubble.classList.add('message');
+            } else {
+                if(type === 'INFO') {
+                    bubble.classList.add('info');
+                }
+            }
+
+            const p = document.createElement('p');
+            p.textContent = text;
+            
+            bubble.appendChild(p);
+            messageBox.appendChild(bubble);
+
+            messageBox.scrollTop = messageBox.scrollHeight;
+        }
+    </script>
+
+    <!-- Create Room -->
+    <script>
+        let connectedPeers = {};
+
+        const createRoomBtn = document.getElementById('create-room-btn');
+        createRoomBtn.addEventListener("click", () => {
+            // Genertae room code
+            const codeOutput = document.getElementById('room-code');
+            let roomCode = "Q";
+            for( let i = 0; i < 6; i++) {
+                roomCode += String(Math.floor(Math.random() * 10));
+            }
+            codeOutput.innerText = roomCode;
+
+            // Peer connection headache
+            const peer = new Peer(roomCode);
+
+            peer.on('open', (id) => {
+                console.log('Room created successfully with ID:', id);
+            });
+
+            peer.on('connection', (conn) => {
+                // Save the connection using the guest's Peer ID
+                connectedPeers[conn.peer] = conn;
+                console.log(`Guest connected! ID: ${conn.peer}`);
+
+                // sending data
+                const sendMsgForm = document.getElementById('send-message-form');
+                sendMsgForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const msg = document.getElementById('send-message').value;
+                    broadcastMessage('MESSAGE', USERNAME, msg);
+                    sendMsgForm.reset();
+                });
+
+                // recie=vireing data
+                conn.on('data', (data) => {
+                    console.log(`Received from ${conn.peer}:`, data);
+                    broadcastMessage(data.type, data.username, data.message);
+                });
+
+                // Remove the guest if they close the tab/disconnect
+                conn.on('close', () => {
+                    delete connectedPeers[conn.peer];
+                    console.log(`Guest disconnected: ${conn.peer}`);
+                });
+            });
+
+            peer.on('error', (err) => {
+                console.error('Peer connection error:', err);
+            });
+        });
+
+        function broadcastMessage(type, user, msg) {
+            Object.values(connectedPeers).forEach(conn => {
+                if (conn.open) {
+                    conn.send({
+                        type: type,
+                        username: user,
+                        message: msg
+                    });
+                }
+            });
+            addMessageToDOM(user, msg);
+        }
+    </script>
+
+    <!-- Join Room -->
+    <script>
+        const joinForm = document.getElementById('join-form');
+        joinForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const joinCode = document.getElementById('join-code').value.trim();
+
+            const peer = new Peer();
+            peer.on('open', (id) => {
+                console.log('User initialized with ID:', id);
+
+                const conn = peer.connect(joinCode);
+
+                conn.on('open', () => {
+                    console.log('Successfully connected to host!');
+                    conn.send({
+                        type: "INFO",
+                        username: USERNAME,
+                        message: `${USERNAME} has joined.`
+                    });
+
+                    // Sending Messages
+                    const sendMsgForm = document.getElementById('send-message-form');
+                    sendMsgForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const msg = document.getElementById('send-message').value;
+                        conn.send({
+                            type: "MESSAGE",
+                            username: USERNAME,
+                            message: msg
+                        });
+                        sendMsgForm.reset();
+                    });
+
+                    // Reciving Messages
+                    conn.on('data', (data) => {
+                        addMessageToDOM(data.username, data.message);
+                    });
+                });
+
+                conn.on('error', (err) => {
+                    console.error('Connection error:', err);
+                });
+            });
+            peer.on('error', (err) => {
+                console.error('Guest peer error:', err);
+            });
+        });
+    </script>
+</body>
+</html>
