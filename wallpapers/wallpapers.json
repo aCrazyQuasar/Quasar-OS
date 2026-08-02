@@ -35,6 +35,12 @@
       "name": "Floating Boxes",
       "filePath": "/wallpapers/floatingBoxes.js",
       "objectName": "FloatingBoxesWallpaper"
+    },
+    {
+        "id": "python-terminal",
+        "name": "Python Terminal",
+        "filePath": "/wallpapers/pythonTerminal.js",
+        "objectName": "PythonTerminalWallpaper"
     }
   ]
 }
