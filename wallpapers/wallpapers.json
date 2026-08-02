@@ -41,6 +41,12 @@
         "name": "Python Terminal",
         "filePath": "/wallpapers/pythonTerminal.js",
         "objectName": "PythonTerminalWallpaper"
+    },
+    {
+      "id":"rain",
+      "name": "Rain",
+      "filePath": "/wallpapers/rain.js",
+      "objectName": "RainWallpaper"
     }
   ]
 }
