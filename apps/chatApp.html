@@ -7,31 +7,273 @@
 
     <!-- CDN Import -->
     <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/quantum.js"></script>
+
+    <!-- CSS -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            color: white;
+            scrollbar-width: 0;
+            -ms-overflow-style: none;
+        }
+        *::-webkit-scrollbar {
+            display: none;
+        }
+        .load-screen{
+            position: fixed; 
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-direction: column;
+            background-color: #10002790;
+            backdrop-filter: blur(10px);
+            user-select: none;
+            z-index: 9999;
+
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .load-screen.hidden{
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .load-screen h1{
+            font-size: 4rem;
+            color: #4294ff;
+            text-shadow: 0 0 10px #4294ff;
+        }
+        #starfield{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -10;
+        }
+       body {
+            position: relative;
+            min-height: 100vh;
+            min-height: 100dvh; /* Mobile viewport fix */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        section {
+            position: absolute; /* Stack sections on top of each other */
+            width: 100%;
+            max-width: 480px;
+            
+            /* Active State (Visible) */
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.4s ease;
+        }
+        section.hidden {
+            display: block !important; /* Override standard display:none */
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none; /* Prevents clicking on hidden forms */
+            transform: translateY(30px) scale(0.95); /* Slides down and shrinks slightly */
+        }
+
+        .card {
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            padding: clamp(1.25rem, 5vw, 2.5rem);
+
+            background: rgba(22, 10, 45, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            
+            border: 1px solid rgba(138, 115, 254, 0.25);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+            text-wrap: balance;
+            overflow-y: auto;
+        }
+       .card h1 {
+            font-size: clamp(2rem, 8vw, 3rem);
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+        .card h2 {
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .card p {
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            opacity: 0.9;
+        }
+        .card .container{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.25rem;
+            flex-direction: column;
+        }
+        hr {
+            width: 100%;
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(138, 115, 254, 0.3), transparent);
+            margin: 0.25rem 0;
+        }
+
+        /* Form & Controls Layout */
+        #join-form, #send-message-form {
+            width: 100%;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(138, 115, 254, 0.3);
+            background: rgba(15, 5, 30, 0.6);
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #8a73fe;
+            box-shadow: 0 0 12px rgba(138, 115, 254, 0.4);
+            background: rgba(15, 5, 30, 0.8);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Buttons */
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #create-room-btn {
+            width: 100%;
+        }
+
+        #room-code-container{
+            box-sizing: border-box;
+            border: 1px solid #8a73fe40;
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #room-code {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #a78bfa;
+            min-height: 1.5rem;
+        }
+    </style>
 </head>
 <body>
-    <button id="create-room-btn">Create Room</button>
-    <span id="room-code"></span>
-    <hr>
-    <form id="join-form">
-        <input type="text" placeholder="Join Code" id="join-code" required>
-        <button type="submit">Join</button>
-    </form>
-    <message-box>
-        <message-bubble>
-            <h3>Username</h3>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat cupiditate inventore adipisci omnis, dolores placeat necessitatibus ratione accusantium accusamus sit libero explicabo ipsa, incidunt repellendus obcaecati quasi qui architecto delectus.</p>
-        </message-bubble>
-    </message-box>
-    <form id="send-message-form">
-        <input type="text" placeholder="Type your message..." id="send-message">
-        <button type="submit">
-            Send
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg>
-        </button>
-    </form>
+    <div class="load-screen hidden" id="ldr-screen">
+        <h1>Loading...</h1>
+        <l-quantum
+            size="200"
+            speed="1.75"
+            color="#4294ff">
+        </l-quantum>
+    </div>
+    <canvas id="starfield"></canvas>
+    <section id="start">
+        <div class="card">
+            <h1>Welcome to Quasar Chat</h1>
+            <p>Your squad. Your space. Instant private chatrooms created in one click.</p>
+            <hr>
+            <h2>Make a room</h2>
+            <div class="container">
+                 <button id="create-room-btn">Create Room</button>
+                <div id="room-code-container"><span id="room-code">Room Code Will Appear Here</span></div>
+            </div>
+            <hr>
+            <h2>Or join one!</h2>
+            <form id="join-form">
+                <input type="text" placeholder="Join Code" id="join-code" required>
+                <button type="submit">Join</button>
+            </form>
+            <p id="join-error-out"></p>
+        </div>
+    </section>
+    
+    <section class="hidden" id="chat-sys">
+        <div class="card">
+            <message-box>
+                <message-bubble>
+                    <h3>Username</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat cupiditate inventore adipisci omnis, dolores placeat necessitatibus ratione accusantium accusamus sit libero explicabo ipsa, incidunt repellendus obcaecati quasi qui architecto delectus.</p>
+                </message-bubble>
+            </message-box>
+            <form id="send-message-form">
+                <input type="text" placeholder="Type your message..." id="send-message">
+                <button type="submit">
+                    Send
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg>
+                </button>
+            </form>
+        </div>
+    </section>
 
     <!-- Username Mgr -->
     <script>
+        const peerMap = {};
         let USERNAME = "user";
         for(let i = 0; i < 6; i++) {
             USERNAME += String(Math.floor(Math.random() * 10));
@@ -40,18 +282,28 @@
 
     <!-- Useful js -->
     <script>
-        function addMessageToDOM(type, username, text) {
+        function addMessageToDOM(type, username, text, color) {
             const messageBox = document.querySelector('message-box');
             const bubble = document.createElement('message-bubble');
 
             if(type === 'MESSAGE') {
                 const h3 = document.createElement('h3');
-                h3.textContent = username;
+                if(username === USERNAME) {
+                    h3.textContent = "You";
+                    h3.style.color = "#FFFFFF";
+                } else {
+                    h3.textContent = username;
+                    h3.style.color = color;
+                }
                 bubble.appendChild(h3);
                 bubble.classList.add('message');
             } else {
                 if(type === 'INFO') {
                     bubble.classList.add('info');
+                } else {
+                    if(type === 'WARN') {
+                        bubble.classList.add('warn');
+                    }
                 }
             }
 
@@ -63,10 +315,31 @@
 
             messageBox.scrollTop = messageBox.scrollHeight;
         }
+        function getRandomColor() {
+            const hue = Math.floor(Math.random() * 360);
+            return `hsl(${hue}, 75%, 45%)`;
+        }
+        function getFunnyLeaveMessage(username) {
+            const messages = [
+                `${username} rage quit! 🚪💥`,
+                `${username} vanished into the shadow realm. 🌌`,
+                `${username} left to go get milk and never came back. 🥛`,
+                `${username} disconnected. Probably lost their Wi-Fi to a squirrel. 🐿️`,
+                `${username} has left the chat. Fs in the chat, boys. 🫡`
+            ];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+    </script>
+
+    <!-- Both -->
+    <script>
+        let peer;
+        const loadScreen = document.getElementById('ldr-screen');
     </script>
 
     <!-- Create Room -->
     <script>
+        let hostColor;
         let connectedPeers = {};
 
         const createRoomBtn = document.getElementById('create-room-btn');
@@ -80,15 +353,22 @@
             codeOutput.innerText = roomCode;
 
             // Peer connection headache
-            const peer = new Peer(roomCode);
+            if(!peer) {
+                peer = new Peer(roomCode);
+            }
 
             peer.on('open', (id) => {
                 console.log('Room created successfully with ID:', id);
+                hostColor = getRandomColor();
             });
 
             peer.on('connection', (conn) => {
                 // Save the connection using the guest's Peer ID
                 connectedPeers[conn.peer] = conn;
+                peerMap[conn.peer] = {
+                    username: "Unknown User",
+                    color: getRandomColor()
+                };
                 console.log(`Guest connected! ID: ${conn.peer}`);
 
                 // sending data
@@ -96,20 +376,27 @@
                 sendMsgForm.addEventListener("submit", (e) => {
                     e.preventDefault();
                     const msg = document.getElementById('send-message').value;
-                    broadcastMessage('MESSAGE', USERNAME, msg);
+                    broadcastMessage('MESSAGE', USERNAME, msg, hostColor);
                     sendMsgForm.reset();
                 });
 
                 // recie=vireing data
                 conn.on('data', (data) => {
-                    console.log(`Received from ${conn.peer}:`, data);
-                    broadcastMessage(data.type, data.username, data.message);
+                    if (data.username) {
+                        peerMap[conn.peer].username = data.username;
+                    }
+                    const userColor = peerMap[conn.peer].color;
+                    broadcastMessage(data.type, data.username, data.message, userColor);
                 });
 
                 // Remove the guest if they close the tab/disconnect
                 conn.on('close', () => {
                     delete connectedPeers[conn.peer];
                     console.log(`Guest disconnected: ${conn.peer}`);
+                    const leaveUser = peerMap[conn.peer].username;
+                    const leaveMsg = getFunnyLeaveMessage(peerMap[conn.peer].username);
+                    const userColor = peerMap[conn.peer].color;
+                    broadcastMessage('WARN', leaveUser, leaveMsg, userColor);
                 });
             });
 
@@ -118,17 +405,18 @@
             });
         });
 
-        function broadcastMessage(type, user, msg) {
+        function broadcastMessage(type, user, msg, color) {
             Object.values(connectedPeers).forEach(conn => {
                 if (conn.open) {
                     conn.send({
                         type: type,
                         username: user,
-                        message: msg
+                        message: msg,
+                        color: color
                     });
                 }
             });
-            addMessageToDOM(user, msg);
+            addMessageToDOM(type, user, msg, color);
         }
     </script>
 
@@ -136,12 +424,19 @@
     <script>
         const joinForm = document.getElementById('join-form');
         joinForm.addEventListener('submit', (e) => {
+            loadScreen.classList.remove('hidden');
             e.preventDefault();
-            
             const joinCode = document.getElementById('join-code').value.trim();
+            if (!joinCode) return;
 
-            const peer = new Peer();
+            if (peer) {
+                peer.destroy();
+                peer = null;
+            }
+            peer = new Peer();
+
             peer.on('open', (id) => {
+                loadScreen.classList.add('hidden');
                 console.log('User initialized with ID:', id);
 
                 const conn = peer.connect(joinCode);
@@ -169,18 +464,124 @@
 
                     // Reciving Messages
                     conn.on('data', (data) => {
-                        addMessageToDOM(data.username, data.message);
+                        addMessageToDOM(data.type, data.username, data.message, data.color);
                     });
                 });
 
                 conn.on('error', (err) => {
                     console.error('Connection error:', err);
+                    cleanupFailedJoin('Failed to connect to room');
                 });
             });
             peer.on('error', (err) => {
                 console.error('Guest peer error:', err);
+                cleanupFailedJoin('Room code incorrect or room does not exist');
             });
         });
+
+        function cleanupFailedJoin(message) {
+            loadScreen.classList.add('hidden');
+            document.getElementById('join-error-out').innerText = message;
+            if (peer) {
+                peer.destroy();
+                peer = null;
+            }
+        }
+    </script>
+
+    <!-- Star BG --> 
+    <script type="module">
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        let stars = [];
+        const numStars = 150; // Total star count
+
+        // Palette focused on blue-purple shades
+        const starColors = [
+            '138, 115, 254', // Soft Violet / Indigo
+            '96, 120, 255',  // Vibrant Periwinkle
+            '64, 150, 255',  // Deep Electric Blue
+            '175, 140, 255', // Soft Purple
+            '110, 180, 255'  // Cool Ice Blue
+        ];
+
+        // Handle Canvas Resize
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
+        }
+
+        // Create Star Objects
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                const color = starColors[Math.floor(Math.random() * starColors.length)];
+
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5 + 0.8,
+                    alpha: Math.random() * 0.4 + 0.4, // Constrained starting alpha
+                    twinkleSpeed: (Math.random() * 0.003 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+                    color: color
+                });
+            }
+        }
+
+        // Animation Loop
+        function animate() {
+            // Dark Purple Gradient Background
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#120726');   // Lighter midnight purple at top
+            gradient.addColorStop(0.5, '#0a0414'); // Deep purple in middle
+            gradient.addColorStop(1, '#040108');   // Dark purple-black at bottom
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Render & update each star
+            stars.forEach(star => {
+                // Slower & Softer Twinkle
+                star.alpha += star.twinkleSpeed;
+                if (star.alpha > 0.95 || star.alpha < 0.3) {
+                    star.twinkleSpeed = -star.twinkleSpeed;
+                }
+
+                const currentAlpha = Math.max(0.1, Math.min(1, star.alpha));
+
+                // Glow Effect (Outer Radial Gradient)
+                const glowRadius = star.radius * 3.5;
+                const glowGradient = ctx.createRadialGradient(
+                    star.x, star.y, star.radius * 0.2,
+                    star.x, star.y, glowRadius
+                );
+                glowGradient.addColorStop(0, `rgba(${star.color}, ${currentAlpha})`);
+                glowGradient.addColorStop(0.4, `rgba(${star.color}, ${currentAlpha * 0.3})`);
+                glowGradient.addColorStop(1, `rgba(${star.color}, 0)`);
+
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, glowRadius, 0, Math.PI * 2);
+                ctx.fillStyle = glowGradient;
+                ctx.fill();
+
+                // Core of the star (Tinted to match the star color rather than pure white)
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius * 0.7, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${star.color}, ${Math.min(1, currentAlpha + 0.2)})`;
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Event Listeners
+        window.addEventListener('resize', resizeCanvas);
+
+        // Initialization
+        resizeCanvas();
+        animate();
     </script>
 </body>
 </html>

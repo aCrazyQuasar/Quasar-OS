@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="shortcut icon" href="/assets/favicon.png" type="image/png">
     <title>Quasar OS | A Browser Based OS</title>
 
     <!-- CSS Imports -->
@@ -26,8 +26,8 @@
     </div>
 
     <!-- ********** BACKGROUND *********** -->
-    <img class="bg-img" src="https://www.quantamagazine.org/wp-content/uploads/2018/11/ChangingQuasar_2880x1800-1720x1075.jpg" alt="Get internet pal" draggable="false">
-    
+    <canvas id="background-wallpaper" class="bg-image"></canvas>
+
     <!-- ********** NAV ********** -->
     <nav>
         <button class="dock-btn">
@@ -48,14 +48,16 @@
         <button class="dock-btn">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5t1-13.5L78-585l110-190 119 50q11-8 23-15t24.5-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5t-1 13.5l103 78-110 190-119-50q-11 8-23 15t-24.5 12L590-80H370Zm110-260q58 0 99-41t41-99q0-58-41-99t-99-41q-58 0-99 41t41 99q0 58 41 99t99 41Z"/></svg>
         </button>
-        <button class="dock-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-120q-33 0-56.5-23.5T80-240v-440q0-33 23.5-56.5T160-760h240l80 80h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Z"/></svg>
+        <button class="dock-btn" id="wallpaper-app-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-240h80v240h240v80H200Zm320 0v-80h240v-240h80v240q0 33-23.5 56.5T760-120H520ZM240-280l120-160 90 120 120-160 150 200H240ZM120-520v-240q0-33 23.5-56.5T200-840h240v80H200v240h-80Zm640 0v-240H520v-80h240q33 0 56.5 23.5T840-760v240h-80Zm-183-57q-17-17-17-43t17-43q17-17 43-17t43 17q17 17 17 43t-17 43q-17 17-43 17t-43-17Z"/></svg>
         </button>
     </nav>
 
     <app-toast-container></app-toast-container>
 
     <!-- JavaScript -->
+    <script type="module" src="/js/window/windowFunc.js"></script>
     <script type="module" src="/js/navApps.js"></script>
+    <script type="module" src="/js/wallpaper.js"></script>
 </body>
 </html>

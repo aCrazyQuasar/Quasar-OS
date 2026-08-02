@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Wallpaper Host</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #000;
+        }
+
+        #background-wallpaper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+        }
+
+        .ui-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 12px;
+            color: #fff;
+            width: 300px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .ui-panel h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 10px;
+            background: #2563eb;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-label:hover {
+            background: #1d4ed8;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .status {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #a1a1aa;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="background-wallpaper"></canvas>
+
+    <div class="ui-panel">
+        <h2>Wallpaper Loader</h2>
+        <label for="wallpaper-file" class="file-upload-label">
+            Upload Wallpaper (.js)
+        </label>
+        <input type="file" id="wallpaper-file" accept=".js">
+        
+        <button id="clear-btn" class="btn">Clear Wallpaper</button>
+        <div id="status-msg" class="status">Ready for upload.</div>
+    </div>
+
+    <script type="module">
+        const canvas = document.getElementById('background-wallpaper');
+        const ctx = canvas.getContext('2d');
+        let currentWallpaper = null;
+        let lastTime = 0;
+
+        const API = {
+            width: canvas.width,
+            height: canvas.height,
+        };
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            API.width = canvas.width;
+            API.height = canvas.height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function setWallpaper(wallpaper) {
+            if (currentWallpaper && currentWallpaper.destroy) {
+                currentWallpaper.destroy();
+            }
+            currentWallpaper = wallpaper;
+
+            if (currentWallpaper && currentWallpaper.init) {
+                currentWallpaper.init(API);
+            }
+        }
+
+        function renderWallpaper(time) {
+            const dt = time - lastTime;
+            lastTime = time;
+
+            if (currentWallpaper && currentWallpaper.render) {
+                currentWallpaper.render(ctx, API, time, dt);
+            }
+
+            requestAnimationFrame(renderWallpaper);
+        }
+        renderWallpaper(0);
+
+        const fileInput = document.getElementById('wallpaper-file');
+        const clearBtn = document.getElementById('clear-btn');
+        const statusMsg = document.getElementById('status-msg');
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = async (e) => {
+                try {
+                    // Convert file contents to a data URL to safely import without CORS issues
+                    const dataUrl = 'data:text/javascript;charset=utf-8,' + encodeURIComponent(e.target.result);
+
+                    // Dynamically import the module
+                    const module = await import(dataUrl);
+
+                    // grab default export, or fallback to the single exported property
+                    const exportedWallpaper = module.default || Object.values(module)[0];
+
+                    if (exportedWallpaper) {
+                        setWallpaper(exportedWallpaper);
+                        statusMsg.style.color = '#4ade80';
+                        statusMsg.textContent = `Active: ${file.name}`;
+                    } else {
+                        throw new Error('No valid export found in the file.');
+                    }
+                } catch (err) {
+                    console.error('Failed to import wallpaper module:', err);
+                    statusMsg.style.color = '#f87171';
+                    statusMsg.textContent = `Error: ${err.message}`;
+                }
+            };
+
+            reader.readAsText(file);
+        });
+
+        clearBtn.addEventListener('click', () => {
+            setWallpaper(null);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            statusMsg.style.color = '#a1a1aa';
+            statusMsg.textContent = 'Wallpaper cleared.';
+        });
+    </script>
+</body>
+</html>

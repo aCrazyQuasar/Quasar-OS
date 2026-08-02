@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QOS APP: WALLPAPER</title>
+
+    <!-- CSS -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap');
+        *{
+            margin:0;
+            padding:0;
+            font-family: "Exo 2", monospace, system-ui;
+            scrollbar-width: none;
+            -moz-scrollbar-width: none;
+        }
+        *::-webkit-scrollbar {
+            display: none;
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem 3rem;
+            background: #121024;
+            color: white;
+        }
+        .btns-container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .animated-wallpaper-btn{
+            padding: 0.5rem 1rem;
+            background: #2a283c;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+        .animated-wallpaper-btn:hover{
+            background: #3a385c;
+        }
+        hr{
+            border: none;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, #6352ff, #a855f7, transparent);
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+            margin: 1rem 0;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        label[for="wallpaper-upload"], label[for="static-wallpaper-upload"] {
+            padding: 0.5rem 1rem;
+            background: #2a283c;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+        label[for="wallpaper-upload"]:hover, label[for="static-wallpaper-upload"]:hover {
+            background: #3a385c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quasar Wallpaper App</h1>
+    <p>Select a wallpaper to set it as your desktop background.</p>
+    <hr>
+    <div class="btns-container"></div>
+    <br>
+    <h2>Upload a Custom Animated Wallpaper</h2>
+    <hr>
+    <input type="file" id="wallpaper-upload" accept=".js">
+    <label for="wallpaper-upload">Choose a JavaScript file</label>
+    <br>
+    <h2>Upload an Image as a Static Wallpaper</h2>
+    <hr>
+    <input type="file" id="static-wallpaper-upload" accept="image/*">
+    <label for="static-wallpaper-upload">Choose an Image File</label>
+
+    <!-- JavaScript -->
+    <script>
+        const btnsContainer = document.querySelector('.btns-container');
+        const wallpaperUploadInput = document.getElementById('wallpaper-upload');
+        const staticWallpaperUploadInput = document.getElementById('static-wallpaper-upload');
+        const OS = window.parent.AppAPI;
+        const ToastType = window.parent.ToastType;
+
+        async function initWallpaperBtns() {
+            try{
+                const response = await fetch('/wallpapers/wallpapers.json');
+                const data = await response.json();
+
+                // If your JSON structure is { "wallpapers": [...] }
+                const wallpapersList = Array.isArray(data) ? data : data.wallpapers;
+
+                if (!Array.isArray(wallpapersList)) {
+                    throw new Error("Parsed JSON is not an array");
+                }
+
+                wallpapersList.forEach(wallpaper => {
+                    const btn = document.createElement('button');
+                    btn.id = wallpaper.id;
+                    btn.classList.add('animated-wallpaper-btn');
+                    btn.textContent = wallpaper.name;
+                    btn.addEventListener('click', () => {
+                        switchWallpaper(wallpaper.filePath, wallpaper.objectName);
+                    });
+                    btnsContainer.appendChild(btn);
+                });
+            } catch (error) {
+                console.error("Error fetching wallpapers:", error);
+                OS.showToast(ToastType.ERROR, "Wallpaper App", "Failed to fetch wallpapers.");
+            }
+        }
+        initWallpaperBtns();
+
+        async function switchWallpaper(path, objectName) {
+            const wallpaperModule = await import(path);
+            const selectedWallpaper = wallpaperModule[objectName];
+            OS.setWallpaper(selectedWallpaper);
+        }
+
+        wallpaperUploadInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                // 1. Create an Object URL from the uploaded .js file
+                const blobUrl = URL.createObjectURL(file);
+
+                // 2. Dynamically import the module from the Blob URL
+                const customModule = await import(blobUrl);
+
+                // 3. Fall back to export named matching the file name, 'default', or first exported object
+                const customWallpaper = 
+                    customModule.default || 
+                    customModule[file.name.replace('.js', '')] || 
+                    Object.values(customModule)[0];
+
+                if (!customWallpaper) {
+                    throw new Error("No valid wallpaper export found in file.");
+                }
+
+                // 4. Set the new wallpaper via OS API
+                if (OS?.setWallpaper) {
+                    OS.setWallpaper(customWallpaper);
+                    OS?.showToast?.(ToastType.SUCCESS, "Wallpaper App", `Applied ${file.name}`);
+                }
+
+                // Clean up the Blob URL memory after load
+                URL.revokeObjectURL(blobUrl);
+
+            } catch (error) {
+                console.error("Error applying custom wallpaper:", error);
+                OS?.showToast?.(ToastType.ERROR, "Wallpaper App", "Failed to apply custom wallpaper.");
+            }
+            
+            // Reset file input so users can re-upload the same file if needed
+            event.target.value = '';
+        });
+
+        staticWallpaperUploadInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const imageUrl = URL.createObjectURL(file);
+            const img = new Image();
+
+            img.onload = () => {
+                // Create an object compatible with wallpaper.js
+                const staticWallpaper = {
+                    init(api) {},
+                    render(ctx, api) {
+                        // Clear previous frame
+                        ctx.clearRect(0, 0, api.width, api.height);
+
+                        // Draw image scaled to fill the canvas resolution
+                        ctx.drawImage(img, 0, 0, api.width, api.height);
+                    },
+                    destroy() {
+                        // Revoke object URL to prevent memory leaks when changing wallpapers
+                        URL.revokeObjectURL(imageUrl);
+                    }
+                };
+
+                if (OS?.setWallpaper) {
+                    OS.setWallpaper(staticWallpaper);
+                    OS?.showToast?.(ToastType.SUCCESS, "Wallpaper App", `Applied ${file.name}`);
+                }
+            };
+
+            img.onerror = () => {
+                console.error("Failed to load image file.");
+                OS?.showToast?.(ToastType.ERROR, "Wallpaper App", "Failed to load image file.");
+                URL.revokeObjectURL(imageUrl);
+            };
+
+            // Trigger loading the image
+            img.src = imageUrl;
+
+            // Reset input for re-selection
+            event.target.value = '';
+        });
+    </script>
+</body>
+</html>

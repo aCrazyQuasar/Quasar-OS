@@ -23,3 +23,7 @@ const chatAppBtn = document.getElementById('chat-app-btn');
 chatAppBtn.addEventListener("click", () => {
     loadNativeApp("Chat App", "/apps/chatApp.html");
 });
+const wallpaperAppBtn = document.getElementById('wallpaper-app-btn');
+wallpaperAppBtn.addEventListener("click", () => {
+    loadNativeApp("Wallpaper App", "/apps/wallpaperApp.html");
+});

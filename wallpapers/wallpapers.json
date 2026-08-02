@@ -1,0 +1,40 @@
+{
+  "wallpapers": [
+    {
+        "id": "default",
+        "name": "Default",
+        "filePath": "/wallpapers/default.js",
+        "objectName": "DefaultWallpaper"
+    },
+    {
+      "id": "quasar-3d",
+      "name": "3D Quasar",
+      "filePath": "/wallpapers/quasar.js",
+      "objectName": "QuasarWallpaper"
+    },
+    {
+      "id": "warp-speed",
+      "name": "Warp Speed Hyperspace",
+      "filePath": "/wallpapers/warpspeed.js",
+      "objectName": "WarpSpeedWallpaper"
+    },
+    {
+      "id": "solar-system",
+      "name": "Orbiting Solar System",
+      "filePath": "/wallpapers/solarSystem.js",
+      "objectName": "SolarSystemWallpaper"
+    },
+    {
+      "id": "geo-mesh",
+      "name": "Geometric Mesh",
+      "filePath": "/wallpapers/geometricMesh.js",
+      "objectName": "GeometricMeshWallpaper"
+    },
+    {
+      "id": "floating-boxes",
+      "name": "Floating Boxes",
+      "filePath": "/wallpapers/floatingBoxes.js",
+      "objectName": "FloatingBoxesWallpaper"
+    }
+  ]
+}

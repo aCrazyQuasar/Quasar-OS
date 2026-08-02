@@ -6,4 +6,8 @@
 }
 body{
     background-color: #34206c;
+    box-sizing: border-box;
+    max-width: 100%;
+    max-height: 100vh;
+    overflow: hidden;
 }
