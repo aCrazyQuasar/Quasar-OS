@@ -54,15 +54,44 @@ async def about(interaction: discord.Interaction):
     embed.add_field(
             name="The Wallpaper Tool",
             value="This is a tool for viewing & creating animated wallpapers for Quasar OS. " \
-            "It allows you to upload a compatable .js file, and then see how it would look when run by Quasar OS." \
             "If you would like read more about this feature, run `/quasaros devtools wallpaper`",
             inline=False
         )
 
     #send
     await interaction.response.send_message(embed=embed, file=logo)
+#devtools wallpaper
+@devtools.command(
+    name="wallpaper",
+    description="View and create animated wallpapers for Quasar OS"
+)
+async def wallpaper(interaction: discord.Interaction):
+    embed = discord.Embed(
+            title="Devtools: Wallpaper Tool",
+            description="The wallpappaper tool allows you to upload a custom animated wallpaper for Quasar OS as a `.js` file." \
+            " If you do now know how to code, and would instead like to vibe code it, you can also download the prompt, and paste it" \
+            "into any AI, and it will set up the AI to make a wallpaper.",
+            color=QUASAR_BLUE
+        )
+    # logo
+    logo = discord.File("assets/quasar-logo.png", filename="quasar-logo.png")
+    embed.set_thumbnail(url="attachment://quasar-logo.png")
 
+    # buttons
+    view = discord.ui.View()
+    
+    view.add_item(
+        discord.ui.Button(
+            label="Open Tool",
+            emoji="📄",
+            url="https://sites.google.com/view/quasarosresources/devtools/wallpaper-tool?authuser=0",
+        )
+    )
 
+    #attach prompt
+    prompt = discord.File("assets/prompts/wallpaper-prompt.txt", filename="wallpaper-prompt.txt")
+
+    await interaction.response.send_message(embed=embed, files=[logo, prompt], view=view)
 
 # Make command tree
 
