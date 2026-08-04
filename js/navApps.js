@@ -27,3 +27,7 @@ const wallpaperAppBtn = document.getElementById('wallpaper-app-btn');
 wallpaperAppBtn.addEventListener("click", () => {
     loadNativeApp("Wallpaper App", "/apps/wallpaperApp.html");
 });
+const browserBtn = document.getElementById('browser-btn');
+browserBtn.addEventListener("click", () => {
+    loadNativeApp("Quasar Browser", "/apps/browser/index.html");
+});
