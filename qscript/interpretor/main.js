@@ -1,15 +1,34 @@
 import { tokenize } from "./frontend/lexer.js";
 import { Parser } from "./frontend/parser.js";
 import { evaluate } from "./runtime/interpreter.js";
+import { NumberValue, BooleanValue, NullValue } from "./runtime/values.js";
+import { Enviorment } from "./runtime/enviorment.js";
+
+// Dom
 const code = document.getElementById('code');
 const runcodeBtn = document.getElementById('run-code-btn');
 runcodeBtn.addEventListener('click', runCode);
+
+//  Run func
 function runCode() {
     const parser = new Parser();
+    const env = new Enviorment();
+
+    // Vars
+    env.declareVariable("x", new NumberValue(5));
+    env.declareVariable("true", new BooleanValue(true));
+    env.declareVariable("false", new BooleanValue(false));
+    env.declareVariable("null", new NullValue());
+
+    // Tokenize
     const tokens = tokenize(code.value);
     console.log(tokens);
+
+    // Parse
     const ast = parser.produceAST(code.value);
     console.log(ast);
-    const result = evaluate(ast);
+
+    // Evaluate
+    const result = evaluate(ast, env);
     console.log(result);
 }

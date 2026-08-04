@@ -1,9 +1,12 @@
 export const NodeType = {
+    // STATEMENTS
     Program: "Program",
+    VariableDeclaration: "VariableDeclaration",
+
+    // EXPRESSIONS
     NumericLiteral: "NumericLiteral",
     Identifier: "Identifier",
     BinaryExpression: "BinaryExpression",
-    NullLiteral: "NullLiteral"
 }
 
 export class Stmt {
@@ -15,6 +18,14 @@ export class Program extends Stmt {
     constructor(body) {
         super(NodeType.Program);
         this.body = body;
+    }
+}
+export class VariableDeclaration extends Stmt {
+    constructor(constn, identifier, value) {
+        super(NodeType.VariableDeclaration);
+        this.constant = constn;
+        this.identifier = identifier;
+        this.value = value;
     }
 }
 export class Expr extends Stmt {
@@ -40,11 +51,5 @@ export class NumericLiteral extends Expr {
     constructor(value) {
         super(NodeType.NumericLiteral);
         this.value = value;
-    }
-}
-export class NullLiteral extends Expr {
-    constructor() {
-        super(NodeType.NullLiteral);
-        this.value = null;
     }
 }

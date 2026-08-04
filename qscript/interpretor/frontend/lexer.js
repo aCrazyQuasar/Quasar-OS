@@ -5,19 +5,24 @@ export class Token {
     }
 }
 export const TokenType = {
+    // Literals
     Number: "Number",
     Identifier: "Identifier",
+    // Keywords
+    Set: "Set",
+    Const: "Const",
+    // Grouping operators
     Equals: "Equals",
+    Semicolon: "Semicolon",
     OpenParen: "OpenParen",
     CloseParen: "CloseParen",
     BinaryOperator: "BinaryOperator",
-    Set: "set",
-    Null: "Null",
+    // EOF
     EOF: "EOF"
 }
 const KEYWORDS = {
     "set": TokenType.Set,
-    "null": TokenType.Null
+    "const": TokenType.Const
 }
 
 function isAlpha(src) {
@@ -45,6 +50,8 @@ export function tokenize (sourceCode) {
             tokens.push(new Token(src.shift(), TokenType.BinaryOperator));
         } else if (src[0] === '=') {
             tokens.push(new Token(src.shift(), TokenType.Equals));
+        } else if (src[0] === ';') {
+            tokens.push(new Token(src.shift(), TokenType.Semicolon));
         } else {
             // Build a number token
             if (isInt(src[0])) {

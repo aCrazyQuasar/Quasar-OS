@@ -1,4 +1,4 @@
-import { Stmt, Program, Expr, BinaryExpr, NumericLiteral, NullLiteral, Identifier } from "./ast.js";
+import { Stmt, Program, Expr, BinaryExpr, NumericLiteral, Identifier, VariableDeclaration } from "./ast.js";
 import { tokenize, Token, TokenType } from "./lexer.js";
 
 export class Parser {
@@ -37,8 +37,31 @@ export class Parser {
     }
 
     parse_stmt() {
-        return this.parse_expr();
+        switch (this.at().type) {
+            case TokenType.Set:
+                return this.parse_var_declaration();
+            default:
+                return this.parse_expr();
+        }
     }
+    parse_var_declaration() {
+        const isConstant = this.eat().type == TokenType.Const;
+        const identifier = this.expect(TokenType.Identifier, "Expected identifier").value;
+        if (this.at().type == TokenType.Semicolon) {
+            this.eat(); // consume ';'
+            if (isConstant) {
+                throw new Error("Constant variables must be initialized");
+            }
+            return new VariableDeclaration(false, identifier);
+        }
+
+        this.expect(TokenType.Equals, "Expected assignment operator");
+        const declaration = new VariableDeclaration(isConstant, identifier, this.parse_expr());
+        this.expect(TokenType.Semicolon, "Expected semicolon");
+        return declaration;
+    }
+
+    // Expr
     parse_expr() {
         return this.parse_additive_expr();
     }
@@ -77,9 +100,6 @@ export class Parser {
                 const expr = this.parse_expr();
                 this.expect(TokenType.CloseParen, "Expected closing parenthesis");
                 return expr;
-            case TokenType.Null:
-                this.eat(); // consume 'null'
-                return new NullLiteral();
             default:
                 throw new Error(`Unexpected token: ${tk.type}`);
         }
