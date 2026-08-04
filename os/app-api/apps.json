@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "Wallpaper App", 
+            "type": "native",
+            "url": "/os/apps/wallpaperApp.html"
+        }
+    ]
+}

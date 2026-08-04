@@ -1,5 +1,5 @@
-import { showToast, ToastType } from "../toast.js";
-import { setWallpaper } from "../wallpaper.js";
+import { showToast, ToastType } from "../js/toast.js";
+import { setWallpaper } from "./wallpaper.js";
 
 window.ToastType = ToastType;
 window.AppAPI = {};

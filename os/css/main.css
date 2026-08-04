@@ -2,9 +2,6 @@
 @import "./base/reset.css";
 @import "./base/variables.css";
 
-/* ---------- Layout ---------- */
-@import "./layout/content.css";
-
 /* ---------- Components ---------- */
 @import "./components/bg.css";
 @import "./components/boot.css";
