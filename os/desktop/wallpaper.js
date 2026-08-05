@@ -26,7 +26,7 @@ function setWallpaper(wallpaper) {
         currentWallpaper.destroy();
     }
     currentWallpaper = wallpaper;
-    console.log("🚀 ~ setWallpaper ~ currentWallpaper = wallpaper;:", currentWallpaper = wallpaper);
+    console.log("🚀 ~ setWallpaper to new wallpaper");
 
     if(currentWallpaper?.init) {
         currentWallpaper.init(API);
