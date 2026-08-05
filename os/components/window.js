@@ -1,3 +1,6 @@
+
+// * IF YOU WANT TO OPTIMIZE THIS JUST KNOW I WARNED YOU
+
 let winId = 1;
 class QuasarWindow {
     constructor(element) {

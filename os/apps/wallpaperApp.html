@@ -98,7 +98,7 @@
 
         async function initWallpaperBtns() {
             try{
-                const response = await fetch('/wallpapers/wallpapers.json');
+                const response = await fetch('/os/system/wallpapers.json');
                 const data = await response.json();
 
                 // If your JSON structure is { "wallpapers": [...] }
