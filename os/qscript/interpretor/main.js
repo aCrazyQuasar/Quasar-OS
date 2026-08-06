@@ -1,8 +1,8 @@
-import { tokenize } from "./frontend/lexer.js";
 import { Parser } from "./frontend/parser.js";
 import { evaluate } from "./runtime/interpreter.js";
 import { NumberValue, BooleanValue, NullValue } from "./runtime/values.js";
 import { Enviorment } from "./runtime/enviorment.js";
+import { tokenize } from "./frontend/lexer.js";
 
 // Dom
 const code = document.getElementById('code');
@@ -15,10 +15,9 @@ function runCode() {
     const env = new Enviorment();
 
     // Vars
-    env.declareVariable("x", new NumberValue(5));
-    env.declareVariable("true", new BooleanValue(true));
-    env.declareVariable("false", new BooleanValue(false));
-    env.declareVariable("null", new NullValue());
+    env.declareVariable("true", new BooleanValue(true), true);
+    env.declareVariable("false", new BooleanValue(false), true);
+    env.declareVariable("null", new NullValue(), true);
 
     // Tokenize
     const tokens = tokenize(code.value);

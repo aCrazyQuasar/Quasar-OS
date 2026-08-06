@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "ES2023",
         "module": "ESNext",
-        "checkJs": true
+        "checkJs": false
     },
     "exclude": [
         "node_modules"

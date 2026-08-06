@@ -1,107 +1,177 @@
 import { Stmt, Program, Expr, BinaryExpr, NumericLiteral, Identifier, VariableDeclaration } from "./ast.js";
 import { tokenize, Token, TokenType } from "./lexer.js";
 
+
+/**
+ * Parses Tokens into AST (Abstract Syntax Tree)
+ *
+ * @export
+ * @class Parser
+ * @typedef {Parser}
+ */
 export class Parser {
 
+    /**
+     * Creates an instance of Parser.
+     * No Params
+     *
+     * @constructor
+     */
     constructor() {
+        /** @type {Token[]} */
         this.tokens = [];
     }
 
-    not_eof() {
+    // * Helper Methods
+
+    /**
+     * Check if we are not at end of file
+     * @returns {boolean} 
+     */
+    #not_eof() {
         return this.tokens[0].type !== TokenType.EOF;
     }
-    at() {
+    
+    /**
+     * Returns the current token
+     * @returns {Token} 
+     */
+    #at() {
         return this.tokens[0];
     }
-    eat() {
+    
+    /**
+     * Return the currrent token and advance to the next one
+     * @returns {Token} 
+     */
+    #eat() {
         return this.tokens.shift();
     }
-    expect(type, err) {
-        const prev = this.eat();
+    
+    /**
+     * Expect specific token, and consume it, otherwise throw an error
+     *
+     * @param {TokenType} type 
+     * @param {string} err 
+     * @returns {Token} 
+     */
+    #expect(type, err) {
+        const prev = this.#eat();
         if (prev.type !== type) {
             throw new Error(err);
         }
         return prev;
     }
 
+    // * PUBLIC METHODS
+    /**
+     * Parses source code into an Abstract Syntax Tree.
+     *
+     * This is the main entry point of the parser.
+     *
+     * @param {string} sourceCode Source code to parse.
+     * @returns {Program} Root AST node.
+     */
     produceAST(sourceCode) {
         this.tokens = tokenize(sourceCode);
         const program = new Program([]);
 
         // Parse Until EOF
-        while (this.not_eof()) {
-            program.body.push(this.parse_stmt());
+        while (this.#not_eof()) {
+            program.body.push(this.#parse_stmt());
         }
 
         return program;
     }
 
-    parse_stmt() {
-        switch (this.at().type) {
+    // * STATEMENT PARSING
+
+    // Parse general statements, and dispatch to specific statement parsing methods
+    #parse_stmt() {
+        // cases
+        switch (this.#at().type) {
             case TokenType.Set:
-                return this.parse_var_declaration();
+            case TokenType.Const:
+                return this.#parse_var_declaration();
             default:
-                return this.parse_expr();
+                return this.#parse_expr(); // fallback
         }
     }
-    parse_var_declaration() {
-        const isConstant = this.eat().type == TokenType.Const;
-        const identifier = this.expect(TokenType.Identifier, "Expected identifier").value;
-        if (this.at().type == TokenType.Semicolon) {
-            this.eat(); // consume ';'
+
+    // Parse variable declaration statements
+    #parse_var_declaration() {   
+        const isConstant = this.#eat().type == TokenType.Const; // check if it's a constant declaration
+        const identifier = this.#expect(TokenType.Identifier, "Expected identifier").value;
+
+        if (this.#at().type == TokenType.Semicolon) {
+            this.#eat(); // consume ';'
             if (isConstant) {
                 throw new Error("Constant variables must be initialized");
             }
-            return new VariableDeclaration(false, identifier);
+            return new VariableDeclaration(false, identifier);  
         }
 
-        this.expect(TokenType.Equals, "Expected assignment operator");
-        const declaration = new VariableDeclaration(isConstant, identifier, this.parse_expr());
-        this.expect(TokenType.Semicolon, "Expected semicolon");
+        this.#expect(TokenType.Equals, "Expected assignment operator");
+        const declaration = new VariableDeclaration(isConstant, identifier, this.#parse_expr());
+        this.#expect(TokenType.Semicolon, "Expected semicolon");
+
         return declaration;
     }
 
-    // Expr
-    parse_expr() {
-        return this.parse_additive_expr();
-    }
-    parse_additive_expr() {
-        let left = this.parse_multiplicative_expr();
+    // * EXPRESSION PARSING
+    // Follows order of precedence
 
-        while (this.at().value === '+' || this.at().value === '-') {
-            const operator = this.eat().value;
-            const right = this.parse_multiplicative_expr();
+    // general expression parsing method, dispatches to specific expression parsing methods
+    #parse_expr() {
+        // TODO: Lookahead implimentation
+
+        return this.#parse_additive_expr();
+    }
+    
+    // Addition and subtraction
+    #parse_additive_expr() {
+        let left = this.#parse_multiplicative_expr();
+
+        while (this.#at().value === '+' || this.#at().value === '-') { 
+            const operator = this.#eat().value;
+            const right = this.#parse_multiplicative_expr();
+            left = new BinaryExpr(left, operator, right); // continue recursively
+        }
+
+        return left;
+    }
+
+    // Multiplication, division, and modulus
+    #parse_multiplicative_expr() {
+        // same as additive, but with different operators, and higher precedence
+        let left = this.#parse_primary_expr();
+
+        while (this.#at().value === '*' || this.#at().value === '/' || this.#at().value === '%') {
+            const operator = this.#eat().value;
+            const right = this.#parse_primary_expr();
             left = new BinaryExpr(left, operator, right);
         }
 
         return left;
     }
-    parse_multiplicative_expr() {
-        let left = this.parse_primary_expr();
 
-        while (this.at().value === '*' || this.at().value === '/' || this.at().value === '%') {
-            const operator = this.eat().value;
-            const right = this.parse_primary_expr();
-            left = new BinaryExpr(left, operator, right);
-        }
+    // Primary expressions: identifiers, literals, and parenthesized expressions
+    #parse_primary_expr() {
+        const tk = this.#at().type;
 
-        return left;
-    }
-    parse_primary_expr() {
-        const tk = this.at().type;
-
+        // handle cases
         switch (tk) {
             case TokenType.Identifier:
-                return new Identifier(this.eat().value);
+                return new Identifier(this.#eat().value);
             case TokenType.Number:
-                return new NumericLiteral(parseFloat(this.eat().value));
+                return new NumericLiteral(parseFloat(this.#eat().value));
             case TokenType.OpenParen:
-                this.eat(); // consume '('
-                const expr = this.parse_expr();
-                this.expect(TokenType.CloseParen, "Expected closing parenthesis");
+                this.#eat(); // consume '('
+                const expr = this.#parse_expr();
+                this.#expect(TokenType.CloseParen, "Expected closing parenthesis");
                 return expr;
             default:
-                throw new Error(`Unexpected token: ${tk.type}`);
+                throw new Error(`Unexpected token: ${tk}`); // fallback error for unexpected tokens
         }
     }
 }
