@@ -1,5 +1,5 @@
 import { BinaryExpr, Identifier } from "../../frontend/ast.js";
-import { Enviorment } from "../enviorment.js";
+import { Environment } from "../Environment.js";
 import { evaluate } from "../interpreter.js";
 import { NumberValue, RuntimeValue, NullValue } from "../values.js";
 

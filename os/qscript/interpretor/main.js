@@ -1,7 +1,7 @@
 import { Parser } from "./frontend/parser.js";
 import { evaluate } from "./runtime/interpreter.js";
 import { NumberValue, BooleanValue, NullValue } from "./runtime/values.js";
-import { Enviorment } from "./runtime/enviorment.js";
+import { Environment } from "./runtime/Environment.js";
 import { tokenize } from "./frontend/lexer.js";
 
 // Dom
@@ -12,7 +12,7 @@ runcodeBtn.addEventListener('click', runCode);
 //  Run func
 function runCode() {
     const parser = new Parser();
-    const env = new Enviorment();
+    const env = new Environment();
 
     // Vars
     env.declareVariable("true", new BooleanValue(true), true);

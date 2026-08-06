@@ -1,5 +1,5 @@
 import { Program } from "../../frontend/ast.js";
-import { Enviorment } from "../enviorment.js";
+import { Environment } from "../Environment.js";
 import { evaluate } from "../interpreter.js";
 import { NullValue, RuntimeValue } from "../values.js";
 
