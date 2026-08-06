@@ -1,19 +1,30 @@
-import { ValueType, RuntimeValue, NumberValue, NullValue, BooleanValue } from "./values.js";
+import { RuntimeValue } from "./values.js";
 import { NodeType, Stmt } from "../frontend/ast.js";
+
+// ! OTHER INTERPRETER FUNCTIONS GO IN THESES FILES
 import { eval_program, eval_var_declaration } from "./eval/statements.js";
 import { eval_identifier, evaluate_binary_expr } from "./eval/expressions.js";
 
+/**
+ * Default an stem evalutate function
+ *  - Switches to sperate functions depending on the case
+ *
+ * @export
+ * @param {Stmt} node 
+ * @param {Environment} env 
+ * @returns {RuntimeValue} 
+ */
 export function evaluate(node, env) {
     switch (node.kind) {
-        case "NumericLiteral":
+        case NodeType.NumericLiteral:
             return new NumberValue(node.value);
-        case "Identifier":
+        case NodeType.Identifier:
             return eval_identifier(node, env);
-        case "BinaryExpression":
+        case NodeType.BinaryExpression:
             return evaluate_binary_expr(node, env);
-        case "Program":
+        case NodeType.Program:
             return eval_program(node, env);
-        case "VariableDeclaration":
+        case NodeType.VariableDeclaration:
             return eval_var_declaration(node, env);
         default:
             throw new Error(`Unhandled node kind: ${node.kind}`);
