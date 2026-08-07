@@ -10,7 +10,7 @@
  * - Constant enforcement
  */
 
-import { RuntimeValue } from "./values";
+import { RuntimeValue } from "./values.js";
 
 /**
  * Environment Class to store variables on a scope

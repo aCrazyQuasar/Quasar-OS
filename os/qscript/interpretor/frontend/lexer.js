@@ -1,5 +1,7 @@
 // * TOKEN STUFF
 
+import { QScriptError } from "../runtime/errors.js";
+
 /**
  * Token is a recognized character in language
  *
@@ -166,7 +168,12 @@ export function tokenize (sourceCode) {
                 src.shift();
                 column++;
             } else {
-                throw new Error(`Unexpected character: ${src[0]}`);
+                throw new QScriptError(
+                    `Unexpected character: ${src[0]}`,
+                    "SyntaxError",
+                    line,
+                    column
+                );
             }
         }
     }

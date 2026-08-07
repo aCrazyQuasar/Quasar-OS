@@ -1,3 +1,4 @@
+import { QScriptError } from "../runtime/errors.js";
 import { Stmt, Program, Expr, BinaryExpr, NumericLiteral, Identifier, VariableDeclaration } from "./ast.js";
 import { tokenize, Token, TokenType } from "./lexer.js";
 
@@ -58,7 +59,12 @@ export class Parser {
     #expect(type, err) {
         const prev = this.#eat();
         if (prev.type !== type) {
-            throw new Error(err);
+            throw new QScriptError(
+                err || `Expected token of type ${type}, but got ${prev.type}`,
+                "SyntaxError", 
+                prev.line, 
+                prev.column
+            );
         }
         return prev;
     }
@@ -106,7 +112,12 @@ export class Parser {
         if (this.#at().type == TokenType.Semicolon) {
             this.#eat(); // consume ';'
             if (isConstant) {
-                throw new Error("Constant variables must be initialized");
+                throw new QScriptError(
+                    "Constant variables must be initialized",
+                    "SyntaxError",
+                    this.#at().line,
+                    this.#at().column
+                );
             }
             return new VariableDeclaration(false, identifier);  
         }
@@ -171,7 +182,11 @@ export class Parser {
                 this.#expect(TokenType.CloseParen, "Expected closing parenthesis");
                 return expr;
             default:
-                throw new Error(`Unexpected token: ${tk}`); // fallback error for unexpected tokens
+                throw new QScriptError(
+                    `Unexpected token: ${tk}`,
+                    "SyntaxError", 
+                    this.#at().line, 
+                    this.#at().column); // fallback error for unexpected tokens
         }
     }
 }
