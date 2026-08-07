@@ -1,4 +1,4 @@
-import { showToast, ToastType } from "./toast.js";
+import { showToast, ToastType } from "../ui/toast.js";
 import { createWindowCode } from "./window.js";
 
 /* 
@@ -6,32 +6,35 @@ import { createWindowCode } from "./window.js";
 */
 
 async function loadNativeApp(name, url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to load app: ${response.statusText}`);
-            
-        }
-        const htmlContent = await response.text();
-        createWindowCode(name, htmlContent);
-    } catch(error) {
-        console.error("Failed to load app:", error);
-        showToast(ToastType.ERROR, "Failed to Load", "This app has failed to load successfully.");
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to load app: ${response.statusText}`);
     }
+    const htmlContent = await response.text();
+    createWindowCode(name, htmlContent);
+  } catch (error) {
+    console.error("Failed to load app:", error);
+    showToast(
+      ToastType.ERROR,
+      "Failed to Load",
+      "This app has failed to load successfully.",
+    );
+  }
 }
 
 // * Event Listeners
 // TODO: MODIFY THIS TO BE MUTABLE
 
-const chatAppBtn = document.getElementById('chat-app-btn');
+const chatAppBtn = document.getElementById("chat-app-btn");
 chatAppBtn.addEventListener("click", () => {
-    loadNativeApp("Chat App", "/os/apps/chatApp.html");
+  loadNativeApp("Chat App", "/os/apps/chatApp.html");
 });
-const wallpaperAppBtn = document.getElementById('wallpaper-app-btn');
+const wallpaperAppBtn = document.getElementById("wallpaper-app-btn");
 wallpaperAppBtn.addEventListener("click", () => {
-    loadNativeApp("Wallpaper App", "/os/apps/wallpaperApp.html");
+  loadNativeApp("Wallpaper App", "/os/apps/wallpaperApp.html");
 });
-const browserBtn = document.getElementById('browser-btn');
+const browserBtn = document.getElementById("browser-btn");
 browserBtn.addEventListener("click", () => {
-    loadNativeApp("Quasar Browser", "/os/apps/browser/index.html");
+  loadNativeApp("Quasar Browser", "/os/apps/browser/index.html");
 });
