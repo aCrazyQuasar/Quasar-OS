@@ -1,5 +1,5 @@
 import { QScriptError } from "../runtime/errors.js";
-import { Stmt, Program, Expr, BinaryExpr, NumericLiteral, Identifier, VariableDeclaration } from "./ast.js";
+import { Stmt, Program, Expr, BinaryExpr, NumericLiteral, Identifier, VariableDeclaration, AssignmentExpr } from "./ast.js";
 import { tokenize, Token, TokenType } from "./lexer.js";
 
 
@@ -136,7 +136,20 @@ export class Parser {
     #parse_expr() {
         // TODO: Lookahead implimentation
 
-        return this.#parse_additive_expr();
+        return this.#parse_assignment_expr();
+    }
+    
+    // Assignment Expression
+    #parse_assignment_expr() {
+        const left = this.#parse_additive_expr(); // TODO: switch out with object expr
+
+        if (this.#at().type === TokenType.Equals) {
+            this.#eat();
+            const value = this.#parse_assignment_expr();
+            return new AssignmentExpr(left, value);
+        }
+
+        return left;
     }
     
     // Addition and subtraction

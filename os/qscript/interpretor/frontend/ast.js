@@ -19,6 +19,7 @@ export const NodeType = {
     VariableDeclaration: "VariableDeclaration",
 
     // EXPRESSIONS
+    AssignmentExpression: "AssignmentExpression",
     NumericLiteral: "NumericLiteral",
     Identifier: "Identifier",
     BinaryExpression: "BinaryExpression",
@@ -116,6 +117,30 @@ export class Expr extends Stmt {
      */
     constructor(kind) {
         super(kind);
+    }
+}
+
+// * ASSIGNMENT EXPRESSION
+/**
+ * Assigns a value to a variable
+ *
+ * @export
+ * @class AssignmentExpr
+ * @typedef {AssignmentExpr}
+ * @extends {Expr}
+ */
+export class AssignmentExpr extends Expr {
+    /**
+     * Creates an instance of AssignmentExpr.
+     *
+     * @constructor
+     * @param {Expr} assinge 
+     * @param {Expr} value 
+     */
+    constructor(assinge, value) {
+        super(NodeType.AssignmentExpression);
+        this.assigne = assinge;
+        this.value = value;
     }
 }
 

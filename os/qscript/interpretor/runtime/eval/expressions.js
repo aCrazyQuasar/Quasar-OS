@@ -1,4 +1,4 @@
-import { BinaryExpr, Identifier} from "../../frontend/ast.js";
+import { AssignmentExpr, BinaryExpr, Identifier, NodeType} from "../../frontend/ast.js";
 import { Environment } from "../Environment.js";
 import { evaluate } from "../interpreter.js";
 import { ValueType, NumberValue, RuntimeValue, MK_NULL, MK_NUMBER } from "../values.js";
@@ -17,7 +17,7 @@ export function evaluate_binary_expr(binop, env) {
     const lhs = evaluate(binop.left, env);
     const rhs = evaluate(binop.right, env);
 
-    if (lhs.type === ValueType.Number && rhs.type === ValueType.Number) {
+    if (lhs.type === ValueType.number && rhs.type === ValueType.number) {
         return eval_numeric_binary_expr(lhs, rhs, binop.operator);
     }
 
@@ -60,4 +60,21 @@ function eval_numeric_binary_expr(lhs, rhs, operator) {
  */
 export function eval_identifier(ident, env) {
     return env.lookupVariable(ident.symbol);
+}
+
+// * ASSIGNMENT
+/**
+ * Assigns a value to a variables
+ *
+ * @export
+ * @param {AssignmentExpr} node 
+ * @param {Environment} env 
+ */
+export function eval_assignment(node, env) {
+    if (node.assigne.kind !== NodeType.Identifier) {
+        throw new Error("Invalid LHS in assignment expression.")
+    }
+
+    const varname = node.assigne.symbol;
+    return env.assignVariable(varname, evaluate(node.value, env));
 }
