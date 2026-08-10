@@ -1,5 +1,5 @@
 import { QScriptError } from "../runtime/errors.js";
-import { Stmt, Program, Expr, BinaryExpr, NumericLiteral, Identifier, VariableDeclaration, AssignmentExpr } from "./ast.js";
+import { Stmt, Program, Expr, BinaryExpr, NumericLiteral, Identifier, VariableDeclaration, AssignmentExpr, Property, ObjectLiteral } from "./ast.js";
 import { tokenize, Token, TokenType } from "./lexer.js";
 
 
@@ -141,7 +141,7 @@ export class Parser {
     
     // Assignment Expression
     #parse_assignment_expr() {
-        const left = this.#parse_additive_expr(); // TODO: switch out with object expr
+        const left = this.#parse_object_expr();
 
         if (this.#at().type === TokenType.Equals) {
             this.#eat();
@@ -150,6 +150,40 @@ export class Parser {
         }
 
         return left;
+    }
+
+    // Object expressions
+    #parse_object_expr() {
+        if (this.#at().type !== TokenType.OpenBrace) {
+            return this.#parse_additive_expr();
+        }
+
+        this.#eat();
+        const properties = [];
+
+        while (this.#not_eof() && this.#at().type !== TokenType.CloseBrace) {
+
+            const key = this.#expect(TokenType.Identifier, "Object literal key expected");
+
+            if (this.#at().type === TokenType.Comma) {
+                this.#eat();
+                properties.push(new Property(key));
+                continue;
+            } else if (this.#at().type === TokenType.CloseBrace) {
+                properties.push(new Property(key));
+                continue;
+            }
+
+            this.#expect(TokenType.Colon, "Missing colon following identifier in ObjectExpr");
+            const value = this.#parse_expr();
+            properties.push(new Property(key, value));
+            if (this.#at().type !== TokenType.CloseBrace) {
+                this.#expect(TokenType.Comma, "Expected closing bracket or comma following property");
+            }
+        }
+
+        this.#expect(TokenType.CloseBrace, "Object literal missing closing brace");
+        return new ObjectLiteral(properties);
     }
     
     // Addition and subtraction

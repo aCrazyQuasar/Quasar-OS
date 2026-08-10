@@ -1,7 +1,7 @@
-import { AssignmentExpr, BinaryExpr, Identifier, NodeType} from "../../frontend/ast.js";
+import { AssignmentExpr, BinaryExpr, Identifier, NodeType, ObjectLiteral} from "../../frontend/ast.js";
 import { Environment } from "../Environment.js";
 import { evaluate } from "../interpreter.js";
-import { ValueType, NumberValue, RuntimeValue, MK_NULL, MK_NUMBER } from "../values.js";
+import { ValueType, NumberValue, RuntimeValue, MK_NULL, MK_NUMBER, ObjectValue } from "../values.js";
 
 // * BINARY EXPRESSIONS
 /**
@@ -77,4 +77,27 @@ export function eval_assignment(node, env) {
 
     const varname = node.assigne.symbol;
     return env.assignVariable(varname, evaluate(node.value, env));
+}
+
+// * OBJECT
+/**
+ * evalutates object expression
+ *
+ * @export
+ * @param {ObjectLiteral} obj 
+ * @param {Environment} env 
+ * @returns {RuntimeValue}
+ */
+export function eval_object_expr(obj, env) {
+    const object = new ObjectValue(new Map());
+
+    for (const {key, value} of obj.properties) {
+        const runtimeVal = (value === undefined) 
+        ? env.lookupVariable(key.value) 
+        : evaluate(value, env);
+
+        object.properties.set(key, runtimeVal);
+    }
+
+    return object;
 }

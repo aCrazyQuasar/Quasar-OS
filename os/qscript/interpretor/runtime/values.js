@@ -20,7 +20,8 @@
 export const ValueType = Object.freeze({
     null: "null",
     number: "number",
-    boolean: "boolean"
+    boolean: "boolean",
+    object: "object"
 });
 
 // * RUNTIME VALUES
@@ -135,4 +136,26 @@ export class NumberValue extends RuntimeValue {
  */
 export function MK_NUMBER(value) {
     return new NumberValue(value);
+}
+
+// * OBJECT VALUE
+/**
+ * Runtime object
+ *
+ * @export
+ * @class ObjectValue
+ * @typedef {ObjectValue}
+ * @extends {RuntimeValue}
+ */
+export class ObjectValue extends RuntimeValue {
+    /**
+     * Creates an instance of ObjectValue.
+     *
+     * @constructor
+     * @param {Map<string, RuntimeValue>} properties 
+     */
+    constructor (properties) {
+        super(ValueType.object);
+        this.properties = properties;
+    }
 }

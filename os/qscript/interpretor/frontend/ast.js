@@ -20,6 +20,10 @@ export const NodeType = {
 
     // EXPRESSIONS
     AssignmentExpression: "AssignmentExpression",
+
+    // literals
+    Property: "Property",
+    ObjectLiteral: "ObjectLiteral",
     NumericLiteral: "NumericLiteral",
     Identifier: "Identifier",
     BinaryExpression: "BinaryExpression",
@@ -211,5 +215,51 @@ export class NumericLiteral extends Expr {
     constructor(value) {
         super(NodeType.NumericLiteral);
         this.value = value;
+    }
+}
+
+// * PROPERTIES
+/**
+ * Property AST Node
+ *
+ * @export
+ * @class Property
+ * @typedef {Property}
+ * @extends {Expr}
+ */
+export class Property extends Expr {
+    /**
+     * Creates an instance of Property.
+     *
+     * @constructor
+     * @param {string} key 
+     * @param {Expr | undefined} value 
+     */
+    constructor(key, value) {
+        super(NodeType.Property);
+        this.key = key;
+        this.value = value;
+    }
+}
+
+// * OBJECT LITERAL
+/**
+ * Object literally class
+ *
+ * @export
+ * @class ObjectLiteral
+ * @typedef {ObjectLiteral}
+ * @extends {Expr}
+ */
+export class ObjectLiteral extends Expr {
+    /**
+     * Creates an instance of ObjectLiteral.
+     *
+     * @constructor
+     * @param {Property[]} properties 
+     */
+    constructor(properties) {
+        super(NodeType.ObjectLiteral);
+        this.properties = properties;
     }
 }

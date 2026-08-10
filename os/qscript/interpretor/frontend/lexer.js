@@ -43,9 +43,13 @@ export const TokenType = {
 
     // * Grouping Operators
     Equals: "Equals",
+    Comma: "Comma",
+    Colon: "Colon",
     Semicolon: "Semicolon",
-    OpenParen: "OpenParen",
-    CloseParen: "CloseParen",
+    OpenParen: "OpenParen", // (
+    CloseParen: "CloseParen", // )
+    OpenBrace: "OpenBrace", // [
+    CloseBrace: "CloseBrace", // ]
     BinaryOperator: "BinaryOperator",
 
     // * EOF
@@ -125,13 +129,23 @@ export function tokenize (sourceCode) {
             tokens.push(createToken(src.shift(), TokenType.OpenParen));
         } else if (src[0] === ')') {
             tokens.push(createToken(src.shift(), TokenType.CloseParen));
-        } else if (src[0] === '+' || src[0] === '-' || src[0] === '*' || src[0] === '/' || src[0] === '%') {     // Binary Operators
+        } else if (src[0] === '{') {
+            tokens.push(createToken(src.shift(), TokenType.OpenBrace));
+        } else if (src[0] === '}') {
+            tokens.push(createToken(src.shift(), TokenType.CloseBrace));
+        }
+        else if (src[0] === '+' || src[0] === '-' || src[0] === '*' || src[0] === '/' || src[0] === '%') {     // Binary Operators
             tokens.push(createToken(src.shift(), TokenType.BinaryOperator));
         } else if (src[0] === '=') {
             tokens.push(createToken(src.shift(), TokenType.Equals));
         } else if (src[0] === ';') {
             tokens.push(createToken(src.shift(), TokenType.Semicolon));
-        } else {
+        } else if (src[0] === ':') {
+            tokens.push(createToken(src.shift(), TokenType.Colon));
+        } else if (src[0] === ',') {
+            tokens.push(createToken(src.shift(), TokenType.Comma));
+        }
+        else {
             // Build a number token
             if (isInt(src[0])) {
                 let num = '';

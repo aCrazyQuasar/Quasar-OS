@@ -10,8 +10,24 @@
  * - Constant enforcement
  */
 
-import { MK_NUMBER, RuntimeValue } from "./values.js";
+import { MK_NUMBER, MK_BOOL, MK_NULL, RuntimeValue } from "./values.js";
 
+
+// * Setup Scope
+/**
+ * Setup global vairbale sin scope
+ *
+ * @export
+ */
+export function createGlobalEnvironment() {
+    const env = new Environment();
+    env.declareVariable("true", MK_BOOL(true), true);
+    env.declareVariable("false", MK_BOOL(false), true);
+    env.declareVariable("null", MK_NULL(), true);
+    return env;
+}
+
+// * ENV CLASS
 /**
  * Environment Class to store variables on a scope
  *
@@ -27,6 +43,7 @@ export class Environment {
      * @param {Environment | undefined} parent 
      */
     constructor(parent) {
+        const global = parent ? true : false;
         this.parent = parent;
 
         /** @type {Map<string, RuntimeValue>} */
