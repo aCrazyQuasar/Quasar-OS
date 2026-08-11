@@ -253,9 +253,36 @@
             border: 1px solid rgba(138, 115, 254, 0.3);
             background: rgba(15, 5, 30, 0.6);
             box-sizing: border-box;
+            overflow: scroll;
         }
         message-bubble{
             font-size: 1.5rem;
+        }
+        message-bubble.info p{
+            color: grey;
+        }
+        message-bubble.warn p{
+            color: red;
+        }
+        #show-change-username-btn{
+            background-color: #242696;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            padding: 1rem;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+        }
+        dialog:not([open]) {
+            display: none !important;
+        }
+        dialog::backdrop{
+            background-color: #09001444;
+            backdrop-filter: blur(5px);
+        }
+        dialog{
+            z-index: 9999999999999;
         }
     </style>
 </head>
@@ -289,6 +316,19 @@
     </section>
     
     <section class="hidden" id="chat-sys">
+            <dialog class="card" id="change-username-modal">
+                <h2>Change your username</h2>
+                <hr>
+                <form id="change-user-form">
+                    <input type="text" id="change-username" required>
+                    <button type="submit">Close</button>
+                </form>
+            </dialog>
+
+            <button id="show-change-username-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+            </button>
+
             <div id="room-code-container">
                 <span id="room-code">Room Code Will Appear Here</span>
             </div>
@@ -311,6 +351,12 @@
         for(let i = 0; i < 6; i++) {
             USERNAME += String(Math.floor(Math.random() * 10));
         }
+
+        const showUserModalBtn= document.getElementById('show-change-username-btn');
+        showUserModalBtn.addEventListener("click", () => {
+            document.getElementById('change-username').value = USERNAME;
+            document.getElementById('change-username-modal').showModal();
+        });
     </script>
 
     <!-- Useful js -->
@@ -354,11 +400,12 @@
         }
         function getFunnyLeaveMessage(username) {
             const messages = [
-                `${username} rage quit! 🚪💥`,
-                `${username} vanished into the shadow realm. 🌌`,
-                `${username} left to go get milk and never came back. 🥛`,
-                `${username} disconnected. Probably lost their Wi-Fi to a squirrel. 🐿️`,
-                `${username} has left the chat. Fs in the chat, boys. 🫡`
+                `${username} rage quit!`,
+                `${username} vanished into the shadow realm.`,
+                `${username} left to go get milk and never came back.`,
+                `${username} disconnected. Probably lost their Wi-Fi to a squirrel.`,
+                `${username} has left the chat. Fs in the chat, boys.`,
+                `${username} went 3-2 years to dagestan.`
             ];
             return messages[Math.floor(Math.random() * messages.length)];
         }
@@ -411,6 +458,14 @@
                     broadcastMessage('MESSAGE', USERNAME, msg, hostColor);
                     sendMsgForm.reset();
                 });
+
+                const changeUserForm = document.getElementById('change-user-form');
+                    changeUserForm.addEventListener("submit", (e) => {
+                        e.preventDefault();
+                        broadcastMessage('INFO', USERNAME, `${USERNAME} changed thier username to ${document.getElementById('change-username').value}`, hostColor);
+                        USERNAME = document.getElementById('change-username').value;
+                        document.getElementById('change-username-modal').close();
+                    });
             });
 
             peer.on('connection', (conn) => {
@@ -522,6 +577,18 @@
                             message: msg
                         });
                         sendMsgForm.reset();
+                    });
+
+                    const changeUserForm = document.getElementById('change-user-form');
+                    changeUserForm.addEventListener("submit", (e) => {
+                        e.preventDefault();
+                        conn.send({
+                            type: "INFO",
+                            username: USERNAME,
+                            message: `${USERNAME} changed thier username to ${document.getElementById('change-username').value}`
+                        });
+                        USERNAME = document.getElementById('change-username').value;
+                        document.getElementById('change-username-modal').close();
                     });
 
                     // Reciving Messages
