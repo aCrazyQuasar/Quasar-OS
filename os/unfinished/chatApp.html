@@ -462,7 +462,7 @@
                 const changeUserForm = document.getElementById('change-user-form');
                     changeUserForm.addEventListener("submit", (e) => {
                         e.preventDefault();
-                        broadcastMessage('INFO', USERNAME, `${USERNAME} changed thier username to ${document.getElementById('change-username').value}`, hostColor);
+                        broadcastMessage('INFO', USERNAME, `${USERNAME} changed their username to ${document.getElementById('change-username').value}`, hostColor);
                         USERNAME = document.getElementById('change-username').value;
                         document.getElementById('change-username-modal').close();
                     });
@@ -585,7 +585,7 @@
                         conn.send({
                             type: "INFO",
                             username: USERNAME,
-                            message: `${USERNAME} changed thier username to ${document.getElementById('change-username').value}`
+                            message: `${USERNAME} changed their username to ${document.getElementById('change-username').value}`
                         });
                         USERNAME = document.getElementById('change-username').value;
                         document.getElementById('change-username-modal').close();
