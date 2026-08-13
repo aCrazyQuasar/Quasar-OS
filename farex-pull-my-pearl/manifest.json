@@ -1,0 +1,18 @@
+{
+    "name": "Farex Pull My Pearl: The Modpack",
+    "description": "A modpack for farex pull my pearl the goated song.",
+    "credit": "acrazyquasar",
+
+    "bootAudio": "",
+    "backgroundAudio": [
+        {
+            "name": "Farex Pull My Pearl Classic",
+            "file": "./audio/farex-pull-my-pearl-classic.mp3"
+        }
+    ],
+
+    "defaultWallpaper": "./wallpapers/officialmusicvideo.js",
+    "wallpapers": [
+
+    ]
+}

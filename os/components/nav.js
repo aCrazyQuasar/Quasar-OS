@@ -36,5 +36,5 @@ wallpaperAppBtn.addEventListener("click", () => {
 });
 const browserBtn = document.getElementById("browser-btn");
 browserBtn.addEventListener("click", () => {
-  loadNativeApp("Quasar Browser", "/os/apps/browser/index.html");
+  loadNativeApp("Modpack Test", "/os/apps/testmodpack.html");
 });

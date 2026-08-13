@@ -1,0 +1,28 @@
+{
+    "name": "Test Modpack",
+    "description": "This is a modpack for a test it is very testable and awesome you should subscribe",
+    "credit": "acrazyquasar",
+
+    "bootAudio": "./",
+    "backgroundAudio": [
+        {
+            "name": "Space Ambience",
+            "file": "./audio/interstaller.mp3"
+        },
+        {
+            "name": "Space",
+            "file": "./audio/space1.mp3"
+        }
+    ],
+
+    "wallpapers": [
+        {
+            "name": "Wallpaper 1",
+            "file": "./wallpapers/wallpaper1.js"
+        },
+        {
+            "name": "Wallpaper 2",
+            "file": "./wallpapers/wallpaper2.js"
+        }
+    ]
+}

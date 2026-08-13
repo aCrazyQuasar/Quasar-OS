@@ -320,8 +320,8 @@
                 <h2>Change your username</h2>
                 <hr>
                 <form id="change-user-form">
-                    <input type="text" id="change-username" required>
-                    <button type="submit">Close</button>
+                    <input type="text" id="change-username" maxlength="50" required>
+                    <button type="submit">Done</button>
                 </form>
             </dialog>
 
@@ -336,7 +336,7 @@
             <message-box></message-box>
 
             <form id="send-message-form">
-                <input type="text" placeholder="Type your message..." id="send-message">
+                <input type="text" placeholder="Type your message..." id="send-message" maxlength="200">
                 <button type="submit">
                     Send
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg>
@@ -405,7 +405,7 @@
                 `${username} left to go get milk and never came back.`,
                 `${username} disconnected. Probably lost their Wi-Fi to a squirrel.`,
                 `${username} has left the chat. Fs in the chat, boys.`,
-                `${username} went 3-2 years to dagestan.`
+                `${username} went 2-3 years to dagestan.`
             ];
             return messages[Math.floor(Math.random() * messages.length)];
         }

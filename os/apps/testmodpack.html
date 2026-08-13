@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>QPack Test</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            background: #0d1117;
+            color: #e6edf3;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .panel {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 12px;
+            padding: 10px 16px;
+
+            border: none;
+            border-radius: 8px;
+
+            background: #238636;
+            color: white;
+
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #2ea043;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 12px;
+            padding: 10px;
+
+            border-radius: 8px;
+
+            background: #0d1117;
+            border: 1px solid #30363d;
+
+            white-space: pre-wrap;
+        }
+
+        .contents {
+            margin-top: 15px;
+        }
+
+        .file {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+
+            padding: 10px 12px;
+
+            border-bottom: 1px solid #21262d;
+
+            font-family: monospace;
+        }
+
+        .file:last-child {
+            border-bottom: none;
+        }
+
+        .file-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-size {
+            color: #8b949e;
+            flex-shrink: 0;
+        }
+
+        pre {
+            overflow-x: auto;
+
+            padding: 15px;
+
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+
+            font-family: monospace;
+        }
+
+        .empty {
+            color: #8b949e;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📦 QPack Test</h1>
+
+    <!-- CREATE QPACK -->
+    <div class="panel">
+
+        <h2>1. Create QPack</h2>
+
+        <p>
+            Select a directory to package into a
+            <code>.qpack</code> file.
+        </p>
+
+        <input
+            type="file"
+            id="directoryInput"
+            webkitdirectory
+            multiple
+        >
+
+        <button
+            id="downloadButton"
+            disabled
+        >
+            Download QPack
+        </button>
+
+        <div
+            id="directoryStatus"
+            class="status"
+        >
+            No directory selected.
+        </div>
+
+    </div>
+
+
+    <!-- UPLOAD QPACK -->
+    <div class="panel">
+
+        <h2>2. Open QPack</h2>
+
+        <p>
+            Select an existing <code>.qpack</code> file
+            to inspect its contents.
+        </p>
+
+        <input
+            type="file"
+            id="qpackInput"
+            accept=".qpack,.zip"
+        >
+
+        <div
+            id="qpackStatus"
+            class="status"
+        >
+            No QPack selected.
+        </div>
+
+    </div>
+
+
+    <!-- CONTENTS -->
+    <div class="panel">
+
+        <h2>📂 Contents</h2>
+
+        <div
+            id="contents"
+            class="contents"
+        >
+            <div class="empty">
+                No QPack loaded.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- MANIFEST -->
+    <div class="panel">
+
+        <h2>📄 Manifest</h2>
+
+        <pre id="manifest">No manifest.json found.</pre>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+    /*
+     * Quasar OS App API
+     *
+     * The OS should expose:
+     *
+     * window.parent.AppAPI.downloadQpack(...)
+     * window.parent.AppAPI.extractQpack(...)
+     */
+
+    const OS = window.parent;
+
+
+    /*
+     * Elements
+     */
+
+    const directoryInput =
+        document.getElementById("directoryInput");
+
+    const downloadButton =
+        document.getElementById("downloadButton");
+
+    const directoryStatus =
+        document.getElementById("directoryStatus");
+
+    const qpackInput =
+        document.getElementById("qpackInput");
+
+    const qpackStatus =
+        document.getElementById("qpackStatus");
+
+    const contents =
+        document.getElementById("contents");
+
+    const manifest =
+        document.getElementById("manifest");
+
+
+    /*
+     * Selected directory
+     */
+
+    let selectedFiles = [];
+
+
+    /*
+     * Directory selection
+     */
+
+    directoryInput.addEventListener(
+        "change",
+        () => {
+
+            selectedFiles =
+                [...directoryInput.files];
+
+            if (selectedFiles.length === 0) {
+
+                downloadButton.disabled = true;
+
+                directoryStatus.textContent =
+                    "No directory selected.";
+
+                return;
+            }
+
+
+            downloadButton.disabled = false;
+
+
+            directoryStatus.textContent =
+                `Selected ${selectedFiles.length} files.\n\n` +
+                selectedFiles
+                    .map(file =>
+                        file.webkitRelativePath ||
+                        file.name
+                    )
+                    .join("\n");
+        }
+    );
+
+
+    /*
+     * Download QPack
+     */
+
+    downloadButton.addEventListener(
+        "click",
+        async () => {
+
+            if (selectedFiles.length === 0)
+                return;
+
+
+            try {
+
+                directoryStatus.textContent =
+                    "Creating QPack...";
+
+
+                /*
+                 * Call the Quasar OS App API.
+                 *
+                 * Expected signature:
+                 *
+                 * AppAPI.downloadQpack(
+                 *     files,
+                 *     filename
+                 * )
+                 */
+
+                await OS.AppAPI.downloadQpack(
+                    selectedFiles,
+                    "TestModpack.qpack"
+                );
+
+
+                directoryStatus.textContent =
+                    `Successfully created TestModpack.qpack\n\n` +
+                    `${selectedFiles.length} files packaged.`;
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                directoryStatus.textContent =
+                    `Failed to create QPack:\n\n${error}`;
+            }
+        }
+    );
+
+
+    /*
+     * Upload / extract QPack
+     */
+
+    qpackInput.addEventListener(
+        "change",
+        async () => {
+
+            const file =
+                qpackInput.files[0];
+
+            if (!file)
+                return;
+
+
+            try {
+
+                qpackStatus.textContent =
+                    "Extracting QPack...";
+
+
+                /*
+                 * Call the Quasar OS App API.
+                 *
+                 * Expected signature:
+                 *
+                 * AppAPI.extractQpack(file)
+                 *
+                 * Expected result:
+                 *
+                 * [
+                 *     {
+                 *         name: "manifest.json",
+                 *         blob: Blob
+                 *     },
+                 *     ...
+                 * ]
+                 */
+
+                const files =
+                    await OS.AppAPI.extractQpack(file);
+
+                OS.AppAPI.loadQpack(file);
+
+                qpackStatus.textContent =
+                    `Loaded ${file.name}\n\n` +
+                    `${files.length} files found.`;
+
+
+                displayContents(files);
+
+                await displayManifest(files);
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                qpackStatus.textContent =
+                    `Failed to extract QPack:\n\n${error}`;
+            }
+        }
+    );
+
+
+    /*
+     * Display QPack contents
+     */
+
+    function displayContents(files) {
+
+        contents.innerHTML = "";
+
+
+        if (files.length === 0) {
+
+            contents.innerHTML =
+                `<div class="empty">
+                    QPack is empty.
+                </div>`;
+
+            return;
+        }
+
+
+        /*
+         * Sort alphabetically
+         */
+
+        files.sort(
+            (a, b) =>
+                a.name.localeCompare(b.name)
+        );
+
+
+        for (const file of files) {
+
+            const element =
+                document.createElement("div");
+
+            element.className = "file";
+
+
+            const name =
+                document.createElement("span");
+
+            name.className = "file-name";
+
+            name.textContent =
+                file.name;
+
+
+            const size =
+                document.createElement("span");
+
+            size.className = "file-size";
+
+            size.textContent =
+                formatBytes(file.blob.size);
+
+
+            element.appendChild(name);
+            element.appendChild(size);
+
+            contents.appendChild(element);
+        }
+    }
+
+
+    /*
+     * Display manifest.json
+     */
+
+    async function displayManifest(files) {
+
+        const manifestFile =
+            files.find(
+                file =>
+                    file.name === "manifest.json"
+            );
+
+
+        if (!manifestFile) {
+
+            manifest.textContent =
+                "No manifest.json found.";
+
+            return;
+        }
+
+
+        try {
+
+            const text =
+                await manifestFile.blob.text();
+
+
+            const json =
+                JSON.parse(text);
+
+
+            manifest.textContent =
+                JSON.stringify(
+                    json,
+                    null,
+                    4
+                );
+
+        }
+
+        catch (error) {
+
+            manifest.textContent =
+                `Invalid manifest.json:\n\n${error}`;
+        }
+    }
+
+
+    /*
+     * Format file sizes
+     */
+
+    function formatBytes(bytes) {
+
+        if (bytes === 0)
+            return "0 B";
+
+
+        const units = [
+            "B",
+            "KB",
+            "MB",
+            "GB"
+        ];
+
+
+        const index =
+            Math.floor(
+                Math.log(bytes) /
+                Math.log(1024)
+            );
+
+
+        return (
+            `${(bytes / Math.pow(1024, index))
+                .toFixed(2)} ${units[index]}`
+        );
+    }
+
+</script>
+
+</body>
+</html>

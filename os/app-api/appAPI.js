@@ -1,4 +1,5 @@
-import { setWallpaper } from "../desktop/wallpaper.js";
+import { createQpack, downloadQpack, extractQpack, loadQpack } from "../desktop/modpackMgr.js";
+import { setWallpaper } from "../desktop/subsystems/wallpaper.js";
 import { showToast, ToastType } from "../ui/toast.js";
 
 window.ToastType = ToastType;
@@ -20,6 +21,19 @@ registerAppFunction("showToast", (type, title, contents) => {
 registerAppFunction("setWallpaper", (wallpaperObj) => {
   setWallpaper(wallpaperObj);
 });
+
+// * QPACK
+registerAppFunction("downloadQpack", async (files, packname) => {
+  const qpack = await createQpack(files);
+
+  downloadQpack(qpack, packname);
+});
+registerAppFunction("extractQpack", (qpack) => {
+  return extractQpack(qpack);
+});
+registerAppFunction("loadQpack", (qpack) => {
+  return loadQpack(qpack);
+})
 
 // Exports
 console.log("AppAPI registered");
