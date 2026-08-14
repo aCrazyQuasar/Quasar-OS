@@ -3,7 +3,7 @@ import { normalizePath, onModpackChange } from "../modpackMgr.js";
 
 const audioLogger = new SystemLogger("Audio Subsystem");
 
-audioLogger.log("System initialized", "Module Loaded and Initialized");
+audioLogger.log("Subsystem initialized", "Module Loaded and Initialized");
 
 // ! WHEN USEFULL THING IS UPDATED
 onModpackChange(async (e) => {
