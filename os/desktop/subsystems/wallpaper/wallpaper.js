@@ -1,5 +1,5 @@
 import { SystemLogger } from "../../../system/logger.js";
-import { normalizePath, onModpackChange } from "../../modpackMgr.js";
+import { currentPack, normalizePath, onModpackChange } from "../../modpackMgr.js";
 import { DefaultWallpaper } from "../../wallpapers/default.js";
 
 // Logger
@@ -11,9 +11,36 @@ const canvas = document.getElementById("background-wallpaper");
 const ctx = canvas.getContext("2d");
 let currentWallpaper;
 let lastTime = 0;
+
+// setup pack
+let pack = currentPack;
+onModpackChange(() => {
+    pack = currentPack;
+})
+
 export const  API = {
     width: canvas.width,
     height: canvas.height,
+    getFile(filePath) {
+        return pack.get(normalizePath(filePath));
+    },
+    getAssetUrl(filePath, mimeType = "") {
+        const blob = pack.get(normalizePath(filePath));
+        if (!blob) return null;
+
+        const typedBlob = mimeType
+        ? new Blob([blob], { type: mimeType })
+        : blob;
+        return URL.createObjectURL(typedBlob);
+    },
+    log(msg) {
+        console.log(`[Modpack Wallpaper]:`, msg);
+    },
+    async getTextFile(filePath) {
+        const blob = pack.get(normalizePath(filePath));
+        if (!blob) return null;
+        return await blob.text();
+    },
 };
 
 // Canvas setup

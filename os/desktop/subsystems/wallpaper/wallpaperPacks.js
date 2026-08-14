@@ -25,35 +25,7 @@ onModpackChange(async (e) => {
         try {
             const module = await import(objectUrl);
             const wallpaper = module.default || module;
-
-            let newAPI = {
-                ...API,
-                getFile(filePath) {
-                    return pack.get(normalizePath(filePath));
-                },
-                getAssetUrl(filePath, mimeType = "") {
-                    const blob = pack.get(normalizePath(filePath));
-                    if (!blob) return null;
-            
-                    const typedBlob = mimeType
-                    ? new Blob([blob], { type: mimeType })
-                    : blob;
-                    return URL.createObjectURL(typedBlob);
-                },
-                log(msg) {
-                    console.log(`[Modpack Wallpaper]:`, msg);
-                },
-                async getTextFile(filePath) {
-                    const blob = pack.get(normalizePath(filePath));
-                    if (!blob) return null;
-                    return await blob.text();
-                },
-            }
-            
-            wallpaper.init(newAPI);
-
-            setWallpaper(wallpaper, false);
-
+            setWallpaper(wallpaper);
         } catch (err) {
             logger.error("Failed to load wallpaper module", err);
         } finally {
