@@ -1,0 +1,57 @@
+nav{
+    position: sticky;
+    top: 0;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+
+    background-color: #07070780;
+    backdrop-filter: blur(5px);
+    z-index: 100;
+}
+nav .nav-group{
+    display: contents;
+}
+nav .logo{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-decoration: none;
+}
+nav .logo img{
+    width: 64px;
+    height: 64px;
+}
+nav ul{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+nav .nav-links .nav-link{
+    font-size: 1.25rem;
+    text-decoration: none;
+}
+nav .nav-links .nav-link:hover{
+    text-decoration: underline;
+}
+nav .nav-btns{
+    gap: 1rem;
+}
+nav .nav-btns .nav-btn{
+    background-color: var(--brand-color);
+    padding: 1rem 1.75rem;
+    text-decoration: none;
+    border-radius: 10px;
+    display: inline-block;
+    transition: 0.3s ease;
+}
+nav .nav-btns .nav-btn:hover{
+    transform: translateY(-2px);
+}
+nav .nav-btns .nav-btn:active{
+    transform: translateY(0px);
+}

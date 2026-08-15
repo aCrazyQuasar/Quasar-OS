@@ -1,0 +1,7 @@
+/* Base */
+@import "./base/reset.css";
+@import "./base/typography.css";
+@import "./base/variables.css";
+
+/* Components */
+@import "./components/nav.css";

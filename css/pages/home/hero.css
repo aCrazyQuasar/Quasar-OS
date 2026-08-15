@@ -1,0 +1,10 @@
+header {
+    width: 100%;
+    position: relative;
+}
+header canvas{
+    width: 100%;
+}
+header .text{
+    position: absolute;
+}
