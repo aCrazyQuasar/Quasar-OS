@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>acrazyquasar game app</title>
+
+    <!-- CDN Import -->
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/games.js"></script>
+
+    <!-- CSS -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            scrollbar-width: none;
+            -moz-overflow-style: none;
+        }
+        *::-webkit-scrollbar{
+            display: none;
+        }
+        :root{
+            --base-color: #000000;
+            --surface-color: #0b0b0b;
+            --brand-color: #0d57c7;
+            --text-color: #ffffff;
+            --text-secondary: #e6e6e6;
+        }
+        body{
+            background-color: var(--base-color);
+            display: flex;
+            justify-content: flex-start;        
+            align-items: center;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 2rem 3rem;
+        }
+        h1, h2{
+            font-family: "Exo 2", Arial, Helvetica, sans-serif;
+            color: var(--text-color)
+        }
+        p, span, a, button{
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            color: var(--text-secondary);
+        }
+        #game-cards{
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+        }
+        .game-card{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.75rem;
+            background-color: var(--surface-color);
+            border-radius: 10px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .game-card.hidden {
+            display: none;
+        }
+        .game-card .btns{
+            display: flex;
+            gap: 10px;
+        }
+        .game-card .btns .btn{
+            padding: 1rem 1.75rem;
+            border: 1px solid var(--brand-color);
+            background: transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+        .game-card .btns .btn:hover{
+            transform: translateY(-2px);
+        }
+        .game-card .btns .btn:active{
+            transform: translateY(0px);
+        }
+        input[type=text] {
+            border: 1px solid var(--brand-color);
+            background-color: var(--base-color);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            caret-color: var(--text-color);
+            color: var(--text-color);
+        }
+        input[type=text]:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--brand-color);
+        }
+        h1{
+            font-size: 4rem;
+            color: var(--brand-color);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>aCrazyQuasar Games</h1>
+    <p>The best games you'll ever find!</p>
+    <input type="text" placeholder="Search a game..." id="searchGameInput">
+    <div id="game-cards">
+        
+    </div>
+
+    <!-- JS -->
+    <script defer>
+        function initGameCards() {
+            const gamesContainer = document.getElementById('game-cards');
+            let newHTML = ``;
+            for (let f of files) {
+                const gameName= f.slice(2);
+                const gameURL = `https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/${f}.html`;
+
+                newHTML += `
+                <div class="game-card">
+                    <h2>${gameName}</h2>
+                    <div class="btns">
+                        <button class="btn" onclick="openGameWindow('${gameURL}')">Open</button>
+                        <button class="btn" onclick="openGameTab('${gameURL}')">Cloak</button>
+                    </div>
+                </div>
+                `;
+            }
+            gamesContainer.innerHTML = newHTML;
+        }
+
+        initGameCards();
+
+        const OS = window.parent.AppAPI;
+        function openGameWindow(url) {
+            OS.createWindowJsDelivr(getRandomTitle(), url);
+        }
+        function openGameTab(url) {
+            fetch(url)
+            .then(response => response.text())
+            .then(text => {
+                const newWin = window.open("about:blank", "_blank");
+                if (newWin) {
+                    newWin.document.open();
+                    newWin.document.write(text);
+                    newWin.document.close();
+                    newWin.document.title = getRandomTitle();
+                }
+            });
+        }
+        function getRandomTitle() {
+            const names = [
+                "Google Drive",
+                "Clever | Log in",
+                "Subscribe to acrazyquasar",
+                "Subscribe to Quasar-OS",
+                "Cloaked tab",
+                "Not Suspcious",
+                "Nonexistant",
+                "I know where you live"
+            ];
+            return names[Math.floor(Math.random() * names.length)];
+        }
+
+        const searchInput = document.getElementById('searchGameInput');
+
+        searchInput.addEventListener("input", () => {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const gameCards = document.querySelectorAll(".game-card");
+
+            gameCards.forEach((card) => {
+                const title = card.querySelector('h2').textContent.toLowerCase();
+
+                if (title.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

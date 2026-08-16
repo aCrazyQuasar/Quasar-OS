@@ -38,3 +38,8 @@ const browserBtn = document.getElementById("browser-btn");
 browserBtn.addEventListener("click", () => {
   loadNativeApp("Modpack Test", "/os/apps/testmodpack.html");
 });
+
+const gamesBtn = document.getElementById('games-btn');
+gamesBtn.addEventListener("click", () => {
+  loadNativeApp("aCrazyQuasar Games", "/os/apps/gamesApp.html");
+});

@@ -170,7 +170,7 @@ function createWindowCode(name, rawCode) {
                     </div>
                 </div>
             </div>
-            <iframe sandbox="allow-scripts allow-same-origin"></iframe>
+            <iframe sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
             <div class="resize-handle"></div>
         </div>
     `;

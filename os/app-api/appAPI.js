@@ -1,3 +1,4 @@
+import { createWindowJsDelivr } from "../components/window.js";
 import {
   createQpack,
   downloadQpack,
@@ -25,6 +26,11 @@ registerAppFunction("showToast", (type, title, contents) => {
 });
 registerAppFunction("setWallpaper", (wallpaperObj) => {
   setWallpaper(wallpaperObj);
+});
+
+// * Window Sys
+registerAppFunction("createWindowJsDelivr", (title, url) => {
+  createWindowJsDelivr(title, url);
 });
 
 // * QPACK
