@@ -1,0 +1,22 @@
+{
+    "name": "Dr. Donut Songs: The Modpack",
+    "description": "A modpack for all the Dr Donut songs",
+    "credit": "acrazyquasar",
+
+    "bootAudio": "",
+    "backgroundAudio": [
+        {
+            "name": "Farex Pull My Pearl",
+            "file": "./audio/farex-pull-my-pearl.mp3"
+        },
+        {
+            "name": "Wizox Ban This guy",
+            "file": "./audio/wizox-ban-this-guy.mp3"
+        }
+    ],
+
+    "defaultWallpaper": "./wallpapers/defaultwallpaper.js",
+    "wallpapers": [
+
+    ]
+}
