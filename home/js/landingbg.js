@@ -1,58 +1,114 @@
-const canvas = document.getElementById('heroCanvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("heroCanvas");
+const ctx = canvas.getContext("2d");
+
+const nav = document.querySelector("nav");
+
+let width = 0;
+let height = 0;
+
+const PARTICLE_COUNT = 600;
+const particles = [];
+const S = 0.003;
+const SPEED = 0.75;
 
 function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  width = window.innerWidth;
+
+  const navHeight = nav
+    ? nav.getBoundingClientRect().height
+    : 0;
+
+  height = window.innerHeight - navHeight;
+
+  canvas.width = width;
+  canvas.height = height;
 }
-window.addEventListener("resize", resize)
+
+window.addEventListener("resize", resize);
 resize();
 
-let time = 0;
-
-let stars = [];
-let amount = 200;
-for (let i = 0; i < amount; i++) {
-    stars.push({
-        x: (Math.random() - 0.5) * canvas.width * 2,
-        y: (Math.random() - 0.5) * canvas.height * 2,
-        z: Math.random() * 10,
-        lz: undefined
-    });
+function angle(x, y, t) {
+  return (
+    Math.sin(x * S * 1.3 + t * 0.34) * 1.5 +
+    Math.cos(y * S * 1.9 - t * 0.27) * 1.5 +
+    Math.sin((x + y) * S * 0.7 + t * 0.16) * 1.1
+  );
 }
 
-function animate() {
+function createParticle() {
+  return {
+    x: Math.random() * width,
+    y: Math.random() * height,
+    life: 0,
+    maxLife: 100 + Math.random() * 150,
+    speedMultiplier: 0.8 + Math.random() * 0.4
+  };
+}
 
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  const p = createParticle();
+  p.life = Math.random() * p.maxLife;
+  particles.push(p);
+}
 
-    ctx.fillStyle = "black"
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+function animate(now) {
+  const time = now * 0.003;
 
-    for (const s of stars) {
-        s.lz = s.z
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, width, height);
 
-        s.z -= 0.01;
-        if (s.z <= 0) {
-            s.lz = 10.01
-            s.z = 10;
-        }
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    let p = particles[i];
 
-        const tlx = cx - (s.x / s.lz);
-        const tly = cy - (s.y / s.lz);
-        const tx = cx - (s.x / s.z);
-        const ty = cy - (s.y / s.z);
+    p.life++;
 
-        ctx.beginPath();
-        ctx.moveTo(tlx, tly);
-        ctx.lineTo(tx, ty);
+    const hitBoundary =
+      p.x < 0 ||
+      p.x >= width ||
+      p.y < 0 ||
+      p.y >= height;
 
-        ctx.strokeStyle = "white"; 
-        ctx.lineWidth = 2; 
-        ctx.stroke();
+    if (p.life >= p.maxLife || hitBoundary) {
+      p = createParticle();
+      particles[i] = p;
     }
 
+    const a = angle(p.x, p.y, time);
 
-    requestAnimationFrame(animate);
+    const vx =
+      Math.cos(a) *
+      SPEED *
+      p.speedMultiplier;
+
+    const vy =
+      Math.sin(a) *
+      SPEED *
+      p.speedMultiplier;
+
+    p.x += vx;
+    p.y += vy;
+
+    const fadeIn =
+      Math.min(1, p.life / 20);
+
+    const fadeOut =
+      Math.min(1, (p.maxLife - p.life) / 20);
+
+    const alpha =
+      Math.min(fadeIn, fadeOut) * 0.8;
+
+    ctx.fillStyle =
+      `rgba(13, 87, 199, ${alpha})`;
+
+    ctx.fillRect(
+      p.x,
+      p.y,
+      1.8,
+      1.8
+    );
+  }
+
+  requestAnimationFrame(animate);
 }
+
 requestAnimationFrame(animate);
