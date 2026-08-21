@@ -74,3 +74,8 @@ header .hero-content p {
     line-height: 1.65;
     text-wrap: pretty;
 }
+header .cta-btns{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}

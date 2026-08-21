@@ -1,0 +1,120 @@
+#website-config-form .control-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+#website-config-form .control-grid .grid-section{
+    background-color: var(--base-secondary);
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+#website-config-form hr {
+    border: none;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--surface-color), transparent);
+}
+
+/* Colors Section */
+
+#website-config-form .colors-group{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    height: 100%;
+}
+#website-config-form .colors-group label{
+    background-color: var(--surface-color);
+    width: max-content;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+#website-config-form .colors-group input[type="color"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 3rem;
+    height: 2rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+#website-config-form .colors-group input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+#website-config-form .colors-group input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
+#website-config-form .colors-group input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
+
+/* Text Section */
+#website-config-form .text-group{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+#website-config-form .text-group .group{
+    background-color: var(--surface-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    width: 100%;
+    text-align: center;
+}
+#website-config-form .text-group .group input[type="text"]{
+    padding: 0.5rem 1rem;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--surface-light);
+    background-color: var(--surface-color);
+    caret-color: var(--text-secondary);
+    color: var(--text-secondary);
+}
+#website-config-form .text-group .group input[type="text"]:focus{
+    border: 1px solid var(--brand-color);
+    box-shadow: 0 0 5px var(--brand-color);
+    outline: none;
+}
+
+/* Font Section */
+#website-config-form .font-group{
+    height: 100%;
+    width: 100%;
+}
+#website-config-form .font-group .box{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+}
+#website-config-form .font-group .box svg{
+    scale: 3;
+    display: block;
+}

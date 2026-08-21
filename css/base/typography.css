@@ -10,7 +10,7 @@ h1, h2, h3, h4, h5, h6{
     font-family: "Exo 2", Arial, monospace;
     color: var(--text-color);
 }
-p, a, button{
+p, a, button, label{
     font-family: "Nuntio", Arial, Helvetica, sans-serif;
     color: var(--text-secondary);
 }

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quasar OS | Customize Your Site</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+
+    <!-- CSS Imports -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/pages/custom/form.css">
+    <link rel="stylesheet" href="/css/pages/custom/iframe.css">
+</head>
+<body>
+    <nav>
+        <a class="logo" href="/">
+            <img src="/assets/images/favicon.png" alt="QuasarOS logo">
+            <h1>Quasar OS</h1>
+        </a>
+
+        <div class="nav-group">
+            <ul class="nav-links">
+                <li><a class="nav-link" href="/home/">Home</a></li>
+                <li><a class="nav-link" href="/about/">About</a></li>
+                <li><a class="nav-link" href="/devtools/">Devtools</a></li>
+                <li><a class="nav-link" href="/docs/">Docs</a></li>
+            </ul>
+            <ul class="nav-btns">
+                <li><a class="nav-btn" href="/">Launch</a></li>
+                <li><a class="nav-btn" href="/contribute/">Contribute</a></li>
+            </ul>
+        </div>
+    </nav>
+    <header>
+        <h1>Make a Custom QOS Version</h1>
+        <p>Make your very own, uniquely you game website. Change colors, themes, fonts, and more!</p>
+    </header>
+    <main>
+        <form id="website-config-form">
+            <div class="control-grid">
+                <div class="grid-section">
+                    <h2>Website Colors</h2>
+                    <hr>
+                    <div class="colors-group">
+                        <label class="group" for="main-color-input">
+                            Brand Color
+                            <input type="color" id="main-color-input">
+                        </label>
+                        <label class="group" for="text-color-input">
+                            Text Color
+                            <input type="color" id="text-color-input">
+                        </label>
+                        <label class="group" for="text-secondary-input">
+                            Secondary Text Color
+                            <input type="color" id="text-secondary-input">
+                        </label>
+                        <label class="group" for="base-color-input">
+                            Base Color
+                            <input type="color" id="base-color-input">
+                        </label>
+                        <label class="group" for="surface-color-input">
+                            Surface Color
+                            <input type="color" id="surface-color-input">
+                        </label>
+                    </div>
+                </div>
+                <div class="grid-section">
+                    <h2>Website Text</h2>
+                    <hr>
+                    <div class="text-group">
+                        <label class="group" for="text-title-input">
+                            Website Name
+                            <input type="text" placeholder="Type here..." id="text-title-input" maxlength="20">
+                        </label>
+                        <label class="group" for="text-subtext-input">
+                            Website Subtext
+                            <input type="text" placeholder="Type here..." id="text-subtext-input" maxlength="200">
+                        </label>
+                        <label class="group" for="text-creator-input">
+                            Username
+                            <input type="text" placeholder="Type here..." id="text-creator-input" maxlength="200">
+                        </label>
+                    </div>
+                </div>
+                <div class="grid-section">
+                    <h2>Website Font</h2>
+                    <hr>
+                    <div class="font-group">
+                        <div class="box">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-640h560v-80H200v80Zm0 0v-80 80Zm0 560q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v227q-19-9-39-15t-41-9v-43H200v400h252q7 22 16.5 42T491-80H200Zm378.5-18.5Q520-157 520-240t58.5-141.5Q637-440 720-440t141.5 58.5Q920-323 920-240T861.5-98.5Q803-40 720-40T578.5-98.5ZM787-145l28-28-75-75v-112h-40v128l87 87Z"/></svg>
+                            <p>Coming Soon...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <iframe id="website-preview"></iframe>
+    </main>
+
+    <!-- JavaScript -->
+    <script type="module" src="./js/formReset.js"></script>
+    <script type="module" src="./js/iframe.js"></script>
+</body>
+</html>
