@@ -51,7 +51,7 @@ header .hero-content .hero-badge {
 
     font-family: monospace;
     font-size: 0.72rem;
-    font-weight: 500;
+    font-weight: 500; 
     letter-spacing: 0.12em;
     text-transform: uppercase;
     opacity: 0.7;
@@ -78,4 +78,18 @@ header .cta-btns{
     display: flex;
     justify-content: center;
     gap: 20px;
+}
+header .cta-btns .btn{
+    padding: 1rem 1.75rem;
+    background-color: var(--brand-color);
+    cursor: pointer;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+header .cta-btns .btn:hover{
+    transform: translateY(-5px);
+}
+header .cta-btns .btn:active{
+    transform: translateY(0px);
 }
