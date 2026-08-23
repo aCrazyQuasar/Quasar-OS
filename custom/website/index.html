@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Example Website | Custom Sites</title>
+    <title></title>
+    
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
 
     <!-- CSS -->
     <style>
@@ -107,9 +109,28 @@
         </div>
     </nav>
     <header>
-        <h1>Example Website</h1>
-        <p class="subtext">Cool inspirational quote or a slogan or something.</p>
-        <p class="author">Made by: acrazyquasar</p>
+        <h1 id="site-title">Example Website</h1>
+        <p class="subtext" id="site-subtext">Cool inspirational quote or a slogan or something.</p>
+        <p class="author" id="site-creator">Made by: acrazyquasar</p>
     </header>
+    
+    <!-- Setup -->
+    <script type="module">
+        const siteURL = new URL(window.location.href);
+        const params = siteURL.searchParams;
+
+        document.getElementById('site-title').innerText = params.get('name');
+        document.getElementById('site-subtext').innerText = params.get('sub');
+        document.getElementById('site-creator'). innerText =`Made by: ${params.get('creator')}`;
+
+        const root = document.documentElement;
+        root.style.setProperty('--base-color', params.get('c1')); 
+        root.style.setProperty('--surface-color', params.get('c2')); 
+        root.style.setProperty('--brand-color', params.get('c3')); 
+        root.style.setProperty('--text-color', params.get('c4')); 
+        root.style.setProperty('--text-secondary', params.get('c5')); 
+
+        document.title = `${params.get('name')} | Made by: ${params.get('creator')}`;
+    </script>
 </body>
 </html>

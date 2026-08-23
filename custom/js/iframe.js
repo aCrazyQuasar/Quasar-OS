@@ -1,12 +1,49 @@
-import { baseColorInput, surfaceColorInput, brandColorInput, textColorInput, textSecondaryInput } from "./formReset.js";
+import { 
+    baseColorInput,
+    surfaceColorInput, 
+    brandColorInput, 
+    textColorInput, 
+    textSecondaryInput, 
+
+    websiteNameInput,
+    websiteSubtextInput, 
+    websiteCreatorInput,
+
+    websiteURLOutput,
+    visitSiteBtn
+} from "./formReset.js";
 
 const frame = document.getElementById('website-preview');
 const controlForm = document.getElementById('website-config-form');
 controlForm.addEventListener('change', () => {
     frame.srcdoc = getNewFrame();
+
+    let link = makeURL();
+    websiteURLOutput.innerText = link;
+visitSiteBtn.href = link;
 });
 
+let initialLink = makeURL();
+websiteURLOutput.innerText = initialLink;
+visitSiteBtn.href = initialLink;
+
 frame.srcdoc = getNewFrame();
+
+function makeURL() {
+    const websiteURL = new URL(window.location.href)
+    websiteURL.pathname = "/custom/website/"
+    websiteURL.searchParams.set("c1", baseColorInput.value);
+    websiteURL.searchParams.set("c2", surfaceColorInput.value);
+    websiteURL.searchParams.set("c3", brandColorInput.value);
+    websiteURL.searchParams.set("c4", textColorInput.value);
+    websiteURL.searchParams.set("c5", textSecondaryInput.value);
+    websiteURL.searchParams.set("name", websiteNameInput.value);
+    websiteURL.searchParams.set("sub", websiteSubtextInput.value);
+    websiteURL.searchParams.set("creator", websiteCreatorInput.value);
+
+    console.log("New Website URL:", websiteURL.href);
+    return websiteURL;
+}
 
 function getNewFrame() {
     return `
@@ -89,12 +126,12 @@ function getNewFrame() {
             font-family: "Exo 2", Arial, Helvetica, sans-serif;
         }
         header .subtext{
-            color: color-mix(in srgb, var(--text-color), transparent 20%);
+            color: color-mix(in srgb, var(--text-secondary), transparent 20%);
             font-size: 1.25rem;
             font-family: "Nunito", Arial, Helvetica, sans-serif;
         }
         header .author{
-            color: color-mix(in srgb, var(--text-color), transparent 40%);
+            color: color-mix(in srgb, var(--text-secondary), transparent 40%);
             font-family: "Nunito", Arial, Helvetica, sans-serif;
         }
     </style>
@@ -119,9 +156,9 @@ function getNewFrame() {
         </div>
     </nav>
     <header>
-        <h1>Example Website</h1>
-        <p class="subtext">Cool inspirational quote or a slogan or something.</p>
-        <p class="author">Made by: acrazyquasar</p>
+        <h1>${websiteNameInput.value}</h1>
+        <p class="subtext">${websiteSubtextInput.value}</p>
+        <p class="author">Made by: ${websiteCreatorInput.value}</p>
     </header>
 </body>
 </html>

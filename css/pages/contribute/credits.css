@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap');
+#credits{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-top: 20px;
+}
+.credits{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.credit{
+    background-color: var(--base-secondary);
+    padding: 1rem 1.75rem;
+    display: flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    border-radius: 10px;
+    user-select: none;
+}
+#credit-acrazyquasar{
+    background: linear-gradient(45deg, #3196f5, #31f181);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    color: transparent;
+}
+#credit-unknown{
+    color: #3636dc;
+}
+#credit-error{
+    background: linear-gradient( #002b00, lime, #002b00);
+    background-size: 100% 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    color: transparent;
+    font-family: "Rubik Glitch", monospace;
+    letter-spacing: 20px;
+    animation: shift-bg-up 3s linear alternate infinite;
+}
+#credit-jamba{
+    background: linear-gradient(45deg, blue, green, blue);
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    color: transparent;
+    animation: shift-bg 3s linear alternate infinite;
+}
+#credit-momister{
+    font-family: "Edu NSW ACT Cursive", cursive;
+    color: #00bfff;
+    font-size: 0.9rem;
+}
+@keyframes shift-bg{
+    from{background-position: 0% 50%;}
+    to{background-position: 100% 50%;}
+}
+@keyframes shift-bg-up{
+    from{background-position: 50% 0%;}
+    to{background-position: 50% 100%;}
+}

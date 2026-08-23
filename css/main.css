@@ -5,3 +5,5 @@
 
 /* Components */
 @import "./components/nav.css";
+@import "./components/header.css";
+@import "./components/hr.css";

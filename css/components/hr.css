@@ -1,0 +1,6 @@
+hr {
+    border: none;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--surface-color), transparent);
+}
