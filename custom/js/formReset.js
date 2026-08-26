@@ -22,6 +22,8 @@ websiteCreatorInput.value = "acrazyquasar";
 export const websiteBgInput = document.getElementById('image-background-input');
 export const websiteFaviconInput = document.getElementById('image-favicon-input');
 
+export const form = document.getElementById('website-config-form');
+
 // output
 export const websiteURLOutput = document.getElementById('website-url-output');
 export const visitSiteBtn = document.getElementById('visit-website-btn');

@@ -156,23 +156,34 @@
 
 /* Layout Section */
 #website-config-form .layout-group{
-    height: 100%;
-    width: 100%;
-}
-#website-config-form .layout-group .box{
-    height: 100%;
-    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    gap: 40px;
-    background-color: var(--surface-color);
-    border-radius: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
-#website-config-form .layout-group .box svg{
-    scale: 3;
-    display: block;
+#website-config-form .layout-group .group{
+    background-color: var(--surface-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    width: 100%;
+    text-align: center;
+}
+#website-config-form .layout-group .group#layout-nav-sec{
+    justify-content: space-evenly;
+}
+#website-config-form .layout-group .group label{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+#website-config-form .layout-group .group label input[type="radio"] {
+  accent-color: var(--brand-color);
 }
 
 /* App Section */

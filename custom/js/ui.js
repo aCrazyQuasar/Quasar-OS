@@ -13,6 +13,8 @@ import {
     websiteBgInput,
     websiteFaviconInput,
 
+    form,
+
     websiteURLOutput,
     visitSiteBtn
 } from "./formReset.js";
@@ -37,6 +39,7 @@ controlForm.addEventListener('change', async () => {
 updateUI();
 
 async function makeURL() {
+    const formD = new FormData(form);
     const websiteURL = new URL(window.location.href)
     websiteURL.pathname = "/custom/website/";
     const config = {
@@ -52,7 +55,9 @@ async function makeURL() {
         creator: websiteCreatorInput.value,
 
         bgi: websiteBgInput.value,
-        fai: websiteFaviconInput.value
+        fai: websiteFaviconInput.value,
+
+        navl: formD.get('layout-nav')
     }
     const base64 = await packConfig(config);
     websiteURL.searchParams.set("c", base64);

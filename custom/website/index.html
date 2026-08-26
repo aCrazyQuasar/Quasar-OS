@@ -7,6 +7,9 @@
     
     <link id="site-favicon" rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
 
+    <!-- UGS Import -->
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/games.js"></script>
+
     <!-- CSS -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
@@ -22,6 +25,10 @@
         *{
             margin: 0;
             padding: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        } *::-webkit-scrollbar{
+            display: none;
         }
         body{
             background-color: var(--base-color);
@@ -35,18 +42,45 @@
             height: 100vh;
             overflow: hidden;
             box-sizing: border-box;
+            color: var(--text-secondary);
+            font-family: "Nuntio", Arial, Helvetica, sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6{
+            color: var(--text-color);
+            font-family: "Exo 2", Arial, Helvetica, sans-serif;
         }
         nav{
-            display: block;
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 15px;
             z-index: 100;
+        }
+        nav.bottom{
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        nav.top{
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        nav.right{
+            flex-direction: column;
+            position: fixed;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+        }
+        nav.left{
+            flex-direction: column;
+            position: fixed;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
         }
         nav .app{
             background: color-mix(in srgb, var(--brand-color), transparent 40%);
@@ -58,6 +92,13 @@
             border-radius: 5px;
             cursor: pointer;
             border: none;
+            transition: 0.3s ease;
+        }
+        nav .app:hover{
+            scale: 1.15;
+        }
+        nav .app:active{
+            scale: 0.85;
         }
         .glow{
             position: absolute;
@@ -84,13 +125,39 @@
             opacity: 0;
             scale: 0.5;
             visibility: hidden;
-            transition: 0.3s ease;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         section.active{
             opacity: 1;
             scale: 1;
             visibility: visible;
         }
+        .lettermark{
+            z-index: 50;
+            position: absolute;
+            right: 1rem;
+            bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            flex-direction: column;
+            color: white;
+            opacity: 0.3;
+        }
+        .lettermark p{
+            text-transform: uppercase;
+            font-family: monospace;
+        }
+        .lettermark h4{
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            user-select: none;
+        } 
+    </style>
+    
+    <!-- Home CSS -->
+    <style>
         #home{
             display: flex;
             justify-content: center;
@@ -113,8 +180,71 @@
             font-family: "Nunito", Arial, Helvetica, sans-serif;
         }
     </style>
+
+    <!-- Games CSS -->
+    <style>
+        #games{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 3rem;
+        }
+        #games h2{
+            font-size: 3rem;
+        }
+        #games input[type="text"]{
+            color: var(--text-color);
+            padding: 1rem;
+            border: 1px solid var(--surface-color);
+            background-color: var(--base-color);
+            width: 400px;
+            border-radius: 15px;
+        }
+        #games input[type="text"]:focus{
+            outline: none;
+            border: 1px solid var(--brand-color);
+            box-shadow: 0 0 5px var(--brand-color);
+        }
+        #games #games-container{
+            height: 100%;
+            overflow-y: scroll;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        #games #games-container .game{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background-color: var(--surface-color);
+            flex: 0;
+            width: fit-content;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            font-size: 1rem;
+        }
+        #games #games-container .game button{
+            background-color: var(--brand-color);
+            border: none;
+            padding: 1rem 1.75rem;
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+    <div class="lettermark">
+        <p>Powered By:</p>
+        <h4>CreateQOS</h4>
+    </div>
     <div class="glow"></div>
     <nav>
         <button class="app" id="home-btn">
@@ -143,7 +273,9 @@
             <p class="author" id="site-creator">Made by: acrazyquasar</p>
         </section>
         <section id="games">
-            <h2>Games or smt</h2>
+            <h2><span id="games-author"></span>'s Games</h2>
+            <input type="text" placeholder="Search a game here..." id="search-games">
+            <div id="games-container"></div>
         </section>
         <section id="chat">
 
@@ -155,7 +287,7 @@
 
         </section>
         <section id="code">
-            <iframe src="https://vscode.dev"></iframe>
+
         </section>
     </main>
     
@@ -168,6 +300,7 @@
         document.getElementById('site-title').innerText = config.name;
         document.getElementById('site-subtext').innerText = config.subtext;
         document.getElementById('site-creator'). innerText =`Made by: ${config.creator}`;
+        document.getElementById('games-author').innerText = config.creator;
 
         const root = document.documentElement;
         root.style.setProperty('--base-color', config.bac); 
@@ -184,6 +317,8 @@
         if (config.fai) {
             document.getElementById('site-favicon').href = config.fai;
         }
+
+        document.querySelector("nav").classList.add(config.navl);
 
         function unpackConfig(compressedUrlString) {
             if (!compressedUrlString) return null;
@@ -219,6 +354,41 @@
 
         const codeBtn = document.getElementById('code-btn');
         codeBtn.addEventListener("click", () => { switchToWindow('code') });
+    </script>
+
+    <!-- Games App -->
+    <script>
+        function initGameCards() {
+            const gamesContainer = document.getElementById('games-container');
+            let newHTML = ``;
+            for (let f of files) {
+                const gameName= f.slice(2);
+                const gameURL = `https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/${f}.html`;
+
+                newHTML += `
+                    <div class="game">
+                        <span class="name">${gameName}</span>
+                        <button onclick="openGameTab('${gameURL}')">Play</button>
+                    </div>
+                `;
+            }
+            gamesContainer.innerHTML = newHTML;
+        }
+
+        initGameCards();
+
+        function openGameTab(url) {
+            fetch(url)
+            .then(response => response.text())
+            .then(text => {
+                const newWin = window.open("about:blank", "_blank");
+                if (newWin) {
+                    newWin.document.open();
+                    newWin.document.write(text);
+                    newWin.document.close();
+                }
+            });
+        }
     </script>
 </body>
 </html>
