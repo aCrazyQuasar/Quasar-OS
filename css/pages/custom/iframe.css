@@ -1,7 +1,5 @@
 #website-preview{
-    margin-left: 1rem;
-    margin-right: 1rem;
-    width: calc(100% - 2rem);
+    width: 100%;
     aspect-ratio: 16/9;
     box-sizing: border-box;
     border: none;

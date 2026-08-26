@@ -1,0 +1,14 @@
+footer{
+    background-color: var(--base-secondary);
+    padding: 2rem 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 20px;
+    text-wrap: pretty;
+}
+footer h4{
+    font-size: 1.5rem;
+}

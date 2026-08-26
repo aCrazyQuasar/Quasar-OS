@@ -15,11 +15,23 @@ header img{
     z-index: -1;
     filter: blur(2px) brightness(0.4);
 }
-header .title{
+header .text-box{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    animation: rise-in 3s ease forwards;
+}
+header .title{
     font-size: min(5rem, 80vw);
     text-align: center;
+}
+@keyframes rise-in{
+    from{transform: translate(-50%, calc(-50% + 20px)); opacity: 0;}
+    to{transform: translate(-50%, -50%); opacity: 1;;}
 }

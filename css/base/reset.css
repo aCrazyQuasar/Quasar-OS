@@ -1,6 +1,14 @@
 *{
     margin: 0;
     padding: 0;
+    scrollbar-width: 0;
+    -ms-overflow-style: none;
+}
+*::-webkit-scrollbar{
+    display: none;
+}
+*::selection{
+    background-color: var(--brand-color);
 }
 html{
     scroll-behavior: smooth;

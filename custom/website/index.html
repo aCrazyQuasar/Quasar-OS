@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     
-    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <link id="site-favicon" rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
 
     <!-- CSS -->
     <style>
@@ -25,26 +25,31 @@
         }
         body{
             background-color: var(--base-color);
+            background-size: cover;
+            background-repeat: no-repeat;
+            backdrop-filter: blur(5px) brightness(0.5);
             position: relative;
             min-width: 100%;
             min-height: 100vh;
             max-height: 100vh;
+            height: 100vh;
             overflow: hidden;
+            box-sizing: border-box;
         }
         nav{
-            position: absolute;
-            bottom: 0rem;
+            display: block;
+            position: fixed;
+            bottom: 15px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            max-height: 3rem;
+            transform: translateX(-50%);
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 15px;
-            padding: 1rem;
+            z-index: 100;
         }
         nav .app{
-            background: color-mix(in srgb, var(--brand-color), transparent 90%);
+            background: color-mix(in srgb, var(--brand-color), transparent 40%);
             padding: 0.75rem;
             aspect-ratio: 1/1;
             display: flex;
@@ -52,6 +57,7 @@
             align-items: center;
             border-radius: 5px;
             cursor: pointer;
+            border: none;
         }
         .glow{
             position: absolute;
@@ -60,30 +66,49 @@
             transform: translate(-50%, -50%);
             width: 100%;
             aspect-ratio: 1/1;
-            background: radial-gradient(color-mix(in srgb, var(--brand-color), transparent 90%), transparent);
+            background: radial-gradient(color-mix(in srgb, var(--brand-color), transparent 80%), transparent);
         }
-        header{
+        main{
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            right: 2rem;
+            bottom: 2rem;
+        }
+        section{
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            scale: 0.5;
+            visibility: hidden;
+            transition: 0.3s ease;
+        }
+        section.active{
+            opacity: 1;
+            scale: 1;
+            visibility: visible;
+        }
+        #home{
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             gap: 20px;
         }
-        header h1{
+        #home h1{
             font-size: min(6rem, 80vw);
             color: var(--brand-color);
             font-family: "Exo 2", Arial, Helvetica, sans-serif;
         }
-        header .subtext{
+        #home .subtext{
             color: color-mix(in srgb, var(--text-secondary), transparent 20%);
             font-size: 1.25rem;
             font-family: "Nunito", Arial, Helvetica, sans-serif;
         }
-        header .author{
+        #home .author{
             color: color-mix(in srgb, var(--text-secondary), transparent 40%);
             font-family: "Nunito", Arial, Helvetica, sans-serif;
         }
@@ -92,45 +117,108 @@
 <body>
     <div class="glow"></div>
     <nav>
-        <div class="app">
+        <button class="app" id="home-btn">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
-        </div>
-        <div class="app">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M325-111.5q-73-31.5-127.5-86t-86-127.5Q80-398 80-480.5t31.5-155q31.5-72.5 86-127t127.5-86Q398-880 480.5-880t155 31.5q72.5 31.5 127 86t86 127Q880-563 880-480.5T848.5-325q-31.5 73-86 127.5t-127 86Q563-80 480.5-80T325-111.5ZM480-162q26-36 45-75t31-83H404q12 44 31 83t45 75Zm-104-16q-18-33-31.5-68.5T322-320H204q29 50 72.5 87t99.5 55Zm208 0q56-18 99.5-55t72.5-87H638q-9 38-22.5 73.5T584-178ZM170-400h136q-3-20-4.5-39.5T300-480q0-21 1.5-40.5T306-560H170q-5 20-7.5 39.5T160-480q0 21 2.5 40.5T170-400Zm216 0h188q3-20 4.5-39.5T580-480q0-21-1.5-40.5T574-560H386q-3 20-4.5 39.5T380-480q0 21 1.5 40.5T386-400Zm268 0h136q5-20 7.5-39.5T800-480q0-21-2.5-40.5T790-560H654q3 20 4.5 39.5T660-480q0 21-1.5 40.5T654-400Zm-16-240h118q-29-50-72.5-87T584-782q18 33 31.5 68.5T638-640Zm-234 0h152q-12-44-31-83t-45-75q-26 36-45 75t-31 83Zm-200 0h118q9-38 22.5-73.5T376-782q-56 18-99.5 55T204-640Z"/></svg>
-        </div>
-        <div class="app">
+        </button>
+        <button class="app" id="games-btn">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m272-440 208 120 208-120-168-97v137h-80v-137l-168 97Zm168-189v-17q-44-13-72-49.5T340-780q0-58 41-99t99-41q58 0 99 41t41 99q0 48-28 84.5T520-646v17l280 161q19 11 29.5 29.5T840-398v76q0 22-10.5 40.5T800-252L520-91q-19 11-40 11t-40-11L160-252q-19-11-29.5-29.5T120-322v-76q0-22 10.5-40.5T160-468l280-161Zm0 378L200-389v67l280 162 280-162v-67L520-251q-19 11-40 11t-40-11Zm82.5-486.5Q540-755 540-780t-17.5-42.5Q505-840 480-840t-42.5 17.5Q420-805 420-780t17.5 42.5Q455-720 480-720t42.5-17.5ZM480-160Z"/></svg>
-        </div>
-        <div class="app">
+        </button>
+        <button class="app" id="chat-btn">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm296.5-343.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM480-640Zm0 400Z"/></svg>
-        </div>
-        <div class="app">
+        </button>
+        <button class="app" id="chatbot-btn">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-360q-50 0-85-35t-35-85q0-50 35-85t85-35v-80q0-33 23.5-56.5T240-760h120q0-50 35-85t85-35q50 0 85 35t35 85h120q33 0 56.5 23.5T800-680v80q50 0 85 35t35 85q0 50-35 85t-85 35v160q0 33-23.5 56.5T720-120H240q-33 0-56.5-23.5T160-200v-160Zm242.5-97.5Q420-475 420-500t-17.5-42.5Q385-560 360-560t-42.5 17.5Q300-525 300-500t17.5 42.5Q335-440 360-440t42.5-17.5Zm240 0Q660-475 660-500t-17.5-42.5Q625-560 600-560t-42.5 17.5Q540-525 540-500t17.5 42.5Q575-440 600-440t42.5-17.5ZM320-280h320v-80H320v80Zm-80 80h480v-480H240v480Zm240-240Z"/></svg>
-        </div>
+        </button>
+        <button class="app" id="notes-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M325-111.5q-73-31.5-127.5-86t-86-127.5Q80-398 80-480.5t31.5-155q31.5-72.5 86-127t127.5-86Q398-880 480.5-880t155 31.5q72.5 31.5 127 86t86 127Q880-563 880-480.5T848.5-325q-31.5 73-86 127.5t-127 86Q563-80 480.5-80T325-111.5ZM480-162q26-36 45-75t31-83H404q12 44 31 83t45 75Zm-104-16q-18-33-31.5-68.5T322-320H204q29 50 72.5 87t99.5 55Zm208 0q56-18 99.5-55t72.5-87H638q-9 38-22.5 73.5T584-178ZM170-400h136q-3-20-4.5-39.5T300-480q0-21 1.5-40.5T306-560H170q-5 20-7.5 39.5T160-480q0 21 2.5 40.5T170-400Zm216 0h188q3-20 4.5-39.5T580-480q0-21-1.5-40.5T574-560H386q-3 20-4.5 39.5T380-480q0 21 1.5 40.5T386-400Zm268 0h136q5-20 7.5-39.5T800-480q0-21-2.5-40.5T790-560H654q3 20 4.5 39.5T660-480q0 21-1.5 40.5T654-400Zm-16-240h118q-29-50-72.5-87T584-782q18 33 31.5 68.5T638-640Zm-234 0h152q-12-44-31-83t-45-75q-26 36-45 75t-31 83Zm-200 0h118q9-38 22.5-73.5T376-782q-56 18-99.5 55T204-640Z"/></svg>
+        </button>
+        <button class="app" id="code-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-240 80-480l240-240 57 57-184 184 183 183-56 56Zm320 0-57-57 184-184-183-183 56-56 240 240-240 240Z"/></svg>
+        </button>
     </nav>
-    <header>
-        <h1 id="site-title">Example Website</h1>
-        <p class="subtext" id="site-subtext">Cool inspirational quote or a slogan or something.</p>
-        <p class="author" id="site-creator">Made by: acrazyquasar</p>
-    </header>
+    <main>
+        <section id="home" class="active">
+            <h1 id="site-title">Example Website</h1>
+            <p class="subtext" id="site-subtext">Cool inspirational quote or a slogan or something.</p>
+            <p class="author" id="site-creator">Made by: acrazyquasar</p>
+        </section>
+        <section id="games">
+            <h2>Games or smt</h2>
+        </section>
+        <section id="chat">
+
+        </section>
+        <section id="chatbot">
+
+        </section>
+        <section id="notes">
+
+        </section>
+        <section id="code">
+            <iframe src="https://vscode.dev"></iframe>
+        </section>
+    </main>
     
     <!-- Setup -->
     <script type="module">
+        import LZString from 'https://cdn.jsdelivr.net/npm/lz-string@1.5.0/+esm';
         const siteURL = new URL(window.location.href);
-        const params = siteURL.searchParams;
+        const config = unpackConfig(siteURL.searchParams.get('c'));
 
-        document.getElementById('site-title').innerText = params.get('name');
-        document.getElementById('site-subtext').innerText = params.get('sub');
-        document.getElementById('site-creator'). innerText =`Made by: ${params.get('creator')}`;
+        document.getElementById('site-title').innerText = config.name;
+        document.getElementById('site-subtext').innerText = config.subtext;
+        document.getElementById('site-creator'). innerText =`Made by: ${config.creator}`;
 
         const root = document.documentElement;
-        root.style.setProperty('--base-color', params.get('c1')); 
-        root.style.setProperty('--surface-color', params.get('c2')); 
-        root.style.setProperty('--brand-color', params.get('c3')); 
-        root.style.setProperty('--text-color', params.get('c4')); 
-        root.style.setProperty('--text-secondary', params.get('c5')); 
+        root.style.setProperty('--base-color', config.bac); 
+        root.style.setProperty('--surface-color', config.suc); 
+        root.style.setProperty('--brand-color', config.brc); 
+        root.style.setProperty('--text-color', config.tec); 
+        root.style.setProperty('--text-secondary', config.tsc); 
 
-        document.title = `${params.get('name')} | Made by: ${params.get('creator')}`;
+        document.title = `${config.name} | Made by: ${config.creator}`;
+
+        if (config.bgi) {
+            document.body.style.backgroundImage = `url('${config.bgi}')`;
+        }
+        if (config.fai) {
+            document.getElementById('site-favicon').href = config.fai;
+        }
+
+        function unpackConfig(compressedUrlString) {
+            if (!compressedUrlString) return null;
+            const jsonString = LZString.decompressFromEncodedURIComponent(compressedUrlString);
+            return JSON.parse(jsonString);
+        }
+    </script>
+
+    <!-- Btn functionality -->
+    <script type="module">
+        let currentWin = 'home';
+        function switchToWindow(name) {
+            document.getElementById(currentWin).classList.remove('active');
+            currentWin = name;
+            document.getElementById(currentWin).classList.add('active');
+        }
+
+        // Btns sutffsss
+        const homeBtn = document.getElementById('home-btn');
+        homeBtn.addEventListener("click", () => { switchToWindow('home') });
+
+        const gamesBtn = document.getElementById('games-btn');
+        gamesBtn.addEventListener("click", () => { switchToWindow('games') });
+
+        const chatBtn = document.getElementById('chat-btn');
+        chatBtn.addEventListener("click", () => { switchToWindow('chat') });
+
+        const chatbotBtn = document.getElementById('chatbot-btn');
+        chatbotBtn.addEventListener("click", () => { switchToWindow('chatbot') });
+
+        const notesBtn = document.getElementById('notes-btn');
+        notesBtn.addEventListener("click", () => { switchToWindow('notes') });
+
+        const codeBtn = document.getElementById('code-btn');
+        codeBtn.addEventListener("click", () => { switchToWindow('code') });
     </script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 #site-info-bar{
-    max-width: calc(1005 - 2rem);
-    margin: 0 1rem;
+    width: 100%;
+    box-sizing: border-box;
     background-color: var(--base-secondary);
-    padding: 1rem 1.75rem;
+    padding: 1rem;
     border-radius: 10px;
     display: flex;
     gap: 1rem;
@@ -13,17 +13,19 @@
     padding: 1rem;
     border-radius: 5px;
 
-    /* FIX TEXT WRAP HERE */
     min-width: 0; /* Prevents flex items from overflowing parent on long text */
     word-break: break-all; /* Forces long strings/URLs to break to a new line */
     overflow-wrap: anywhere; /* Ensures standard wrapping behavior */
 }
-#site-info-bar #visit-website-btn{
+#site-info-bar .btn{
     background-color: var(--brand-color);
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     text-decoration: none;
     min-height: 100%;
     border-radius: 5px;
     display: flex;
     align-items: center;
+    border: none;
+    cursor: pointer;
+    font-size: 1.05rem;
 }

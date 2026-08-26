@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Short+Stack&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 #credits{
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-items: center;
-    margin-top: 20px;
+    margin: 2rem 0;
 }
 .credits{
     display: flex;
@@ -25,6 +27,7 @@
     gap: 5px;
     border-radius: 10px;
     user-select: none;
+    text-decoration: none;
 }
 #credit-acrazyquasar{
     background: linear-gradient(45deg, #3196f5, #31f181);
@@ -47,6 +50,14 @@
     letter-spacing: 20px;
     animation: shift-bg-up 3s linear alternate infinite;
 }
+#credit-dennis{
+    background: linear-gradient(45deg, #1b42f0, #7507be);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    color: transparent;
+    font-family: "Short Stack";
+}
 #credit-jamba{
     background: linear-gradient(45deg, blue, green, blue);
     background-size: 200% 100%;
@@ -60,6 +71,11 @@
     font-family: "Edu NSW ACT Cursive", cursive;
     color: #00bfff;
     font-size: 0.9rem;
+}
+#credit-aarow{
+    color: lime;
+    font-family: "Permanent Marker", Arial, Helvetica, sans-serif;
+    letter-spacing: 2px;
 }
 @keyframes shift-bg{
     from{background-position: 0% 50%;}

@@ -21,7 +21,15 @@
             <h1>Quasar OS</h1>
         </a>
 
+        <label for="sidebar-check" id="sidebar-open">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg>
+        </label>
+        <input type="checkbox" id="sidebar-check">
+        <label for="sidebar-check" id="sidebar-cover"></label>
         <div class="nav-group">
+            <label for="sidebar-check" id="sidebar-close">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+            </label>
             <ul class="nav-links">
                 <li><a class="nav-link" href="/home/">Home</a></li>
                 <li><a class="nav-link" href="/about/">About</a></li>
@@ -35,77 +43,128 @@
         </div>
     </nav>
     <header>
-        <h1>Make a Custom QOS Version</h1>
-        <p>Make your very own, uniquely you game website. Change colors, themes, fonts, and more!</p>
+        <img class="bg" src="/assets/images/nasa-earth-view.jpg">
+        <div class="text-box">
+            <h1 class="title">Create. Share. Remix.</h1>
+            <p>Make your very own, uniquely you game website. Change colors, themes, fonts, and more!</p>
+        </div>
     </header>
     <main>
-        <form id="website-config-form">
-            <div class="control-grid">
-                <div class="grid-section">
-                    <h2>Website Colors</h2>
-                    <hr>
-                    <div class="colors-group">
-                        <label class="group" for="main-color-input">
-                            Brand Color
-                            <input type="color" id="main-color-input">
-                        </label>
-                        <label class="group" for="text-color-input">
-                            Text Color
-                            <input type="color" id="text-color-input">
-                        </label>
-                        <label class="group" for="text-secondary-input">
-                            Secondary Text Color
-                            <input type="color" id="text-secondary-input">
-                        </label>
-                        <label class="group" for="base-color-input">
-                            Base Color
-                            <input type="color" id="base-color-input">
-                        </label>
-                        <label class="group" for="surface-color-input">
-                            Surface Color
-                            <input type="color" id="surface-color-input">
-                        </label>
-                    </div>
-                </div>
-                <div class="grid-section">
-                    <h2>Website Text</h2>
-                    <hr>
-                    <div class="text-group">
-                        <label class="group" for="text-title-input">
-                            Website Name
-                            <input type="text" placeholder="Type here..." id="text-title-input" maxlength="20">
-                        </label>
-                        <label class="group" for="text-subtext-input">
-                            Website Subtext
-                            <input type="text" placeholder="Type here..." id="text-subtext-input" maxlength="200">
-                        </label>
-                        <label class="group" for="text-creator-input">
-                            Username
-                            <input type="text" placeholder="Type here..." id="text-creator-input" maxlength="200">
-                        </label>
-                    </div>
-                </div>
-                <div class="grid-section">
-                    <h2>Website Font</h2>
-                    <hr>
-                    <div class="font-group">
-                        <div class="box">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-640h560v-80H200v80Zm0 0v-80 80Zm0 560q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v227q-19-9-39-15t-41-9v-43H200v400h252q7 22 16.5 42T491-80H200Zm378.5-18.5Q520-157 520-240t58.5-141.5Q637-440 720-440t141.5 58.5Q920-323 920-240T861.5-98.5Q803-40 720-40T578.5-98.5ZM787-145l28-28-75-75v-112h-40v128l87 87Z"/></svg>
-                            <p>Coming Soon...</p>
+        <section id="website-configuration">
+            <form id="website-config-form">
+                <div class="control-grid">
+                    <div class="grid-section">
+                        <h2>Website Colors</h2>
+                        <hr>
+                        <div class="colors-group">
+                            <label class="group" for="main-color-input">
+                                Brand Color
+                                <input type="color" id="main-color-input">
+                            </label>
+                            <label class="group" for="text-color-input">
+                                Text Color
+                                <input type="color" id="text-color-input">
+                            </label>
+                            <label class="group" for="text-secondary-input">
+                                Secondary Text Color
+                                <input type="color" id="text-secondary-input">
+                            </label>
+                            <label class="group" for="base-color-input">
+                                Base Color
+                                <input type="color" id="base-color-input">
+                            </label>
+                            <label class="group" for="surface-color-input">
+                                Surface Color
+                                <input type="color" id="surface-color-input">
+                            </label>
                         </div>
                     </div>
+                    <div class="grid-section">
+                        <h2>Website Text</h2>
+                        <hr>
+                        <div class="text-group">
+                            <label class="group" for="text-title-input">
+                                Website Name
+                                <input type="text" placeholder="Type here..." id="text-title-input" maxlength="20">
+                            </label>
+                            <label class="group" for="text-subtext-input">
+                                Website Subtext
+                                <input type="text" placeholder="Type here..." id="text-subtext-input" maxlength="200">
+                            </label>
+                            <label class="group" for="text-creator-input">
+                                Username
+                                <input type="text" placeholder="Type here..." id="text-creator-input" maxlength="200">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid-section">
+                        <h2>Website Font</h2>
+                        <hr>
+                        <div class="font-group">
+                            <div class="box">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-640h560v-80H200v80Zm0 0v-80 80Zm0 560q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v227q-19-9-39-15t-41-9v-43H200v400h252q7 22 16.5 42T491-80H200Zm378.5-18.5Q520-157 520-240t58.5-141.5Q637-440 720-440t141.5 58.5Q920-323 920-240T861.5-98.5Q803-40 720-40T578.5-98.5ZM787-145l28-28-75-75v-112h-40v128l87 87Z"/></svg>
+                                <p>Coming Soon...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-section">
+                        <h2>Website Images</h2>
+                        <hr>
+                        <div class="image-group">
+                            <label class="group" for="image-background-input">
+                                Website Background Image
+                                <input type="url" placeholder="Paste URL here..." id="image-background-input">
+                            </label>
+                            <label class="group" for="image-favicon-input">
+                                Website Favicon
+                                <input type="url" placeholder="Paste URL here..." id="image-favicon-input">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid-section">
+                        <h2>Website Layout</h2>
+                        <hr>
+                        <div class="layout-group">
+                            <div class="box">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-640h560v-80H200v80Zm0 0v-80 80Zm0 560q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v227q-19-9-39-15t-41-9v-43H200v400h252q7 22 16.5 42T491-80H200Zm378.5-18.5Q520-157 520-240t58.5-141.5Q637-440 720-440t141.5 58.5Q920-323 920-240T861.5-98.5Q803-40 720-40T578.5-98.5ZM787-145l28-28-75-75v-112h-40v128l87 87Z"/></svg>
+                                <p>Coming Soon...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-section">
+                        <h2>Website Apps</h2>
+                        <hr>
+                        <div class="app-group">
+                                <div class="box">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-640h560v-80H200v80Zm0 0v-80 80Zm0 560q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v227q-19-9-39-15t-41-9v-43H200v400h252q7 22 16.5 42T491-80H200Zm378.5-18.5Q520-157 520-240t58.5-141.5Q637-440 720-440t141.5 58.5Q920-323 920-240T861.5-98.5Q803-40 720-40T578.5-98.5ZM787-145l28-28-75-75v-112h-40v128l87 87Z"/></svg>
+                                    <p>Coming Soon...</p>
+                                </div>
+                            </div>
+                    </div>
                 </div>
+            </form>
+        </section>
+        <section id="website-info">
+            <div id="site-info-bar">
+                <p id="website-url-output"></p>
+                <button class="btn">Copy</button>
+                <a class="btn" id="visit-website-btn" target="_blank">Visit</a>
             </div>
-        </form>
-        <div id="site-info-bar">
-            <p id="website-url-output"></p>
-            <a id="visit-website-btn" target="_blank">Visit</a>
-        </div>
-        <iframe id="website-preview"></iframe>
+        </section>
+        <section id="preview">
+            <iframe id="website-preview"></iframe>
+        </section>
     </main>
+
+    <footer>
+        <h4>Explore the system. Build your own experience. Make the web yours.</h6>
+        <p>
+            © 2026 Quasar OS. Built with curiosity, code, and a little bit of stardust.
+        </p>
+    </footer>
 
     <!-- JavaScript -->
     <script type="module" src="./js/formReset.js"></script>
-    <script type="module" src="./js/iframe.js"></script>
+    <script type="module" src="./js/ui.js"></script>
 </body>
 </html>

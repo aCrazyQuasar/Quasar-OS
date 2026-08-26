@@ -1,0 +1,14 @@
+main{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    height: max-content;
+    gap: 20px;
+    padding: 20px;
+}
+section{
+    width: 100%;
+}

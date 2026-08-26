@@ -18,6 +18,10 @@ websiteNameInput.value = "Example Website";
 websiteSubtextInput.value = "Cool inspirational quote or a slogan or something";
 websiteCreatorInput.value = "acrazyquasar";
 
+// Image
+export const websiteBgInput = document.getElementById('image-background-input');
+export const websiteFaviconInput = document.getElementById('image-favicon-input');
+
 // output
 export const websiteURLOutput = document.getElementById('website-url-output');
 export const visitSiteBtn = document.getElementById('visit-website-btn');

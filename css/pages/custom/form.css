@@ -1,18 +1,25 @@
 #website-config-form .control-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    grid-auto-rows: 350px;
     gap: 20px;
-    padding: 20px;
 }
 #website-config-form .control-grid .grid-section{
     background-color: var(--base-secondary);
     border-radius: 10px;
     padding: 1rem;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     gap: 20px;
+    animation: fade-in calc(300ms * sibling-index()) ease;
+}
+
+@keyframes fade-in{
+    from{transform: translateY(50px); opacity: 0;}
+    to{transform: translateY(0); opacity: 1;}
 }
 
 /* Colors Section */
@@ -109,6 +116,82 @@
     border-radius: 10px;
 }
 #website-config-form .font-group .box svg{
+    scale: 3;
+    display: block;
+}
+
+/* Images Section */
+#website-config-form .image-group{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+#website-config-form .image-group .group{
+    background-color: var(--surface-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    width: 100%;
+    text-align: center;
+}
+#website-config-form .image-group .group input[type="url"]{
+    padding: 0.5rem 1rem;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--surface-light);
+    background-color: var(--surface-color);
+    caret-color: var(--text-secondary);
+    color: var(--text-secondary);
+}
+#website-config-form .image-group .group input[type="url"]:focus{
+    border: 1px solid var(--brand-color);
+    box-shadow: 0 0 5px var(--brand-color);
+    outline: none;
+}
+
+/* Layout Section */
+#website-config-form .layout-group{
+    height: 100%;
+    width: 100%;
+}
+#website-config-form .layout-group .box{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+}
+#website-config-form .layout-group .box svg{
+    scale: 3;
+    display: block;
+}
+
+/* App Section */
+#website-config-form .app-group{
+    height: 100%;
+    width: 100%;
+}
+#website-config-form .app-group .box{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+}
+#website-config-form .app-group .box svg{
     scale: 3;
     display: block;
 }
