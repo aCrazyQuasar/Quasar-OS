@@ -36,6 +36,12 @@
     -moz-background-clip: text;
     color: transparent;
 }
+#credit-men{
+    color: red;
+}
+#credit-kloudy{
+    color: purple;
+}
 #credit-unknown{
     color: #3636dc;
 }
@@ -49,6 +55,9 @@
     font-family: "Rubik Glitch", monospace;
     letter-spacing: 20px;
     animation: shift-bg-up 3s linear alternate infinite;
+}
+#credit-astro{
+    
 }
 #credit-dennis{
     background: linear-gradient(45deg, #1b42f0, #7507be);

@@ -173,7 +173,7 @@
     width: 100%;
     text-align: center;
 }
-#website-config-form .layout-group .group#layout-nav-sec{
+#website-config-form .layout-group .group#layout-nav-sec, #website-config-form .layout-group .group#l-nav-label{
     justify-content: space-evenly;
 }
 #website-config-form .layout-group .group label{

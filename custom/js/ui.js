@@ -57,7 +57,8 @@ async function makeURL() {
         bgi: websiteBgInput.value,
         fai: websiteFaviconInput.value,
 
-        navl: formD.get('layout-nav')
+        navl: formD.get('layout-nav'),
+        labn: formD.get('label-nav')
     }
     const base64 = await packConfig(config);
     websiteURL.searchParams.set("c", base64);
