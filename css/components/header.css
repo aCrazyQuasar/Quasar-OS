@@ -32,6 +32,6 @@ header .title{
     text-align: center;
 }
 @keyframes rise-in{
-    from{transform: translate(-50%, calc(-50% + 20px)); opacity: 0;}
-    to{transform: translate(-50%, -50%); opacity: 1;;}
+    from{transform: translate(-50%, calc(-50% + 20px)) scale(0.98); opacity: 0; filter: blur(10px)}
+    to{transform: translate(-50%, -50%) scale(1); opacity: 1; filter: blur(0)}
 }

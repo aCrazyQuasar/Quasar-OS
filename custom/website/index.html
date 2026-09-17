@@ -10,6 +10,14 @@
     <!-- UGS Import -->
     <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/games.js"></script>
 
+    <!-- CDN Imports -->
+
+    <!-- PEER IMPORT -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+    <!-- LDR Import -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/trio.js"></script>
+
     <!-- CSS -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
@@ -46,11 +54,15 @@
             overflow: hidden;
             box-sizing: border-box;
             color: var(--text-secondary);
-            font-family: "Nuntio", Arial, Helvetica, sans-serif;
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
         }
         h1, h2, h3, h4, h5, h6{
             color: var(--text-color);
             font-family: "Exo 2", Arial, Helvetica, sans-serif;
+        }
+        p, a, span{
+            color: var(--text-secondary);
+            font-family: "Nuntio", Arial, Helvetica, sans-serif;
         }
         nav{
             display: flex;
@@ -107,10 +119,10 @@
             fill: var(--text-color);
         }
         nav .app:hover{
-            scale: 1.15;
+            scale: 1.05;
         }
         nav .app:active{
-            scale: 0.85;
+            scale: 0.98;
         }
         .glow{
             position: absolute;
@@ -193,6 +205,71 @@
         }
     </style>
 
+    <!-- Featured CSS -->
+    <style>
+        #featured{
+            overflow-y: scroll;
+            margin: 3rem;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 20px;
+            flex-direction: column;
+        }
+        #featured h2{
+            font-size: 4rem;
+        }
+        #featured .games{
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-auto-rows: 300px;
+            gap: 20px;
+        }
+        #featured .game{
+            position: relative;
+            overflow: hidden;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: 150ms ease;
+        }
+        #featured .game:hover{
+            transform: translateY(-3px);
+        }
+        #featured .game:active{
+            transform: translateY(0);
+        }
+        #featured .game img{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(5px) brightness(0.5);
+        }
+        #featured .game .text{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        #featured .game .text h3{
+            font-size: 3rem;
+        }
+        #featured .game .text p{
+            font-size: 1.2rem;
+        }
+    </style>
+
     <!-- Games CSS -->
     <style>
         #games{
@@ -251,6 +328,396 @@
             cursor: pointer;
         }
     </style>
+
+    <!-- Chat CSS -->
+    <style>
+        #chat{
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            padding: 3rem 4rem;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        #chat .load-screen{
+            position: absolute; 
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-direction: column;
+            background-color: var(--surface-color);
+            user-select: none;
+            z-index: 9999;
+
+            opacity: 1;
+            visibility: visible;
+            border-radius: 15px;
+            box-sizing: border-box;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #chat .load-screen.hidden{
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #chat .card{
+            max-width: 60%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            background-color: var(--surface-color);
+            padding: 2rem 3rem;
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #chat .card hr{
+            width: 100%;
+            border: 1px solid color-mix(in srgb, var(--text-secondary), transparent 80%);
+        }
+        #chat .card h1 {
+            font-size: clamp(2rem, 8vw, 3rem);
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+            text-wrap: balance;
+            text-align: center;
+        }
+        #chat .card h2 {
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        #chat .card .container{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.25rem;
+            flex-direction: column;
+        }
+        #chat #join-form {
+            width: 100%;
+            display: flex;
+            gap: 0.75rem;
+        }
+        #chat input[type="text"] {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 2px solid  oklch(from var(--surface-color) calc(l* 1.2) c h);
+            background-color: var(--surface-color);
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            caret-color: var(--text-secondary);
+            color: var(--text-secondary)
+        }
+        #chat input[type="text"]:focus {
+            border-color: var(--brand-color);
+            box-shadow: 0 0 12px var(--brand-color);
+        }
+        #chat input[type="text"]::placeholder {
+            color: var(--text-secondary);
+        }
+        #chat button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--brand-color);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.25s ease;
+            box-shadow: 0 0 5px var(--brand-color);
+        }
+        #chat button:hover {
+            transform: translateY(-2px);
+        }
+        #chat button:active {
+            transform: translateY(0);
+        }
+        #chat-sys{
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        #chat #create-room-btn {
+            width: 100%;
+        }
+        #chat #chat-sys #send-message-form {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            width: 90%;
+        }
+        #chat #chat-sys #send-message-form input[type="text"] {
+            flex: 1;
+        }
+        #chat #chat-sys legend{
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            border: 2px solid oklch(from var(--surface-color) calc(l* 1.2) c h);
+            border-radius: 10px;
+        }
+        #chat #chat-sys fieldset{
+            position: relative;
+            height: 100%;
+            border: 2px solid oklch(from var(--surface-color) calc(l* 1.2) c h);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #chat #chat-sys message-box{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 2rem;
+            box-sizing: border-box;
+            overflow: scroll;
+            padding-bottom: 100px;
+        }
+        #chat #chat-sys message-bubble{
+            font-size: 1.2rem;
+        }
+        #chat #chat-sys message-bubble.info p{
+            color: grey;
+        }
+        #chat #chat-sys message-bubble.warn p{
+            color: red;
+        }
+        #chat #chat-sys #show-change-username-btn{
+            background-color: var(--brand-color);
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            padding: 1rem;
+            position: absolute;
+            top: -20px;
+            right: -50px;
+            transform: translate(-50%, -50%);
+            z-index: 50;
+        }
+        #chat #chat-sys #show-change-username-btn svg{
+            fill: var(--text-color);
+        }
+        #chat #chat-sys #change-username-btn:hover{
+            scale: 1.1;
+        }
+        #chat #chat-sys dialog{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--surface-color);
+            border: none;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 9999999999999;
+        }
+        #chat #chat-sys #change-username-form{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        #chat #chat-sys dialog:not([open]) {
+            display: none !important;
+        }
+        #chat #chat-sys dialog::backdrop{
+            background-color: #09001444;
+            backdrop-filter: blur(5px);
+        }
+        #chat #chat-sys dialog{
+            z-index: 9999999999999;
+        }
+    </style>
+
+    <!-- Draw App CSS -->
+    <style>
+        #draw {
+            padding: 3rem;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        #draw-fullscreen {
+            position: absolute;
+            top: 4rem;
+            right: 4rem;
+            background-color: color-mix(in srgb, var(--brand-color), transparent 40%);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.2s ease;
+        }
+        #draw-fullscreen:hover {
+            scale: 1.1;
+        }
+        #draw .ui {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+        #draw-canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            cursor: crosshair;
+            touch-action: none;
+        }
+        #draw .toolbar {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: var(--surface-color);
+            padding: 0.75rem 1.25rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border: 1px solid color-mix(in srgb, var(--text-secondary), transparent 80%);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        #draw .toolbar button {
+            background-color: var(--brand-color);
+            color: var(--text-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-family: "Nunito", Arial, sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: 0.2s ease;
+        }
+        #draw .toolbar button:hover {
+            scale: 1.05;
+            filter: brightness(1.1);
+        }
+        #draw .toolbar button:active {
+            scale: 0.95;
+        }
+        #draw .toolbar input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 36px;
+            height: 36px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        #draw .toolbar input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        #draw .toolbar input[type="color"]::-webkit-color-swatch {
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+        }
+        #draw .toolbar input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100px;
+            height: 6px;
+            background: color-mix(in srgb, var(--text-secondary), transparent 60%);
+            border-radius: 5px;
+            outline: none;
+        }
+        #draw .toolbar input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--brand-color);
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+        #draw .toolbar input[type="range"]::-webkit-slider-thumb:hover {
+            scale: 1.2;
+        }
+    </style>
+
+    <!-- Game Player -->
+    <style>
+        #game-player {
+            margin: 0;               /* Remove margin to allow full-size scaling */
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;        /* Prevent scrollbars on the container */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #game-player iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;        /* Prevent iframe native scrollbars */
+        }
+        #game-player #game-player-fullscreen{
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: color-mix(in srgb, var(--brand-color), transparent 40%);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="lettermark">
@@ -262,6 +729,10 @@
         <button class="app" id="home-btn">
             <p class="nav-text">Home</p>
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+        </button>
+        <button class="app" id="featured-btn">
+            <p class="nav-text">Featured</p>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m305-704 112-145q12-16 28.5-23.5T480-880q18 0 34.5 7.5T543-849l112 145 170 57q26 8 41 29.5t15 47.5q0 12-3.5 24T866-523L756-367l4 164q1 35-23 59t-56 24q-2 0-22-3l-179-50-179 50q-5 2-11 2.5t-11 .5q-32 0-56-24t-23-59l4-165L95-523q-8-11-11.5-23T80-570q0-25 14.5-46.5T135-647l170-57Zm49 69-194 64 124 179-4 191 200-55 200 56-4-192 124-177-194-66-126-165-126 165Zm126 135Z"/></svg>
         </button>
         <button class="app" id="games-btn">
             <p class="nav-text">Games</p>
@@ -279,6 +750,10 @@
             <p class="nav-text">Notes</p>
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M325-111.5q-73-31.5-127.5-86t-86-127.5Q80-398 80-480.5t31.5-155q31.5-72.5 86-127t127.5-86Q398-880 480.5-880t155 31.5q72.5 31.5 127 86t86 127Q880-563 880-480.5T848.5-325q-31.5 73-86 127.5t-127 86Q563-80 480.5-80T325-111.5ZM480-162q26-36 45-75t31-83H404q12 44 31 83t45 75Zm-104-16q-18-33-31.5-68.5T322-320H204q29 50 72.5 87t99.5 55Zm208 0q56-18 99.5-55t72.5-87H638q-9 38-22.5 73.5T584-178ZM170-400h136q-3-20-4.5-39.5T300-480q0-21 1.5-40.5T306-560H170q-5 20-7.5 39.5T160-480q0 21 2.5 40.5T170-400Zm216 0h188q3-20 4.5-39.5T580-480q0-21-1.5-40.5T574-560H386q-3 20-4.5 39.5T380-480q0 21 1.5 40.5T386-400Zm268 0h136q5-20 7.5-39.5T800-480q0-21-2.5-40.5T790-560H654q3 20 4.5 39.5T660-480q0 21-1.5 40.5T654-400Zm-16-240h118q-29-50-72.5-87T584-782q18 33 31.5 68.5T638-640Zm-234 0h152q-12-44-31-83t-45-75q-26 36-45 75t-31 83Zm-200 0h118q9-38 22.5-73.5T376-782q-56 18-99.5 55T204-640Z"/></svg>
         </button>
+        <button class="app" id="draw-btn">
+            <p class="nav-text">Draw</p>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-120q-45 0-89-22t-71-58q26 0 53-20.5t27-59.5q0-50 35-85t85-35q50 0 85 35t35 85q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T320-280q0-17-11.5-28.5T280-320q-17 0-28.5 11.5T240-280q0 23-5.5 42T220-202q5 2 10 2h10Zm230-160L360-470l358-358q11-11 27.5-11.5T774-828l54 54q12 12 12 28t-12 28L470-360Zm-190 80Z"/></svg>
+        </button>
         <button class="app" id="code-btn">
             <p class="nav-text">Code</p>
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-240 80-480l240-240 57 57-184 184 183 183-56 56Zm320 0-57-57 184-184-183-183 56-56 240 240-240 240Z"/></svg>
@@ -290,13 +765,174 @@
             <p class="subtext" id="site-subtext">Cool inspirational quote or a slogan or something.</p>
             <p class="author" id="site-creator">Made by: acrazyquasar</p>
         </section>
+        <section id="featured">
+            <h2>Featured Games</h2>
+            <br>
+            <div class="games">
+                <button class="game" onclick="openGithub('https://github.com/bubbls/ugs-singlefile/blob/main/UGS-Files/clragdollarchers.html')">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTuMzRXkXdEsuZkKlf9SW-jE1JrbM_Dsq7WpS5HAroyw&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Ragdoll Archers</h3>
+                        <p class="description">Shoot you enemies with ragdoll physics!</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdWAbKOPDZ6ZKuqtdQLEbmZwJp-xI2JOeUQf9dKSvn6yBp1vpxYLDB8GI&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Epstien's</h3>
+                        <p class="description">Five nights at Epstien's</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqpTXH5hidNzKT7r1RyfaeWruwePofQafEJXULZEVkbVPX4tennqEJ7rvH&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Imposters</h3>
+                        <p class="description">Guess who doesn't know the secret word!</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp_XlCPW-OaLNjOrKisYkns2g5LiiFOTDLNjw99AYjKidfkGpARl_3komb&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Tetris</h3>
+                        <p class="description">The classic game of falling blocks!</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTa7Hodc95chNg_sMg_iiOv5nUV4HsKkF1Uk0lBWhUbaw&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Block Blast</h3>
+                        <p class="description">A fun spin on the classic game of Tetris!</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNzQKmNY0xMAH-OjY5Zj4yCOqom1BiwhH-6P9zh1Gq1g&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Angry Birds</h3>
+                        <p class="description">Its classic angry birds</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg5n6rb5gNCSIZBn0QHU5lzgCoRGrsiNhLzeMXFZJHOQ&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Pac Man</h3>
+                        <p class="description">Eat the dots and avoid the ghosts!</p>
+                    </div>
+                </button>
+                <button class="game" onclick="openGithubInPlayer('https://github.com/bubbls/ugs-singlefile/blob/main/UGS-Files/clslope3.html')">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRk-RwFg0kLlWDzPltyTZPlr_KWAemWC9a27V7optbnhA&s" alt="">
+                    <div class="text">
+                        <h3 class="title">Slope</h3>
+                        <p class="description">Steer your ball and avoid obstacles</p>
+                    </div>
+                </button>
+                <button class="game" onclick="openGithubInPlayer('https://github.com/bubbls/ugs-singlefile/blob/main/UGS-Files/clleveldevil.html')">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5FwUVhlML9Ema8BXOpUbRpZ2-y_FGa5VhbHROlz1XDg&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Level Devil</h3>
+                        <p class="description">This platformer is designed to ragebait you!</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnKEZjbV-R1zmeuB7sYvjsl5dArs0Sw1hkgYuf_o1iEg&s" alt="">
+                    <div class="text">
+                        <h3 class="title">Basket Random</h3>
+                        <p class="description">Play basketball only with one key</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzXkfzuZLo0kvx3vApC78Godo0Mz7xHTzVCKodjxp68A&s" alt="">
+                    <div class="text">
+                        <h3 class="title">Soccer Random</h3>
+                        <p class="description">Play soccer using only one key</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW8KhBFoVBPDiuWzdTLZWFkEg5VesXRpHeUkm79k2-sA&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Boximg Random</h3>
+                        <p class="description">Box using only one key</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi-KhO59UNaYzhesqpRtnHFdI7mIQYdSiIO2GwUr2Osw&s" alt="">
+                    <div class="text">
+                        <h3 class="title">Volley Random</h3>
+                        <p class="description">Play volleyball with only one key</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ60FDdPlaxOVTlD4ipWwEo_ie_pU4oT4t85obchvaTJw&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Papa's Pizzeria</h3>
+                        <p class="description">Serve pizza or something</p>
+                    </div>
+                </button>
+                <button class="game">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgFE-HX_sBpRrSHbuwUsL02ZtHfQCCsIuo1hi1zA03Qg&s=10" alt="">
+                    <div class="text">
+                        <h3 class="title">Papa's Freezeria</h3>
+                        <p class="description">Serve freezers or something</p>
+                    </div>
+                </button>
+            </div>
+        </section>
         <section id="games">
             <h2><span id="games-author"></span>'s Games</h2>
             <input type="text" placeholder="Search a game here..." id="search-games">
             <div id="games-container"></div>
         </section>
         <section id="chat">
+            <div class="load-screen hidden" id="chat-ldr-screen">
+                <l-trio
+                    size="120"
+                    speed="1.3"
+                    color="var(--text-color)" 
+                ></l-trio>
+            </div>
+            <div id="chat-start">
+                <div class="card">
+                    <h1>Welcome to <span id="chat-owner-username">Username</span>'s Chat</h1>
+                    <hr>
+                    <div class="container">
+                        <button id="create-room-btn">Create Room</button>
+                    </div>
+                    <h2>- Or join one! -</h2>
+                    <form id="join-form">
+                        <input type="text" placeholder="Join Code" id="join-code" required>
+                        <button type="submit">Join</button>
+                    </form>
+                    <p id="join-error-out"></p>
+                </div>
+            </div>
+            <div class="hidden" id="chat-sys">
+                    <dialog class="card" id="change-username-modal">
+                        <h2>Change your username</h2>
+                        <hr>
+                        <form id="change-user-form">
+                            <input type="text" id="change-username" maxlength="50" required>
+                            <button type="submit">Done</button>
+                        </form>
+                    </dialog>
 
+                    <!-- messages -->
+                    <fieldset>
+                        <button id="show-change-username-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+                        </button>
+                        <legend>
+                            Room Code:
+                            <span id="room-code">Room Code Will Appear Here</span>
+                        </legend>
+                        <message-box></message-box>
+                        <form id="send-message-form">
+                            <input type="text" placeholder="Type your message..." id="send-message" maxlength="200">
+                            <button type="submit">
+                                Send
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg>
+                            </button>
+                        </form>
+                    </fieldset>
+            </div>
         </section>
         <section id="chatbot">
 
@@ -304,10 +940,49 @@
         <section id="notes">
 
         </section>
+        <section id="draw">
+            <button id="draw-fullscreen">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z"/></svg>
+            </button>
+            <div class="ui" id="draw-ui">
+                <canvas id="draw-canvas"></canvas>
+                <div class="toolbar">
+                    <button id="draw-clear">Clear</button>
+                    <button id="draw-export">Export</button>
+                    <p>|</p>
+                    <button id="draw-undo">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z"/></svg>
+                    </button>
+                    <button id="draw-redo">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M396-200q-97 0-166.5-63T160-420q0-94 69.5-157T396-640h252L544-744l56-56 200 200-200 200-56-56 104-104H396q-63 0-109.5 40T240-420q0 60 46.5 100T396-280h284v80H396Z"/></svg>
+                    </button>
+                    <p>|</p>
+                    <button id="draw-mode-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m490-527 37 37 217-217-37-37-217 217ZM200-200h37l233-233-37-37-233 233v37Zm355-205L405-555l167-167-29-29-219 219-56-56 218-219q24-24 56.5-24t56.5 24l29 29 50-50q12-12 28.5-12t28.5 12l93 93q12 12 12 28.5T828-678L555-405ZM270-120H120v-150l285-285 150 150-285 285Z"/></svg>
+                    </button>
+                    <button id="draw-fill-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M346-140 100-386q-10-10-15-22t-5-25q0-13 5-25t15-22l230-229-106-106 62-65 400 400q10 10 14.5 22t4.5 25q0 13-4.5 25T686-386L440-140q-10 10-22 15t-25 5q-13 0-25-5t-22-15Zm47-506L179-432h428L393-646Zm399 526q-36 0-61-25.5T706-208q0-27 13.5-51t30.5-47l42-54 44 54q16 23 30 47t14 51q0 37-26 62.5T792-120Z"/></svg>
+                    </button>
+                    <button id="draw-spray-btn">
+                        <svg fill="#e3e3e3" width="24px" height="24px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"><path d="M 12 2 L 12 8 L 14 8 L 14 9.0625 C 9.898438 9.5 8.125 12.53125 8.125 12.53125 L 8 12.75 L 8 30 L 22 30 L 22 12.75 L 21.875 12.53125 C 21.875 12.53125 20.101563 9.5 16 9.0625 L 16 8 L 18 8 L 18 2 Z M 24 2 C 23.449219 2 23 2.449219 23 3 C 23 3.550781 23.449219 4 24 4 C 24.550781 4 25 3.550781 25 3 C 25 2.449219 24.550781 2 24 2 Z M 14 4 L 16 4 L 16 6 L 14 6 Z M 21 4 C 20.449219 4 20 4.449219 20 5 C 20 5.550781 20.449219 6 21 6 C 21.550781 6 22 5.550781 22 5 C 22 4.449219 21.550781 4 21 4 Z M 24 6 C 23.449219 6 23 6.449219 23 7 C 23 7.550781 23.449219 8 24 8 C 24.550781 8 25 7.550781 25 7 C 25 6.449219 24.550781 6 24 6 Z M 15 11 C 16.738281 11 17.910156 11.480469 18.6875 12 L 11.3125 12 C 12.089844 11.480469 13.261719 11 15 11 Z M 10 14 L 20 14 L 20 28 L 10 28 Z M 15 18 C 13.355469 18 12 19.355469 12 21 C 12 22.644531 13.355469 24 15 24 C 16.644531 24 18 22.644531 18 21 C 18 19.355469 16.644531 18 15 18 Z M 15 20 C 15.5625 20 16 20.4375 16 21 C 16 21.5625 15.5625 22 15 22 C 14.4375 22 14 21.5625 14 21 C 14 20.4375 14.4375 20 15 20 Z"/></g></svg>
+                    </button>
+                    <p>|</p>
+                    <input type="color" id="draw-color" value="#000000">
+                    <input type="range" id="draw-size" min="1" max="50" value="5">
+                </div>
+            </div>
+        </section>
         <section id="code">
 
         </section>
+        <section id="game-player">
+            <iframe id="game-player-iframe" src="" frameborder="0"></iframe>
+            <button id="game-player-fullscreen">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z"/></svg>
+            </button>
+        </section>
     </main>
+
     
     <!-- Setup -->
     <script type="module">
@@ -318,6 +993,7 @@
         document.getElementById('site-title').innerText = config.name;
         document.getElementById('site-subtext').innerText = config.subtext;
         document.getElementById('site-creator'). innerText =`Made by: ${config.creator}`;
+        document.getElementById('chat-owner-username').innerText = config.creator;
         document.getElementById('games-author').innerText = config.creator;
 
         const root = document.documentElement;
@@ -364,8 +1040,9 @@
         }
     </script>
 
+    <!-- Global Scripts Helpers -->
     <!-- Btn functionality -->
-    <script type="module">
+    <script>
         let currentWin = 'home';
         function switchToWindow(name) {
             document.getElementById(currentWin).classList.remove('active');
@@ -376,6 +1053,9 @@
         // Btns sutffsss
         const homeBtn = document.getElementById('home-btn');
         homeBtn.addEventListener("click", () => { switchToWindow('home') });
+
+        const featuredBtn = document.getElementById('featured-btn');
+        featuredBtn.addEventListener("click", () => { switchToWindow('featured') });
 
         const gamesBtn = document.getElementById('games-btn');
         gamesBtn.addEventListener("click", () => { switchToWindow('games') });
@@ -389,30 +1069,76 @@
         const notesBtn = document.getElementById('notes-btn');
         notesBtn.addEventListener("click", () => { switchToWindow('notes') });
 
+        const drawBtn = document.getElementById('draw-btn');
+        drawBtn.addEventListener("click", () => { switchToWindow('draw') });
+
         const codeBtn = document.getElementById('code-btn');
         codeBtn.addEventListener("click", () => { switchToWindow('code') });
     </script>
 
+    <!-- Featured App -->
+    <script>
+        function getJsDelivrUrl(githubUrl) {
+            // Pattern matches: https://github.com/user/repo/blob/branch/path/to/file.js
+            const githubPattern = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/;
+            const match = githubUrl.match(githubPattern);
+
+            if (!match) {
+                throw new Error("Invalid GitHub file URL format.");
+            }
+
+            const [, user, repo, version, filePath] = match;
+            return `https://cdn.jsdelivr.net/gh/${user}/${repo}@${version}/${filePath}`;
+        }
+        function openGithub(url) {
+            const jsDelivrUrl = getJsDelivrUrl(url);
+            fetch(jsDelivrUrl)
+            .then(response => response.text())
+            .then(text => {
+                const newWin = window.open("about:blank", "_blank");
+                if (newWin) {
+                    newWin.document.open();
+                    newWin.document.write(text);
+                    newWin.document.close();
+                }
+            });
+        }
+    </script>
+
     <!-- Games App -->
     <script>
-        function initGameCards() {
+        const searchInput = document.getElementById('search-games');
+
+        function renderGames(filterText = '') {
             const gamesContainer = document.getElementById('games-container');
+            const query = filterText.toLowerCase().trim();
+            
             let newHTML = ``;
             for (let f of files) {
-                const gameName= f.slice(2);
-                const gameURL = `https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/${f}.html`;
-
-                newHTML += `
-                    <div class="game">
-                        <span class="name">${gameName}</span>
-                        <button onclick="openGameTab('${gameURL}')">Play</button>
-                    </div>
-                `;
+                const gameName = f.slice(2);
+                
+                // Check if the game name matches the search input
+                if (gameName.toLowerCase().includes(query)) {
+                    const gameURL = `https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/${f}.html`;
+                    newHTML += `
+                        <div class="game">
+                            <span class="name">${gameName}</span>
+                            <button onclick="openGameTab('${gameURL}')">Play</button>
+                        </div>
+                    `;
+                }
             }
+            
             gamesContainer.innerHTML = newHTML;
         }
 
-        initGameCards();
+        // Initial render
+        renderGames();
+
+        // Listen for typing in the search box
+        searchInput.addEventListener('input', (e) => {
+            renderGames(e.target.value);
+        });
 
         function openGameTab(url) {
             fetch(url)
@@ -426,6 +1152,557 @@
                 }
             });
         }
+    </script>
+
+    <!-- Chat App -->
+    <script>
+        // ! USERNAME MANAGER
+        const peerMap = {};
+        let USERNAME = "user";
+        for(let i = 0; i < 6; i++) {
+            USERNAME += String(Math.floor(Math.random() * 10));
+        }
+
+        const showUserModalBtn= document.getElementById('show-change-username-btn');
+        showUserModalBtn.addEventListener("click", () => {
+            document.getElementById('change-username').value = USERNAME;
+            document.getElementById('change-username-modal').showModal();
+        });
+
+        // ! HELPERS
+        function addMessageToDOM(type, username, text, color) {
+            const messageBox = document.querySelector('message-box');
+            const bubble = document.createElement('message-bubble');
+            if(type === 'MESSAGE') {
+                const h3 = document.createElement('h3');
+                if(username === USERNAME) {
+                    h3.textContent = "You";
+                    h3.style.color = "#FFFFFF";
+                } else {
+                    h3.textContent = username;
+                    h3.style.color = color;
+                }
+                bubble.appendChild(h3);
+                bubble.classList.add('message');
+            } else {
+                if(type === 'INFO') {
+                    bubble.classList.add('info');
+                } else {
+                    if(type === 'WARN') {
+                        bubble.classList.add('warn');
+                    }
+                }
+            }
+            const p = document.createElement('p');
+            p.textContent = text;
+            
+            bubble.appendChild(p);
+            messageBox.appendChild(bubble);
+
+            messageBox.scrollTop = messageBox.scrollHeight;
+        }
+        function getRandomColor() {
+            const hue = Math.floor(Math.random() * 360);
+            return `hsl(${hue}, 75%, 45%)`;
+        }
+        function getFunnyLeaveMessage(username) {
+            const messages = [
+                `${username} rage quit!`,
+                `${username} vanished into the shadow realm.`,
+                `${username} left to go get milk and never came back.`,
+                `${username} disconnected. Probably lost their Wi-Fi to a squirrel.`,
+                `${username} has left the chat. Fs in the chat, boys.`,
+                `${username} went 2-3 years to dagestan.`
+            ];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+    
+        // ! BOTH
+        let peer;
+        const loadScreen = document.getElementById('chat-ldr-screen');
+        const startScreen = document.getElementById('chat-start');
+        const chatScreen = document.getElementById('chat-sys');
+        function switchToChat() {
+            startScreen.classList.add('hidden');
+            chatScreen.classList.remove('hidden');
+        }
+
+        // HOSTING
+        let hostColor;
+        let connectedPeers = {};
+
+        // get join thingy magigy
+        const createRoomBtn = document.getElementById('create-room-btn');
+        createRoomBtn.addEventListener("click", () => {
+
+            // Genertae room code
+            const codeOutput = document.getElementById('room-code');
+            let roomCode = "Q";
+            for( let i = 0; i < 6; i++) {
+                roomCode += String(Math.floor(Math.random() * 10));
+            }
+            codeOutput.innerText = roomCode;
+
+            // Peer connection headache
+            if(!peer) {
+                peer = new Peer(roomCode);
+            }
+
+            peer.on('open', (id) => {
+                switchToChat();
+                console.log('Room created successfully with ID:', id);
+                hostColor = getRandomColor();
+
+                // send message
+                const sendMsgForm = document.getElementById('send-message-form');
+                sendMsgForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const msg = document.getElementById('send-message').value;
+                    broadcastMessage('MESSAGE', USERNAME, msg, hostColor);
+                    sendMsgForm.reset();
+                });
+
+                const changeUserForm = document.getElementById('change-user-form');
+                    changeUserForm.addEventListener("submit", (e) => {
+                        e.preventDefault();
+                        broadcastMessage('INFO', USERNAME, `${USERNAME} changed their username to ${document.getElementById('change-username').value}`, hostColor);
+                        USERNAME = document.getElementById('change-username').value;
+                        document.getElementById('change-username-modal').close();
+                    });
+            });
+
+            peer.on('connection', (conn) => {
+                // Save the connection using the guest's Peer ID
+                connectedPeers[conn.peer] = conn;
+                peerMap[conn.peer] = {
+                    username: "Unknown User",
+                    color: getRandomColor()
+                };
+                console.log(`Guest connected! ID: ${conn.peer}`);
+
+                // recie=vireing data
+                conn.on('data', (data) => {
+                    if (data.username) {
+                        peerMap[conn.peer].username = data.username;
+                    }
+                    const userColor = peerMap[conn.peer].color;
+                    broadcastMessage(data.type, data.username, data.message, userColor);
+                });
+
+                // Remove the guest if they close the tab/disconnect
+                conn.on('close', () => {
+                    delete connectedPeers[conn.peer];
+                    console.log(`Guest disconnected: ${conn.peer}`);
+                    const leaveUser = peerMap[conn.peer].username;
+                    const leaveMsg = getFunnyLeaveMessage(peerMap[conn.peer].username);
+                    const userColor = peerMap[conn.peer].color;
+                    broadcastMessage('WARN', leaveUser, leaveMsg, userColor);
+                });
+            });
+
+            peer.on('error', (err) => {
+                console.error('Peer connection error:', err);
+            });
+        });
+
+        function broadcastMessage(type, user, msg, color) {
+            Object.values(connectedPeers).forEach(conn => {
+                if (conn.open) {
+                    conn.send({
+                        type: type,
+                        username: user,
+                        message: msg,
+                        color: color
+                    });
+                }
+            });
+            addMessageToDOM(type, user, msg, color);
+        }
+
+        // JOINING
+        // Get the form, and apply listend
+        const joinForm = document.getElementById('join-form');
+        joinForm.addEventListener('submit', (e) => {
+
+            //  Start loading
+            loadScreen.classList.remove('hidden');
+            e.preventDefault();
+
+            // make sure we have a code
+            const joinCode = document.getElementById('join-code').value.trim();
+            if (!joinCode) return;
+
+            // reset peer.js
+            if (peer) {
+                peer.destroy();
+                peer = null;
+            }
+            peer = new Peer();
+
+            // peer connections
+            peer.on('open', (id) => {
+                // when peer loads
+                loadScreen.classList.add('hidden');
+                console.log('User initialized with ID:', id);
+
+                // try to connect
+                const conn = peer.connect(joinCode);
+
+                // set joincode thing
+                const codeOutput = document.getElementById('room-code');
+                codeOutput.innerText = joinCode;
+
+                // when connected
+                conn.on('open', () => {
+
+                    // switch to chat ui
+                    switchToChat();
+
+                    console.log('Successfully connected to host!');
+                    
+                    // send init message
+                    conn.send({
+                        type: "INFO",
+                        username: USERNAME,
+                        message: `${USERNAME} has joined.`
+                    });
+
+                    // Sending Messages
+                    const sendMsgForm = document.getElementById('send-message-form');
+                    sendMsgForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const msg = document.getElementById('send-message').value;
+                        conn.send({
+                            type: "MESSAGE",
+                            username: USERNAME,
+                            message: msg
+                        });
+                        sendMsgForm.reset();
+                    });
+
+                    const changeUserForm = document.getElementById('change-user-form');
+                    changeUserForm.addEventListener("submit", (e) => {
+                        e.preventDefault();
+                        conn.send({
+                            type: "INFO",
+                            username: USERNAME,
+                            message: `${USERNAME} changed their username to ${document.getElementById('change-username').value}`
+                        });
+                        USERNAME = document.getElementById('change-username').value;
+                        document.getElementById('change-username-modal').close();
+                    });
+
+                    // Reciving Messages
+                    conn.on('data', (data) => {
+                        addMessageToDOM(data.type, data.username, data.message, data.color);
+                    });
+                });
+
+                conn.on('error', (err) => {
+                    console.error('Connection error:', err);
+                    cleanupFailedJoin('Failed to connect to room');
+                });
+            });
+            peer.on('error', (err) => {
+                console.error('Guest peer error:', err);
+                cleanupFailedJoin('Room code incorrect or room does not exist');
+            });
+        });
+
+        function cleanupFailedJoin(message) {
+            loadScreen.classList.add('hidden');
+            document.getElementById('join-error-out').innerText = message;
+            if (peer) {
+                peer.destroy();
+                peer = null;
+            }
+        }
+    </script>
+
+    <!-- Drawing App -->
+    <script type="module">
+        // handle fullscreen
+        document.getElementById('draw-fullscreen').addEventListener('click', () => {
+            const drawCanvas = document.getElementById('draw-ui');
+            if (drawCanvas.requestFullscreen) {
+                drawCanvas.requestFullscreen();
+            } else if (drawCanvas.webkitRequestFullscreen) { /* Safari */
+                drawCanvas.webkitRequestFullscreen();
+            } else if (drawCanvas.msRequestFullscreen) { /* IE11 */
+                drawCanvas.msRequestFullscreen();
+            }
+        });
+
+        const canvas = document.getElementById('draw-canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const colorPicker = document.getElementById('draw-color');
+        const sizePicker = document.getElementById('draw-size');
+        const clearBtn = document.getElementById('draw-clear');
+        const fullscreenBtn = document.getElementById('draw-fullscreen');
+        let isDrawing = false;
+        let currentMode = 'draw';
+        let sprayAnimationId = null;
+        let lastX = 0;
+        let lastY = 0;
+        const undoStack = [];
+        const redoStack = [];
+        const MAX_HISTORY = 20; // Limit history size to prevent memory leaks
+
+        function resizeCanvas() {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            tempCtx.drawImage(canvas, 0, 0);
+
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.drawImage(tempCanvas, 0, 0);
+        }
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+
+        function saveState() {
+            redoStack.length = 0;
+            if (undoStack.length >= MAX_HISTORY) {
+                undoStack.shift(); 
+            }
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        }
+        function undo() {
+            if (undoStack.length === 0) return;
+            redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            const previousState = undoStack.pop();
+            ctx.putImageData(previousState, 0, 0);
+        }
+        function redo() {
+            if (redoStack.length === 0) return;
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            const nextState = redoStack.pop();
+            ctx.putImageData(nextState, 0, 0);
+        }
+        function getCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * (canvas.width / rect.width),
+                y: (clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+        function startDrawing(e) {
+            const coords = getCoordinates(e);
+            saveState();
+            if (currentMode === 'fill') {
+                floodFill(Math.floor(coords.x), Math.floor(coords.y), colorPicker.value);
+            } else {
+                isDrawing = true;
+                lastX = coords.x;
+                lastY = coords.y;
+                if (currentMode === 'spray') {
+                    spray(coords.x, coords.y);
+                }
+            }
+        }
+        function draw(e) {
+            if (!isDrawing) return;
+            const coords = getCoordinates(e);
+            if (currentMode === 'spray') {
+                lastX = coords.x;
+                lastY = coords.y;
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(coords.x, coords.y);
+                ctx.strokeStyle = colorPicker.value;
+                ctx.lineWidth = sizePicker.value;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+                lastX = coords.x;
+                lastY = coords.y;
+            }
+        }
+        function stopDrawing() {
+            isDrawing = false;
+            if (sprayAnimationId) {
+                cancelAnimationFrame(sprayAnimationId);
+                sprayAnimationId = null;
+            }
+        }
+        function floodFill(startX, startY, fillColorHex) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+
+            let c = fillColorHex.replace('#', '');
+            if (c.length === 3) c = c.split('').map(x => x + x).join('');
+            const num = parseInt(c, 16);
+            const fillColor = [(num >> 16) & 255, (num >> 8) & 255, num & 255, 255];
+            const startIdx = (startY * width + startX) * 4;
+            const targetColor = [data[startIdx], data[startIdx + 1], data[startIdx + 2], data[startIdx + 3]];
+
+            if (fillColor.every((val, i) => Math.abs(val - targetColor[i]) < 5)) return;
+
+            function matchTarget(idx) {
+                return Math.abs(data[idx] - targetColor[0]) < 10 &&
+                    Math.abs(data[idx + 1] - targetColor[1]) < 10 &&
+                    Math.abs(data[idx + 2] - targetColor[2]) < 10 &&
+                    Math.abs(data[idx + 3] - targetColor[3]) < 10;
+            }
+            function setPixel(idx) {
+                data[idx] = fillColor[0];
+                data[idx + 1] = fillColor[1];
+                data[idx + 2] = fillColor[2];
+                data[idx + 3] = fillColor[3];
+            }
+
+            const stack = [[startX, startY]];
+            while (stack.length > 0) {
+                const [x, y] = stack.pop();
+                let currentY = y;
+                while (currentY >= 0 && matchTarget((currentY * width + x) * 4)) {
+                    currentY--;
+                }
+                currentY++;
+
+                let reachLeft = false;
+                let reachRight = false;
+                while (currentY < height && matchTarget((currentY * width + x) * 4)) {
+                    const idx = (currentY * width + x) * 4;
+                    setPixel(idx);
+
+                    if (x > 0) {
+                        if (matchTarget(idx - 4)) {
+                            if (!reachLeft) {
+                                stack.push([x - 1, currentY]);
+                                reachLeft = true;
+                            }
+                        } else if (reachLeft) {
+                            reachLeft = false;
+                        }
+                    }
+                    if (x < width - 1) {
+                        if (matchTarget(idx + 4)) {
+                            if (!reachRight) {
+                                stack.push([x + 1, currentY]);
+                                reachRight = true;
+                            }
+                        } else if (reachRight) {
+                            reachRight = false;
+                        }
+                    }
+                    currentY++;
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        function spray(x, y) {
+            if (!isDrawing || currentMode !== 'spray') return;
+
+            const density = Number(sizePicker.value) * 4; // Number of dots per frame
+            const radius = Number(sizePicker.value) * 2;  // Radius of spray area
+
+            ctx.fillStyle = colorPicker.value;
+
+            for (let i = 0; i < density; i++) {
+                const offsetAngle = Math.random() * 2 * Math.PI;
+                const offsetRadius = Math.random() * radius;
+                const dotX = lastX + offsetRadius * Math.cos(offsetAngle);
+                const dotY = lastY + offsetRadius * Math.sin(offsetAngle);
+
+                ctx.fillRect(dotX, dotY, 1, 1);
+            }
+
+            sprayAnimationId = requestAnimationFrame(() => spray(lastX, lastY));
+        }
+
+        document.getElementById('draw-mode-btn').addEventListener('click', () => currentMode = 'draw');
+        document.getElementById('draw-fill-btn').addEventListener('click', () => currentMode = 'fill');
+        document.getElementById('draw-spray-btn').addEventListener('click', () => currentMode = 'spray');
+
+        document.getElementById('draw-undo').addEventListener('click', undo);
+        document.getElementById('draw-redo').addEventListener('click', redo);
+
+        clearBtn.addEventListener('click', () => {
+            saveState();
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+        
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startDrawing(e);
+        }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            draw(e);
+        }, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        document.getElementById('draw-export').addEventListener('click', () => {
+            const imageBlob = canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'drawing.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                link.href = '';
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+
+    <!-- Game Player -->
+    <script>
+        function openGithubInPlayer(url) {
+            const jsDelivrUrl = getJsDelivrUrl(url);
+            fetch(jsDelivrUrl)
+            .then(response => response.text())
+            .then(text => {
+                const gamePlayerFrame = document.getElementById('game-player-iframe');
+                const customStyle = `
+                    <style>
+                        html, body {
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            width: 100% !important;
+                            height: 100% !important;
+                            overflow: hidden !important;
+                        }
+                        canvas {
+                            max-width: 100% !important;
+                            max-height: 100% !important;
+                            object-fit: contain !important;
+                        }
+                    </style>
+                `;
+                const styledText = text.replace('</head>', customStyle + '</head>');
+                gamePlayerFrame.srcdoc = styledText;
+                switchToWindow('game-player');
+            });
+        }
+        document.getElementById('game-player-fullscreen').addEventListener('click', () => {
+            const gamePlayerFrame = document.getElementById('game-player-iframe');
+            if (gamePlayerFrame.requestFullscreen) {
+                gamePlayerFrame.requestFullscreen();
+            } else if (gamePlayerFrame.webkitRequestFullscreen) { /* Safari */
+                gamePlayerFrame.webkitRequestFullscreen();
+            } else if (gamePlayerFrame.msRequestFullscreen) { /* IE11 */
+                gamePlayerFrame.msRequestFullscreen();
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            font-family: "Nunito", Arial, sans-serif;
+            background-color: #272727;
+        }
+        #draw {
+            padding: 3rem;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        #draw-fullscreen {
+            position: absolute;
+            top: 4rem;
+            right: 4rem;
+            background-color: color-mix(in srgb, #0d57c7, transparent 40%);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.2s ease;
+        }
+        #draw-fullscreen:hover {
+            scale: 1.1;
+        }
+        #draw .ui {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+        #draw-canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            cursor: crosshair;
+            touch-action: none;
+        }
+        #draw .toolbar {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: #272727;
+            padding: 0.75rem 1.25rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border: 1px solid color-mix(in srgb, white, transparent 80%);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        #draw .toolbar button {
+            background-color: #0d57c7;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-family: "Nunito", Arial, sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: 0.2s ease;
+        }
+        #draw .toolbar button:hover {
+            scale: 1.05;
+            filter: brightness(1.1);
+        }
+        #draw .toolbar button:active {
+            scale: 0.95;
+        }
+        #draw .toolbar input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 36px;
+            height: 36px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        #draw .toolbar input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        #draw .toolbar input[type="color"]::-webkit-color-swatch {
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+        #draw .toolbar input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100px;
+            height: 6px;
+            background: color-mix(in srgb, white, transparent 60%);
+            border-radius: 5px;
+            outline: none;
+        }
+        #draw .toolbar input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #0d57c7;
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+        #draw .toolbar input[type="range"]::-webkit-slider-thumb:hover {
+            scale: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <section id="draw">
+            <button id="draw-fullscreen">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z"/></svg>
+            </button>
+            <div class="ui" id="draw-ui">
+                <canvas id="draw-canvas"></canvas>
+                <div class="toolbar">
+                    <button id="draw-clear">Clear</button>
+                    <button id="draw-export">Export</button>
+                    <p>|</p>
+                    <button id="draw-undo">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z"/></svg>
+                    </button>
+                    <button id="draw-redo">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M396-200q-97 0-166.5-63T160-420q0-94 69.5-157T396-640h252L544-744l56-56 200 200-200 200-56-56 104-104H396q-63 0-109.5 40T240-420q0 60 46.5 100T396-280h284v80H396Z"/></svg>
+                    </button>
+                    <p>|</p>
+                    <button id="draw-mode-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m490-527 37 37 217-217-37-37-217 217ZM200-200h37l233-233-37-37-233 233v37Zm355-205L405-555l167-167-29-29-219 219-56-56 218-219q24-24 56.5-24t56.5 24l29 29 50-50q12-12 28.5-12t28.5 12l93 93q12 12 12 28.5T828-678L555-405ZM270-120H120v-150l285-285 150 150-285 285Z"/></svg>
+                    </button>
+                    <button id="draw-fill-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M346-140 100-386q-10-10-15-22t-5-25q0-13 5-25t15-22l230-229-106-106 62-65 400 400q10 10 14.5 22t4.5 25q0 13-4.5 25T686-386L440-140q-10 10-22 15t-25 5q-13 0-25-5t-22-15Zm47-506L179-432h428L393-646Zm399 526q-36 0-61-25.5T706-208q0-27 13.5-51t30.5-47l42-54 44 54q16 23 30 47t14 51q0 37-26 62.5T792-120Z"/></svg>
+                    </button>
+                    <button id="draw-spray-btn">
+                        <svg fill="#e3e3e3" width="24px" height="24px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"><path d="M 12 2 L 12 8 L 14 8 L 14 9.0625 C 9.898438 9.5 8.125 12.53125 8.125 12.53125 L 8 12.75 L 8 30 L 22 30 L 22 12.75 L 21.875 12.53125 C 21.875 12.53125 20.101563 9.5 16 9.0625 L 16 8 L 18 8 L 18 2 Z M 24 2 C 23.449219 2 23 2.449219 23 3 C 23 3.550781 23.449219 4 24 4 C 24.550781 4 25 3.550781 25 3 C 25 2.449219 24.550781 2 24 2 Z M 14 4 L 16 4 L 16 6 L 14 6 Z M 21 4 C 20.449219 4 20 4.449219 20 5 C 20 5.550781 20.449219 6 21 6 C 21.550781 6 22 5.550781 22 5 C 22 4.449219 21.550781 4 21 4 Z M 24 6 C 23.449219 6 23 6.449219 23 7 C 23 7.550781 23.449219 8 24 8 C 24.550781 8 25 7.550781 25 7 C 25 6.449219 24.550781 6 24 6 Z M 15 11 C 16.738281 11 17.910156 11.480469 18.6875 12 L 11.3125 12 C 12.089844 11.480469 13.261719 11 15 11 Z M 10 14 L 20 14 L 20 28 L 10 28 Z M 15 18 C 13.355469 18 12 19.355469 12 21 C 12 22.644531 13.355469 24 15 24 C 16.644531 24 18 22.644531 18 21 C 18 19.355469 16.644531 18 15 18 Z M 15 20 C 15.5625 20 16 20.4375 16 21 C 16 21.5625 15.5625 22 15 22 C 14.4375 22 14 21.5625 14 21 C 14 20.4375 14.4375 20 15 20 Z"/></g></svg>
+                    </button>
+                    <p>|</p>
+                    <input type="color" id="draw-color" value="#000000">
+                    <input type="range" id="draw-size" min="1" max="50" value="5">
+                </div>
+            </div>
+        </section>
+    <script type="module">
+        // handle fullscreen
+        document.getElementById('draw-fullscreen').addEventListener('click', () => {
+            const drawCanvas = document.getElementById('draw-ui');
+            if (drawCanvas.requestFullscreen) {
+                drawCanvas.requestFullscreen();
+            } else if (drawCanvas.webkitRequestFullscreen) { /* Safari */
+                drawCanvas.webkitRequestFullscreen();
+            } else if (drawCanvas.msRequestFullscreen) { /* IE11 */
+                drawCanvas.msRequestFullscreen();
+            }
+        });
+
+        const canvas = document.getElementById('draw-canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const colorPicker = document.getElementById('draw-color');
+        const sizePicker = document.getElementById('draw-size');
+        const clearBtn = document.getElementById('draw-clear');
+        const fullscreenBtn = document.getElementById('draw-fullscreen');
+        let isDrawing = false;
+        let currentMode = 'draw';
+        let sprayAnimationId = null;
+        let lastX = 0;
+        let lastY = 0;
+        const undoStack = [];
+        const redoStack = [];
+        const MAX_HISTORY = 20; // Limit history size to prevent memory leaks
+
+        function resizeCanvas() {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            tempCtx.drawImage(canvas, 0, 0);
+
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.drawImage(tempCanvas, 0, 0);
+        }
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+
+        function saveState() {
+            redoStack.length = 0;
+            if (undoStack.length >= MAX_HISTORY) {
+                undoStack.shift(); 
+            }
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        }
+        function undo() {
+            if (undoStack.length === 0) return;
+            redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            const previousState = undoStack.pop();
+            ctx.putImageData(previousState, 0, 0);
+        }
+        function redo() {
+            if (redoStack.length === 0) return;
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            const nextState = redoStack.pop();
+            ctx.putImageData(nextState, 0, 0);
+        }
+        function getCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * (canvas.width / rect.width),
+                y: (clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+        function startDrawing(e) {
+            const coords = getCoordinates(e);
+            saveState();
+            if (currentMode === 'fill') {
+                floodFill(Math.floor(coords.x), Math.floor(coords.y), colorPicker.value);
+            } else {
+                isDrawing = true;
+                lastX = coords.x;
+                lastY = coords.y;
+                if (currentMode === 'spray') {
+                    spray(coords.x, coords.y);
+                }
+            }
+        }
+        function draw(e) {
+            if (!isDrawing) return;
+            const coords = getCoordinates(e);
+            if (currentMode === 'spray') {
+                lastX = coords.x;
+                lastY = coords.y;
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(coords.x, coords.y);
+                ctx.strokeStyle = colorPicker.value;
+                ctx.lineWidth = sizePicker.value;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+                lastX = coords.x;
+                lastY = coords.y;
+            }
+        }
+        function stopDrawing() {
+            isDrawing = false;
+            if (sprayAnimationId) {
+                cancelAnimationFrame(sprayAnimationId);
+                sprayAnimationId = null;
+            }
+        }
+        function floodFill(startX, startY, fillColorHex) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+
+            let c = fillColorHex.replace('#', '');
+            if (c.length === 3) c = c.split('').map(x => x + x).join('');
+            const num = parseInt(c, 16);
+            const fillColor = [(num >> 16) & 255, (num >> 8) & 255, num & 255, 255];
+            const startIdx = (startY * width + startX) * 4;
+            const targetColor = [data[startIdx], data[startIdx + 1], data[startIdx + 2], data[startIdx + 3]];
+
+            if (fillColor.every((val, i) => Math.abs(val - targetColor[i]) < 5)) return;
+
+            function matchTarget(idx) {
+                return Math.abs(data[idx] - targetColor[0]) < 10 &&
+                    Math.abs(data[idx + 1] - targetColor[1]) < 10 &&
+                    Math.abs(data[idx + 2] - targetColor[2]) < 10 &&
+                    Math.abs(data[idx + 3] - targetColor[3]) < 10;
+            }
+            function setPixel(idx) {
+                data[idx] = fillColor[0];
+                data[idx + 1] = fillColor[1];
+                data[idx + 2] = fillColor[2];
+                data[idx + 3] = fillColor[3];
+            }
+
+            const stack = [[startX, startY]];
+            while (stack.length > 0) {
+                const [x, y] = stack.pop();
+                let currentY = y;
+                while (currentY >= 0 && matchTarget((currentY * width + x) * 4)) {
+                    currentY--;
+                }
+                currentY++;
+
+                let reachLeft = false;
+                let reachRight = false;
+                while (currentY < height && matchTarget((currentY * width + x) * 4)) {
+                    const idx = (currentY * width + x) * 4;
+                    setPixel(idx);
+
+                    if (x > 0) {
+                        if (matchTarget(idx - 4)) {
+                            if (!reachLeft) {
+                                stack.push([x - 1, currentY]);
+                                reachLeft = true;
+                            }
+                        } else if (reachLeft) {
+                            reachLeft = false;
+                        }
+                    }
+                    if (x < width - 1) {
+                        if (matchTarget(idx + 4)) {
+                            if (!reachRight) {
+                                stack.push([x + 1, currentY]);
+                                reachRight = true;
+                            }
+                        } else if (reachRight) {
+                            reachRight = false;
+                        }
+                    }
+                    currentY++;
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+        function spray(x, y) {
+            if (!isDrawing || currentMode !== 'spray') return;
+
+            const density = Number(sizePicker.value) * 4; // Number of dots per frame
+            const radius = Number(sizePicker.value) * 2;  // Radius of spray area
+
+            ctx.fillStyle = colorPicker.value;
+
+            for (let i = 0; i < density; i++) {
+                const offsetAngle = Math.random() * 2 * Math.PI;
+                const offsetRadius = Math.random() * radius;
+                const dotX = lastX + offsetRadius * Math.cos(offsetAngle);
+                const dotY = lastY + offsetRadius * Math.sin(offsetAngle);
+
+                ctx.fillRect(dotX, dotY, 1, 1);
+            }
+
+            sprayAnimationId = requestAnimationFrame(() => spray(lastX, lastY));
+        }
+
+        document.getElementById('draw-mode-btn').addEventListener('click', () => currentMode = 'draw');
+        document.getElementById('draw-fill-btn').addEventListener('click', () => currentMode = 'fill');
+        document.getElementById('draw-spray-btn').addEventListener('click', () => currentMode = 'spray');
+
+        document.getElementById('draw-undo').addEventListener('click', undo);
+        document.getElementById('draw-redo').addEventListener('click', redo);
+
+        clearBtn.addEventListener('click', () => {
+            saveState();
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+        
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startDrawing(e);
+        }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            draw(e);
+        }, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        document.getElementById('draw-export').addEventListener('click', () => {
+            const imageBlob = canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'drawing.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                link.href = '';
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+</body>
+</html>

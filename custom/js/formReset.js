@@ -6,7 +6,7 @@ export const textColorInput = document.getElementById('text-color-input');
 export const textSecondaryInput = document.getElementById('text-secondary-input');
 brandColorInput.value = "#0d57c7";
 baseColorInput.value = "#010101";
-surfaceColorInput.value = "#272727";
+surfaceColorInput.value = "#101010";
 textColorInput.value = "#f9f9f9";
 textSecondaryInput.value = "#cfcdcd"
 

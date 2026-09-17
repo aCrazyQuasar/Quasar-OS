@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random App</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+        :root{
+            --base-color: #010101;
+            --surface-color: #272727;
+
+            --brand-color: #0d57c7;
+
+            --text-color: #f9f9f9;
+            --text-secondary: #cfcdcd;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        } *::-webkit-scrollbar{
+            display: none;
+        }
+        *.hidden{
+            display: none;
+        }
+        h1, h2, h3, h4, h5, h6{
+            color: var(--text-color);
+            font-family: "Exo 2", Arial, Helvetica, sans-serif;
+        }
+        p, a, span{
+            color: var(--text-secondary);
+            font-family: "Nuntio", Arial, Helvetica, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            font-family: "Nunito", Arial, sans-serif;
+            background-color: var(--base-color);
+            color: var(--text-secondary);
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+        }
+        #random{
+            padding: 3rem;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <section id="random">
+        <h1>Welcome to the Random App</h1>
+        <p>There are lots of fun randomization tools, and even a randomizer language!</p>
+        <hr>
+        <h2>Wheel</h2>
+        <p>Spin the wheel to randomly select an option!</p>
+        <hr>
+        <h2>Dice Roll</h2>
+        <p>Roll the dice to get a random number!</p>
+        <hr>
+        <h2>Randomization Language</h2>
+        <p>Type in this custom language to get fully customizable random sentences!</p>
+        <textarea id="random-editor">
+            Hello {name: c=1-10  , s=2}, you are {number} years old.
+        </textarea>
+        <p id="random-output"></p>
+    </section>
+
+    <script>
+        const randomEditor = document.getElementById('random-editor');
+        const randomOutput = document.getElementById('random-output');
+        randomEditor.addEventListener('input', () => {
+            randomOutput.textContent = parse(randomEditor.value);
+        });
+
+        randomOutput.textContent = parse(randomEditor.value);
+
+        function parse(input) {
+            let currentIndex = 0;
+            const tokens = input.trim().split('');
+            let parsedTokens = [];
+            
+            function at() {
+                return tokens[currentIndex];
+            }
+            function eat() {
+                return tokens.shift();
+            }
+            function expect(token) {
+                if (at() !== token) {
+                    throw new Error(`Expected '${token}' but found '${at()}'`);
+                }
+                return eat();
+            }
+            let currentword = "";
+            for (let t of tokens) {
+                if (at() === '{') {
+                    let value = ""
+                    eat();
+                    while (at() !== '}' && currentIndex < tokens.length) {
+                        value += eat();
+                    }
+
+                    expect('}');
+
+                    let paramsObj = {};
+                    let [catagory, params] = value.split(':');
+
+                    if (params) {
+                        params = params.split(',');
+                        for (let param of params) {
+                            const [key, val] = param.split('=');
+                            paramsObj[key.trim()] = val.trim();
+                        }
+                    }
+
+                    parsedTokens.push({
+                        type: "random",
+                        catagory: catagory,
+                        params: paramsObj
+                    });
+                    continue;
+                } else {
+                    if (at() == ' ') {
+                        eat();
+                        parsedTokens.push({
+                            type: "text",
+                            value: currentword
+                        });
+                        currentword = "";
+                        continue;
+                    }
+                }
+                currentword += eat();
+            }
+            console.log(parsedTokens);
+            return JSON.stringify(parsedTokens);
+
+            let finalString = "";
+            for (let token of parsedTokens) {}
+        }
+    </script>
+</body>
+</html>
