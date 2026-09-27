@@ -2,6 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Short+Stack&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 #credits{
     display: flex;
     flex-direction: column;
@@ -42,11 +44,23 @@
 #credit-kloudy{
     color: purple;
 }
+#credit-kepzy{
+    font-family: "Comic Relief", Arial, Helvetica, sans-serif;
+    background: linear-gradient(90deg, #6b02ff, cyan);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    color: transparent;
+}
+#credit-abradee{
+    font-family: "JetBrains Mono", monospace;
+    color:#89CFF0;
+}
 #credit-unknown{
     color: #3636dc;
 }
 #credit-error{
-    background: linear-gradient( #002b00, lime, #002b00);
+    background: linear-gradient( #002b00, #ff00f7, #390042);
     background-size: 100% 200%;
     background-clip: text;
     -webkit-background-clip: text;
@@ -57,7 +71,11 @@
     animation: shift-bg-up 3s linear alternate infinite;
 }
 #credit-astro{
-    
+    background: linear-gradient(90deg, rgba(64, 115, 255, 1) 0%, rgba(181, 29, 219, 1) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    color: transparent;
 }
 #credit-dennis{
     background: linear-gradient(45deg, #1b42f0, #7507be);

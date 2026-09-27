@@ -1,0 +1,723 @@
+CATEGORIES:
+  MENU-TITLE: "&8ѕʜᴏᴘ"
+  MENU-SIZE: 36
+
+# START OF TOP ROW
+  ORES:
+    MATERIAL: DIAMOND
+    DISPLAY-NAME: "&#6BF18Dᴏʀᴇs"
+    SLOT: 10
+    LORE:
+      - "&fClick to view the ores shop"
+    OPEN-MENU: "{ore-menu}"
+
+# MIDDLE OF TOP ROW
+  OVERWORLD:
+    MATERIAL: GRASS_BLOCK
+    DISPLAY-NAME: "&#6BF18Dᴏᴠᴇʀᴡᴏʀʟᴅ"
+    SLOT: 12
+    LORE:
+      - "&fClick to view the overworld shop"
+    OPEN-MENU: "{overworld-menu}"
+  NETHER:
+    MATERIAL: NETHERRACK
+    DISPLAY-NAME: "&#6BF18Dɴᴇᴛʜᴇʀ"
+    SLOT: 13
+    LORE:
+      - "&fClick to view the nether shop"
+    OPEN-MENU: "{nether-menu}"
+  END:
+    MATERIAL: END_STONE
+    DISPLAY-NAME: "&#6BF18Dᴇɴᴅ"
+    SLOT: 14
+    LORE:
+      - "&fClick to view the end shop"
+    OPEN-MENU: "{end-menu}"
+
+# END OF TOP ROW
+  SHARD:
+    MATERIAL: AMETHYST_SHARD
+    DISPLAY-NAME: "&#6BF18Dѕʜᴀʀᴅ ѕʜᴏᴘ"
+    SLOT: 16
+    LORE:
+      - "&fClick to view the shard shop"
+    OPEN-MENU: "{shard-menu}"
+  
+# ROW 2
+
+  GEAR:
+    MATERIAL: TOTEM_OF_UNDYING
+    DISPLAY-NAME: "&#6BF18Dɢᴇᴀʀ"
+    SLOT: 22
+    LORE:
+      - "&fClick to view the gear shop"
+    OPEN-MENU: "{gear-menu}"
+  FOOD:
+    MATERIAL: COOKED_BEEF
+    DISPLAY-NAME: "&#6BF18Dꜰᴏᴏᴅ"
+    SLOT: 23
+    LORE:
+      - "&fClick to view the food shop"
+    OPEN-MENU: "{food-menu}"
+  
+
+#Ore Shop Menu
+ORE-MENU:
+  CURRENCY: MONEY
+  TITLE: "&8ѕʜᴏᴘ - ᴏʀᴇs"
+  SIZE: 27
+  COAL-ITEM:
+    MATERIAL: "COAL"
+    DISPLAY-NAME: "&fCoal"
+    SLOT: 10
+    PRICE-PER-UNIT: 100.0
+    LORE:
+      - "&fBuy price: &a$100"
+    COMMAND: ""
+  COPPER-ITEM:
+    MATERIAL: "COPPER_INGOT"
+    DISPLAY-NAME: "&fCopper Ingot"
+    SLOT: 11
+    PRICE-PER-UNIT: 500.0
+    LORE:
+      - "&fBuy price: &a$500"
+    COMMAND: ""
+  IRON-ITEM:
+    MATERIAL: "IRON_INGOT"
+    DISPLAY-NAME: "&fIron Ingot"
+    SLOT: 12
+    PRICE-PER-UNIT: 1000.0
+    LORE:
+      - "&fBuy price: &a$1,000"
+    COMMAND: ""
+  LAPIS-ITEM:
+    MATERIAL: "LAPIS_LAZULI"
+    DISPLAY-NAME: "&fLapis Lazuli"
+    SLOT: 13
+    PRICE-PER-UNIT: 100.0
+    LORE:
+      - "&fBuy price: &a$100"
+    COMMAND: ""
+  REDSTONE-ITEM:
+    MATERIAL: "REDSTONE"
+    DISPLAY-NAME: "&fRedstone Dust"
+    SLOT: 14
+    PRICE-PER-UNIT: 750.0
+    LORE:
+      - "&fBuy price: &a$750"
+    COMMAND: ""
+  GOLD-ITEM:
+    MATERIAL: "GOLD_INGOT"
+    DISPLAY-NAME: "&fGold Ingot"
+    SLOT: 15
+    PRICE-PER-UNIT: 1500.0
+    LORE:
+      - "&fBuy price: &a$1,500"
+    COMMAND: ""
+  DIAMOND-ITEM:
+    MATERIAL: "DIAMOND"
+    DISPLAY-NAME: "&fDiamond"
+    SLOT: 16
+    PRICE-PER-UNIT: 2500.0
+    LORE:
+      - "&fBuy price: &a$2,500"
+    COMMAND: ""
+
+# Overworld Shop Menu
+OVERWORLD-MENU:
+  CURRENCY: MONEY
+  TITLE: "&8ѕʜᴏᴘ - ᴏᴠᴇʀᴡᴏʀʟᴅ"
+  SIZE: 36
+  GRASS-BLOCK-ITEM:
+    MATERIAL: "GRASS_BLOCK"
+    DISPLAY-NAME: "&fGrass Block"
+    SLOT: 10
+    PRICE-PER-UNIT: 500.0
+    LORE:
+      - "&fBuy price: &a$500"
+    COMMAND: ""
+  DIRT-BLOCK-ITEM:
+    MATERIAL: "DIRT"
+    DISPLAY-NAME: "&fDirt"
+    SLOT: 11
+    PRICE-PER-UNIT: 200.0
+    LORE:
+      - "&fBuy price: &a$200"
+    COMMAND: ""
+  STONE-BLOCK-ITEM:
+    MATERIAL: "STONE"
+    DISPLAY-NAME: "&fStone"
+    SLOT: 12
+    PRICE-PER-UNIT: 500.0
+    LORE:
+      - "&fBuy price: &a$500"
+    COMMAND: ""
+  DEEPSLATE-ITEM:
+    MATERIAL: "DEEPSLATE"
+    DISPLAY-NAME: "&fDeepslate"
+    SLOT: 13
+    PRICE-PER-UNIT: 700.0
+    LORE:
+      - "&fBuy price: &a$700"
+    COMMAND: ""
+  SAND-ITEM:
+    MATERIAL: "SAND"
+    DISPLAY-NAME: "&fSand"
+    SLOT: 14
+    PRICE-PER-UNIT: 500.0
+    LORE:
+      - "&fBuy price: &a$500"
+    COMMAND: ""
+  GRAVEL-ITEM:
+    MATERIAL: "GRAVEL"
+    DISPLAY-NAME: "&fGravel"
+    SLOT: 15
+    PRICE-PER-UNIT: 500.0
+    LORE:
+      - "&fBuy price: &a$500"
+    COMMAND: ""
+  CLAY-ITEM:
+    MATERIAL: "CLAY"
+    DISPLAY-NAME: "&fClay"
+    SLOT: 16
+    PRICE-PER-UNIT: 900.0
+    LORE:
+      - "&fBuy price: &a$900"
+    COMMAND: ""
+  OAK-LOG-ITEM:
+    MATERIAL: "OAK_LOG"
+    DISPLAY-NAME: "&fOak Log"
+    SLOT: 19
+    PRICE-PER-UNIT: 50.0
+    LORE:
+      - "&fBuy price: &a$50"
+    COMMAND: ""
+  SPRUCE-LOG-ITEM:
+    MATERIAL: "SPRUCE_LOG"
+    DISPLAY-NAME: "&fSpruce Log"
+    SLOT: 20
+    PRICE-PER-UNIT: 50.0
+    LORE:
+      - "&fBuy price: &a$50"
+    COMMAND: ""
+  ACACIA-LOG-ITEM:
+    MATERIAL: "ACACIA_LOG"
+    DISPLAY-NAME: "&fAcacia Log"
+    SLOT: 21
+    PRICE-PER-UNIT: 50.0
+    LORE:
+      - "&fBuy price: &a$50"
+    COMMAND: ""
+  DARK-OAK-LOG-ITEM:
+    MATERIAL: "DARK_OAK_LOG"
+    DISPLAY-NAME: "&fDark Oak Log"
+    SLOT: 22
+    PRICE-PER-UNIT: 50.0
+    LORE:
+      - "&fBuy price: &a$50"
+    COMMAND: ""
+  PALE-OAK-LOG-ITEM:
+    MATERIAL: "PALE_OAK_LOG"
+    DISPLAY-NAME: "&fPale Oak Log"
+    SLOT: 23
+    PRICE-PER-UNIT: 50.0
+    LORE:
+      - "&fBuy price: &a$50"
+    COMMAND: ""
+  BIRCH-LOG-ITEM:
+    MATERIAL: "BIRCH_LOG"
+    DISPLAY-NAME: "&fBirch Log"
+    SLOT: 24
+    PRICE-PER-UNIT: 50.0
+    LORE:
+      - "&fBuy price: &a$50"
+    COMMAND: ""
+  CHERRY-LOG-ITEM:
+    MATERIAL: "CHERRY_LOG"
+    DISPLAY-NAME: "&fCherry Log"
+    SLOT: 25
+    PRICE-PER-UNIT: 50.0
+    LORE:
+      - "&fBuy price: &a$50"
+    COMMAND: ""
+
+# Nether Shop Menu
+NETHER-MENU:
+  TITLE: "&8ѕʜᴏᴘ - ɴᴇᴛʜᴇʀ"
+  SIZE: 36
+  NETHERRACK-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "NETHERRACK"
+    DISPLAY-NAME: "&fNetherrack"
+    SLOT: 10
+    PRICE-PER-UNIT: 1000.0
+    LORE:
+      - "&fBuy price: &a$1,000"
+  WARPED-NYLIUM-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "WARPED_NYLIUM"
+    DISPLAY-NAME: "&fWarped Nylium"
+    SLOT: 11
+    PRICE-PER-UNIT: 10000.0
+    LORE:
+      - "&fBuy price: &a$100,000"
+  CRIMSON-NYLIUM-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "CRIMSON-NYLIUM"
+    DISPLAY-NAME: "&fCrimson Nylium"
+    SLOT: 12
+    PRICE-PER-UNIT: 10000.0
+    LORE:
+      - "&fBuy price: &a$10,000"
+  SOUL-SAND-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "SOUL_SAND"
+    DISPLAY-NAME: "&fSoul Sand"
+    SLOT: 13
+    PRICE-PER-UNIT: 2000.0
+    LORE:
+      - "&fBuy price: &a$2,000"
+  SOUL-SOIL-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "SOUL_SOIL"
+    DISPLAY-NAME: "&fSoul Soil"
+    SLOT: 14
+    PRICE-PER-UNIT: 2000.0
+    LORE:
+      - "&fBuy price: &a$2,000"
+  MAGMA-BLOCK-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "MAGMA_BLOCK"
+    DISPLAY-NAME: "&fMagma Block"
+    SLOT: 15
+    PRICE-PER-UNIT: 750.0
+    LORE:
+      - "&fBuy price: &a$750"
+  BLACKSTONE-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "BLACKSTONE"
+    DISPLAY-NAME: "&fBlackstone"
+    SLOT: 16
+    PRICE-PER-UNIT: 750.0
+    LORE:
+      - "&fBuy price: &a$750"
+  
+  BLAZE-ROD-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "BLAZE_ROD"
+    DISPLAY-NAME: "&fBlaze Rod"
+    SLOT: 19
+    PRICE-PER-UNIT: 20000.0
+    LORE:
+      - "&fBuy price: &a$20,000"
+  NETHER-WART-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "NETHER_WART"
+    DISPLAY-NAME: "&fNether Wart"
+    SLOT: 20
+    PRICE-PER-UNIT: 1000.0
+    LORE:
+      - "&fBuy price: &a$1000"
+  GLOWSTONE-DUST-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "GLOWSTONE_DUST"
+    DISPLAY-NAME: "&fGlowstone Dust"
+    SLOT: 21
+    PRICE-PER-UNIT: 1500.0
+    LORE:
+      - "&fBuy price: &a$1,500"
+  MAGMA-CREAM-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "MAGMA_CREAM"
+    DISPLAY-NAME: "&fMagma Cream"
+    SLOT: 22
+    PRICE-PER-UNIT: 100.0
+    LORE:
+      - "&fBuy price: &a$100"
+  GHAST-TEAR-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "GHAST_TEAR"
+    DISPLAY-NAME: "&fGhast Tear"
+    SLOT: 23
+    PRICE-PER-UNIT: 350
+    LORE:
+      - "&fBuy price: &a$350"
+  NETHER-QUARTZ-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "QUARTZ"
+    DISPLAY-NAME: "&fNether Quartz"
+    SLOT: 24
+    PRICE-PER-UNIT: 15
+    LORE:
+      - "&fBuy price: &a$15"
+  CRYING-OBSIDIAN-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "CRYING_OBSIDIAN"
+    DISPLAY-NAME: "&fCrying Obsidian"
+    SLOT: 25
+    PRICE-PER-UNIT: 150
+    LORE:
+      - "&fBuy price: &a$150"
+
+# End Shop Menu
+END-MENU:
+  CURRENCY: MONEY
+  TITLE: "&8ѕʜᴏᴘ - ᴇɴᴅ"
+  SIZE: 27
+  ENDER-PEARL-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "ENDER_PEARL"
+    DISPLAY-NAME: "&fEnder Pearl"
+    SLOT: 10
+    PRICE-PER-UNIT: 75.0
+    LORE:
+      - "&fBuy price: &a$75"
+    COMMAND: ""
+  END-STONE-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "END_STONE"
+    DISPLAY-NAME: "&fEnd Stone"
+    SLOT: 11
+    PRICE-PER-UNIT: 8.0
+    LORE:
+      - "&fBuy price: &a$8"
+    COMMAND: ""
+  DRAGON-BREATH-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "DRAGON_BREATH"
+    DISPLAY-NAME: "&eDragon's Breath"
+    SLOT: 12
+    PRICE-PER-UNIT: 1000.0
+    LORE:
+      - "&fBuy price: &a$1,000"
+    COMMAND: ""
+  END-ROD-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "END_ROD"
+    DISPLAY-NAME: "&fEnd Rod"
+    SLOT: 13
+    PRICE-PER-UNIT: 100.0
+    LORE:
+      - "&fBuy price: &a$100"
+  CHORUS-FRUIT-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "CHORUS_FRUIT"
+    DISPLAY-NAME: "&fChorus Fruit"
+    SLOT: 14
+    PRICE-PER-UNIT: 10.0
+    LORE:
+      - "&fBuy price: &a$10"
+  POPPED-CHORUS-FRUIT-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "POPPED_CHORUS_FRUIT"
+    DISPLAY-NAME: "&fPopped Chorus Fruit"
+    SLOT: 15
+    PRICE-PER-UNIT: 15.0
+    LORE:
+      - "&fBuy price: &a$15"
+  SHULKER-SHELL-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "SHULKER_SHELL"
+    DISPLAY-NAME: "&fShulker Shell"
+    SLOT: 16
+    PRICE-PER-UNIT: 350.0
+    LORE:
+      - "&fBuy price: &a$350"
+
+# Gear Shop Menu
+GEAR-MENU:
+  TITLE: "&8ɢᴇᴀʀ - ѕʜᴏᴘ"
+  SIZE: 36
+  OBSIDIAN-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "OBSIDIAN"
+    DISPLAY-NAME: "&fObsidian"
+    SLOT: 10
+    PRICE-PER-UNIT: 100
+    LORE:
+      - "&fBuy price: &a$100"
+  END-CRYSTAL-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "END_CRYSTAL"
+    DISPLAY-NAME: "&bEnd Crystal"
+    SLOT: 11
+    PRICE-PER-UNIT: 350
+    LORE:
+      - "&fBuy price: &a$350"
+  RESPAWN-ANCHOR-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "RESPAWN_ANCHOR"
+    DISPLAY-NAME: "&fRespawn Anchor"
+    SLOT: 12
+    PRICE-PER-UNIT: 1000
+    LORE:
+      - "&fBuy price: &a$1000"
+  GLOWSTONE-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "GLOWSTONE"
+    DISPLAY-NAME: "&fGlowstone"
+    SLOT: 13
+    PRICE-PER-UNIT: 100
+    LORE:
+      - "&fBuy price: &a$100"
+  TOTEM-OF-UNDYING-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "TOTEM_OF_UNDYING"
+    DISPLAY-NAME: "&eTotem of Undying"
+    SLOT: 14
+    PRICE-PER-UNIT: 1250
+    LORE:
+      - "&fBuy price: &a$1250"
+  ENDER-PEARL-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "ENDER_PEARL"
+    DISPLAY-NAME: "&fEnder Pearl"
+    SLOT: 15
+    PRICE-PER-UNIT: 75
+    LORE:
+      - "&fBuy price: &a$75"
+  GOLDEN-APPLE-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "GOLDEN_APPLE"
+    DISPLAY-NAME: "&bGolden Apple"
+    SLOT: 16
+    PRICE-PER-UNIT: 250
+    LORE:
+      - "&fBuy price: &a$250"
+  BOTTLE-O-ENCHANTING-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "EXPERIENCE_BOTTLE"
+    DISPLAY-NAME: "&eBottle O' Enchanting"
+    SLOT: 22
+    PRICE-PER-UNIT: 100
+    LORE:
+      - "&fBuy price: &a$100"
+
+# Food Shop Menu
+FOOD-MENU:
+  TITLE: "&8ꜰᴏᴏᴅ - ѕʜᴏᴘ"
+  SIZE: 36
+  POTATO-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "POTATO"
+    DISPLAY-NAME: "&fPotato"
+    SLOT: 10
+    PRICE-PER-UNIT: 75
+    LORE:
+      - "&fBuy price: &a$75"
+  SWEET-BERRIES-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "SWEET_BERRIES"
+    DISPLAY-NAME: "&fSweet Berries"
+    SLOT: 11
+    PRICE-PER-UNIT: 50
+    LORE:
+      - "&fBuy price: &a$50"
+  MELON-SLICE-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "MELON_SLICE"
+    DISPLAY-NAME: "&fMelon Slice"
+    SLOT: 12
+    PRICE-PER-UNIT: 10
+    LORE:
+      - "&fBuy price: &a$10"
+  CARROT-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "CARROT"
+    DISPLAY-NAME: "&fCarrot"
+    SLOT: 13
+    PRICE-PER-UNIT: 65
+    LORE:
+      - "&fBuy price: &a$65"
+  APPLE-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "APPLE"
+    DISPLAY-NAME: "&fApple"
+    SLOT: 14
+    PRICE-PER-UNIT: 25
+    LORE:
+      - "&fBuy price: &a$25"
+  COOKED-CHICKEN-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "COOKED_CHICKEN"
+    DISPLAY-NAME: "&fApple"
+    SLOT: 15
+    PRICE-PER-UNIT: 30
+    LORE:
+      - "&fBuy price: &a$30"
+  STEAK-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "COOKED_BEEF"
+    DISPLAY-NAME: "&fSteak"
+    SLOT: 16
+    PRICE-PER-UNIT: 35
+    LORE:
+      - "&fBuy price: &a$35"
+  GOLDEN-CARROT-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "GOLDEN_CARROT"
+    DISPLAY-NAME: "&fGolden Carrot"
+    SLOT: 21
+    PRICE-PER-UNIT: 50
+    LORE:
+      - "&fBuy price: &a$50"
+  GOLDEN-APPLE-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "GOLDEN_APPLE"
+    DISPLAY-NAME: "&bGolden Apple"
+    SLOT: 23
+    PRICE-PER-UNIT: 250
+    LORE:
+      - "&fBuy price: &a$250"
+      
+# Shard Shop Menu
+SHARD-MENU:
+  TITLE: "&8ѕʜᴀʀᴅ - ѕʜᴏᴘ"
+  SIZE: 27
+  PIG-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 9
+    PRICE-PER-UNIT: 250.0
+    LORE:
+      - "&ePig"
+      - "&fBuy price: &5250x &lShards"
+    COMMAND: "spawner give {username} pig {amount}"
+    GIVE-ITEM: false
+  COW-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 10
+    PRICE-PER-UNIT: 350.0
+    LORE:
+      - "&eCow"
+      - "&fBuy price: &5350x &lShards"
+    COMMAND: "spawner give {username} cow {amount}"
+    GIVE-ITEM: false
+  ZOMBIE-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 11
+    PRICE-PER-UNIT: 400.0
+    LORE:
+      - "&eZombie"
+      - "&fBuy price: &5400x &lShards"
+    COMMAND: "spawner give {username} zombie {amount}"
+    GIVE-ITEM: false
+  SPIDER-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 12
+    PRICE-PER-UNIT: 750.0
+    LORE:
+      - "&eSpider"
+      - "&fBuy price: &5750x &lShards"
+    COMMAND: "spawner give {username} spider {amount}"
+    GIVE-ITEM: false
+  SKELETON-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 13
+    PRICE-PER-UNIT: 500.0
+    LORE:
+      - "&eSkeleton"
+      - "&fBuy price: &5500x &lShards"
+    COMMAND: "spawner give {username} skeleton {amount}"
+    GIVE-ITEM: false
+  CREEPER-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 14
+    PRICE-PER-UNIT: 625.0
+    LORE:
+      - "&eCreeper"
+      - "&fBuy price: &5625x &lShards"
+    COMMAND: "spawner give {username} creeper {amount}"
+    GIVE-ITEM: false
+  ZOMBIFIED-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 15
+    PRICE-PER-UNIT: 750.0
+    LORE:
+      - "&eZombified Piglin"
+      - "&fBuy price: &5750x &lShards"
+    COMMAND: "spawner give {username} piglin {amount}"
+    GIVE-ITEM: false
+  BLAZE-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 16
+    PRICE-PER-UNIT: 1000.0
+    LORE:
+      - "&eBlaze"
+      - "&fBuy price: &51000x &lShards"
+    COMMAND: "spawner give {username} blaze {amount}"
+    GIVE-ITEM: false
+  GOLEM-SPAWNER-ITEM:
+    CURRENCY: SHARD
+    MATERIAL: "SPAWNER"
+    DISPLAY-NAME: "&dSpawner"
+    SLOT: 17
+    PRICE-PER-UNIT: 1500.0
+    LORE:
+      - "&eIron Golem"
+      - "&fBuy price: &51500x &lShards"
+    COMMAND: "spawner give {username} iron_golem {amount}"
+    GIVE-ITEM: false
+
+# Extra Shop Menu (1)
+EXTRA-1-MENU:
+  TITLE: "&8ᴇxᴛʀᴀ - ѕʜᴏᴘ"
+  SIZE: 27
+  BACK-BUTTON-SLOT: 18
+  DIRT-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "DIRT"
+    DISPLAY-NAME: "&fDirt"
+    SLOT: 9
+    PRICE-PER-UNIT: 150.0
+    LORE:
+      - "&fBuy price: &a$150"
+
+# Extra Shop Menu (2)
+EXTRA-2-MENU:
+  TITLE: "&8ᴇxᴛʀᴀ - ѕʜᴏᴘ"
+  SIZE: 27
+  BACK-BUTTON-SLOT: 18
+  DIRT-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "DIRT"
+    DISPLAY-NAME: "&fDirt"
+    SLOT: 9
+    PRICE-PER-UNIT: 150.0
+    LORE:
+      - "&fBuy price: &a$150"
+
+# Extra Shop Menu (3)
+EXTRA-3-MENU:
+  TITLE: "&8ᴇxᴛʀᴀ - ѕʜᴏᴘ"
+  SIZE: 27
+  BACK-BUTTON-SLOT: 18
+  DIRT-ITEM:
+    CURRENCY: MONEY
+    MATERIAL: "DIRT"
+    DISPLAY-NAME: "&fDirt"
+    SLOT: 9
+    PRICE-PER-UNIT: 150.0
+    LORE:
+      - "&fBuy price: &a$150"
+
+BACK-BUTTON:
+  MATERIAL: "RED_STAINED_GLASS_PANE"
+  DISPLAY-NAME: "&cʙᴀᴄᴋ"
+  LORE:
+    - "&fClick to return"
