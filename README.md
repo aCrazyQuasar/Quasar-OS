@@ -4,11 +4,9 @@
 
 Quasar OS is designed to be lightweight, extensible, and highly customizable. From animated wallpapers to third-party applications, nearly every part of the system can be modified or extended.
 
----
+# Features
 
-# ✨ Features
-
-## 🖥️ Desktop Environment
+## Desktop Environment
 
 * Full desktop-style interface
 * Draggable and resizable windows
@@ -16,7 +14,7 @@ Quasar OS is designed to be lightweight, extensible, and highly customizable. Fr
 * Multi-window application support
 * Responsive design for multiple screen sizes
 
-## 📦 Application System
+## Application System
 
 Applications run inside isolated iframes, providing:
 
@@ -32,26 +30,9 @@ Each application can be developed using standard web technologies:
 * CSS
 * JavaScript
 * qScript (currently in development)
-* WebAssembly (optional)
+* WebAssembly (optional/indev)
 
-
-# 🏗️ Architecture
-
-```text
-┌──────────────────────────────┐
-│          Quasar OS           │
-├──────────────────────────────┤
-│         Desktop UI           │
-├──────────────────────────────┤
-│      Window Management       │
-├──────────────────────────────┤
-│       Application API        │
-├──────────────────────────────┤
-│      Sandboxed Iframes       │
-├──────────────────────────────┤
-│        Web Browser           │
-└──────────────────────────────┘
-```
+Applications will eventually be packaged as a ```text .qap``` file which should be self dependent/contain all dependencies.
 
 ## Core Components
 
@@ -82,6 +63,8 @@ Responsible for:
 * Managing iframe containers
 * Inter-process communication
 * Permission handling
+* qScript Interpreting
+* App decompression/loading
 
 ### Wallpaper Runtime
 
@@ -91,86 +74,17 @@ Responsible for:
 * Managing render loops
 * Canvas rendering
 * Performance optimization
+* Wallpaper Decompression
 
----
+# Creating Applications
 
-# 📁 Project Structure
+Applications can be built in many different ways. You can use vanilla web technologies like HTML/CSS/JS, QX, or WASM. QX is currently indev, and the app loader is currently not working so more details when that releases.
 
-```text
-quasar-os/
-│
-├── apps/
-│   ├── browser/
-│   ├── settings/
-│   ├── terminal/
-│   └── ...
-│
-├── wallpapers/
-│   ├── sunset.js
-│   ├── asteroidField.js
-│   └── ...
-│
-├── js/
-│   ├── desktop/
-│   ├── window/
-│   ├── wallpaper/
-│   └── ...
-│
-├── css/
-│
-├── assets/
-│
-├── index.html
-│
-└── README.md
-```
+# Performance Goals
 
----
+Quasar OS aims to run a fast as possible with minimal memory usage possible.
 
-# 🧩 Creating Applications
-
-Applications are simply web pages loaded inside iframes.
-
-Example:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hello App</title>
-</head>
-<body>
-    <h1>Hello Quasar!</h1>
-</body>
-</html>
-```
-
-Register the application: (feature in dev)
-
-```javascript
-registerApp({
-    id: "hello",
-    name: "Hello App",
-    icon: "/icons/hello.svg",
-    entry: "/apps/hello/index.html"
-});
-```
-
----
-
-# ⚡ Performance Goals
-
-Quasar OS aims to:
-
-* Maintain smooth desktop rendering
-* Support multiple concurrent applications
-* Minimize memory usage
-* Reduce startup times
-* Efficiently render animated wallpapers
-
----
-
-# 🌍 Vision
+# Vision
 
 The long-term goal of Quasar OS is to create a highly capable web operating system that feels native while remaining fully accessible through the browser.
 
@@ -178,16 +92,11 @@ Future goals include:
 
 * File system support
 * App marketplace
-* User accounts
-* Cloud synchronization
 * Window snapping
-* Virtual desktops
 * PWA integration
 * WebRTC-powered communication
 * Plugin ecosystem
 * Theme marketplace
-
----
 
 # 🤝 Contributing
 
