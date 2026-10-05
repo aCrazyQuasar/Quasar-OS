@@ -32,7 +32,7 @@ Each application can be developed using standard web technologies:
 * qScript (currently in development)
 * WebAssembly (optional/indev)
 
-Applications will eventually be packaged as a ```text .qap``` file which should be self dependent/contain all dependencies.
+Applications will eventually be packaged as a ```.qap``` file which should be self dependent/contain all dependencies.
 
 ## Core Components
 
