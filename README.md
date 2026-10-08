@@ -98,7 +98,7 @@ Future goals include:
 * Plugin ecosystem
 * Theme marketplace
 
-# 🤝 Contributing
+# Contributing
 
 Contributions are welcome.
 
@@ -113,7 +113,7 @@ You can help by:
 
 ---
 
-# 📜 License
+# License
 
 This project is licensed under the MIT License.
 
