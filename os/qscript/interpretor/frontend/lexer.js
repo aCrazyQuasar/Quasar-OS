@@ -49,8 +49,8 @@ export const TokenType = {
     Semicolon: "Semicolon",
     OpenParen: "OpenParen", // (
     CloseParen: "CloseParen", // )
-    OpenBrace: "OpenBrace", // [
-    CloseBrace: "CloseBrace", // ]
+    OpenBrace: "OpenBrace", // {
+    CloseBrace: "CloseBrace", // }
     BinaryOperator: "BinaryOperator",
 
     // * EOF
