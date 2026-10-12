@@ -40,6 +40,7 @@ export const TokenType = {
     // * Keywords
     Set: "Set",
     Const: "Const",
+    List: "List",
 
     // * Grouping Operators
     Equals: "Equals",
