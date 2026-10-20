@@ -40,6 +40,7 @@ export const TokenType = {
     // * Keywords
     Set: "Set",
     Const: "Const",
+    List: "List",
 
     // * Grouping Operators
     Equals: "Equals",
@@ -48,8 +49,8 @@ export const TokenType = {
     Semicolon: "Semicolon",
     OpenParen: "OpenParen", // (
     CloseParen: "CloseParen", // )
-    OpenBrace: "OpenBrace", // [
-    CloseBrace: "CloseBrace", // ]
+    OpenBrace: "OpenBrace", // {
+    CloseBrace: "CloseBrace", // }
     BinaryOperator: "BinaryOperator",
 
     // * EOF

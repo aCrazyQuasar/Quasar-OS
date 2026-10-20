@@ -99,6 +99,7 @@ export class Parser {
             case TokenType.Set:
             case TokenType.Const:
                 return this.#parse_var_declaration();
+            case TokenType.List:
             default:
                 return this.#parse_expr(); // fallback
         }
