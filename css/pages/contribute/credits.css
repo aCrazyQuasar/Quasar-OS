@@ -38,6 +38,13 @@
     -moz-background-clip: text;
     color: transparent;
 }
+#credit-ghost{
+    color: white;
+    text-shadow: 0 0 20px white;
+}
+#credit-ghost ~ p {
+    color: red;
+}
 #credit-men{
     color: red;
 }
